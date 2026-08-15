@@ -85,7 +85,6 @@ const flaggedCount = computed(() =>
 
 
 <style scoped>
-<style scoped>
 .ai-monitoring-view { display: flex; flex-direction: column; gap: 1.25rem; }
 
 /* ── KPI Stat Cards ───────────────── */
