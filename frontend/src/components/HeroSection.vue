@@ -11,8 +11,6 @@
         <div class="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-teal-900 text-white shadow-md border border-teal-700 mb-6">
           <span class="w-2.5 h-2.5 rounded-full bg-emerald-400 animate-ping"></span>
           <span class="text-xs font-extrabold tracking-wide">{{ t?.hero_badge || 'Hanya 45 Menit Naik Kapal Feri dari Singapura' }}</span>
-          <span class="text-xs text-teal-300">•</span>
-          <span class="text-xs font-bold text-sky-200">Free Visa 30 Hari</span>
         </div>
       </div>
 

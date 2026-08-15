@@ -26,8 +26,6 @@
             <span>{{ t?.rate_label || 'Kurs Real:' }}</span>
             <strong class="text-emerald-300 font-mono">1 SGD = Rp {{ formatNumber(exchangeRate) }}</strong>
           </button>
-          <span class="text-sky-300 hidden sm:inline">•</span>
-          <span class="text-sky-200 hidden sm:inline">Free Visa 30 Hari</span>
         </div>
       </div>
     </div>
