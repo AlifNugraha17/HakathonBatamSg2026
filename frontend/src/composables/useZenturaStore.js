@@ -77,11 +77,11 @@ export function useZenturaStore() {
     return salons.value.filter(salon => {
       const matchRegion = !currentRegion.value || salon.region === currentRegion.value;
       const matchCategory = selectedCategory.value === 'all' || (salon.categories && salon.categories.includes(selectedCategory.value));
-      const matchSearch = !searchQuery.value.trim() || 
+      const matchSearch = !searchQuery.value.trim() ||
         (salon.name && salon.name.toLowerCase().includes(searchQuery.value.toLowerCase())) ||
         (salon.tagline && salon.tagline.toLowerCase().includes(searchQuery.value.toLowerCase())) ||
         (salon.landmark && salon.landmark.toLowerCase().includes(searchQuery.value.toLowerCase()));
-      
+
       return matchRegion && matchCategory && matchSearch;
     });
   });
@@ -89,7 +89,7 @@ export function useZenturaStore() {
   // Micro-Moment Matched Slots across the active region
   const matchedFlashSlots = computed(() => {
     const results = [];
-    const regionSalons = currentRegion.value 
+    const regionSalons = currentRegion.value
       ? salons.value.filter(s => s.region === currentRegion.value)
       : salons.value;
 
@@ -101,7 +101,7 @@ export function useZenturaStore() {
             const distance = s.distanceMinutes || s.distance_minutes || 5;
             const matchesDuration = !matcherFilter.value.durationMinutes || duration <= matcherFilter.value.durationMinutes;
             const matchesDistance = !matcherFilter.value.maxDistanceMinutes || distance <= matcherFilter.value.maxDistanceMinutes;
-            
+
             if (matchesDuration && matchesDistance) {
               results.push({
                 ...slot,
