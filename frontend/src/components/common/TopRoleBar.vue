@@ -210,8 +210,8 @@ const handleNavClick = (section) => {
 .user-status-section {
   display: flex;
   align-items: center;
-  gap: 0.6rem;
-  flex-wrap: wrap;
+  gap: 0.5rem;
+  flex-wrap: nowrap;
 }
 
 .lang-switcher-box {
@@ -318,22 +318,79 @@ const handleNavClick = (section) => {
 }
 
 @media (max-width: 768px) {
+  .top-role-header {
+    padding: 0.6rem 0.85rem;
+  }
   .top-nav-container {
+    flex-direction: column;
+    align-items: stretch;
+    gap: 0.55rem;
+  }
+  .brand-section {
+    gap: 0.5rem;
+  }
+  .brand-logo-mark {
+    width: 28px;
+    height: 28px;
+    font-size: 0.95rem;
+  }
+  .brand-name {
+    font-size: 0.92rem;
+  }
+  .brand-sub {
+    font-size: 0.5rem;
+  }
+  .user-status-section {
+    width: 100%;
     justify-content: space-between;
-    gap: 0.75rem;
+    align-items: center;
+    gap: 0.35rem;
+    flex-wrap: nowrap;
+  }
+  .lang-switcher-box {
+    padding: 0.12rem 0.3rem;
+    gap: 0.12rem;
+  }
+  .lang-pill {
+    font-size: 0.68rem;
+    padding: 0.1rem 0.25rem;
+  }
+  .btn-dashboard-link {
+    font-size: 0.72rem;
+    padding: 0.32rem 0.5rem;
+    flex: 1;
+    justify-content: center;
+    text-align: center;
+  }
+  .btn-logout {
+    font-size: 0.72rem;
+    padding: 0.32rem 0.55rem;
+    flex-shrink: 0;
+  }
+  .btn-signin-nav {
+    font-size: 0.75rem;
+    padding: 0.35rem 0.85rem;
   }
   .nav-links-center {
-    order: 3;
     width: 100%;
-    justify-content: center;
-    border-top: 1px solid rgba(255, 255, 255, 0.08);
-    padding-top: 0.5rem;
-    gap: 0.25rem;
+    border-top: 1px solid rgba(255, 255, 255, 0.1);
+    padding-top: 0.45rem;
+    gap: 0.2rem;
+    flex-wrap: nowrap;
+    overflow-x: auto;
+    scrollbar-width: none;
+    -ms-overflow-style: none;
+    justify-content: space-between;
+    -webkit-overflow-scrolling: touch;
+    padding-bottom: 0.15rem;
+  }
+  .nav-links-center::-webkit-scrollbar {
+    display: none;
   }
   .nav-tab {
-    font-size: 0.76rem;
-    padding: 0.3rem 0.55rem;
+    font-size: 0.75rem;
+    padding: 0.25rem 0.45rem;
+    flex-shrink: 0;
   }
 }
 </style>
-
