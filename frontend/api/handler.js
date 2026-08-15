@@ -292,16 +292,32 @@ const SPAS = [
 ];
 
 const ADMIN_METRICS = {
-  totalGmvIdr: 428500000,
-  totalGmvSgd: 36800,
+  totalGmvIdr: 335000,
+  totalGmvSgd: 28.27,
+  total_gmv_idr: 335000,
+  total_gmv_sgd: 28.27,
   monthlyGrowthPercent: 24.8,
-  activeMerchantsCount: 48,
-  pendingVerificationMerchants: 3,
-  totalTouristsRegistered: 3420,
-  totalAiTranslationsMonth: 18450,
-  aiSafetyFilterTriggers: 142,
+  activeMerchantsCount: 4,
+  active_partners_count: 4,
+  total_merchants: 4,
+  pendingVerificationMerchants: 0,
+  pending_kyc_count: 0,
+  totalBookings: 1,
+  total_bookings: 1,
+  totalUsers: 3,
+  total_users: 3,
+  totalAiTranslationsMonth: 0,
+  total_ai_queries: 0,
+  aiSafetyFilterTriggers: 0,
   avgTranslationLatencyMs: 165,
-  totalPlatformCommissionIdr: 51420000
+  avg_edge_latency_ms: 165,
+  totalPlatformCommissionIdr: 40200,
+  total_platform_commission_idr: 40200,
+  regional_distribution: [
+    { zone: 'Batam Harbour Bay (HarbourFront SG)', share: 50 },
+    { zone: 'Batam Centre (Tanah Merah SG)', share: 30 },
+    { zone: 'Nongsa Pura Coast (Tanah Merah SG)', share: 20 },
+  ]
 };
 
 const AI_LOGS = [
@@ -511,24 +527,34 @@ export default async function handler(req, res) {
   }
 
   if (cleanPath === '/admin/merchants') {
-    return send(200, SPAS.map(s => ({
-      id: s.id,
+    return send(200, SPAS.map((s, idx) => ({
+      id: 'merch-' + s.id,
+      db_id: s.id,
       name: s.name,
-      ownerName: 'Ibu Ratna Dewi',
+      owner_name: s.ownerName || (idx === 0 ? 'Ratna Dewi' : 'Spa Partner Director'),
+      ownerName: s.ownerName || (idx === 0 ? 'Ratna Dewi' : 'Spa Partner Director'),
       region: s.region,
-      status: 'active',
-      hygieneScore: s.hygieneScore,
+      city: s.landmark || 'Batam Ferry Zone',
       rating: s.rating,
-      totalBookings: 324,
-      revenueIdr: 129600000
+      hygiene_score: s.hygieneScore,
+      hygieneScore: s.hygieneScore,
+      kyc_verified: true,
+      kycDocumentsVerified: true,
+      status: 'active',
+      total_bookings: idx === 0 ? 1 : 0,
+      totalBookings: idx === 0 ? 1 : 0,
+      revenueIdr: idx === 0 ? 335000 : 0,
+      commission_rate: 12,
+      commissionRate: 12,
+      created_at: '2026-08-15'
     })));
   }
 
   if (cleanPath === '/admin/users') {
     return send(200, [
-      { id: 'usr-1', name: 'Super Admin HQ', email: 'admin@zentura.com', role: 'admin', status: 'active' },
-      { id: 'usr-2', name: 'Ratna Dewi (Merchant)', email: 'partner@heritage-spa.id', role: 'merchant', status: 'active' },
-      { id: 'usr-3', name: 'Alexandre Tan (Tourist)', email: 'traveler@singapore.sg', role: 'tourist', status: 'active' }
+      { id: 'usr-1', db_id: 1, name: 'Super Admin HQ', email: 'admin@zentura.com', role: 'admin', country: 'Singapore', phone: '+65 8123 9900', totalSpentSgd: 0, status: 'active', lastActive: 'Online now' },
+      { id: 'usr-2', db_id: 2, name: 'Ratna Dewi (Merchant)', email: 'partner@heritage-spa.id', role: 'merchant', country: 'Indonesia', phone: '+62 812 7008 8990', totalSpentSgd: 0, status: 'active', lastActive: 'Online now' },
+      { id: 'usr-3', db_id: 3, name: 'Alexandre Tan', email: 'traveler@singapore.sg', role: 'tourist', country: 'Singapore', phone: '+65 9123 4567', totalSpentSgd: 28.27, status: 'active', lastActive: 'Online now' }
     ]);
   }
 
