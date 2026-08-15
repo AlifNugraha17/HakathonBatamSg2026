@@ -24,6 +24,9 @@
         <a @click.prevent="$emit('nav', 'resorts')" href="#" class="text-sm font-medium text-slate-300 hover:text-sky-400 transition-colors flex items-center gap-1.5">
           <span>⛳ Golf & Resorts</span>
         </a>
+        <a @click.prevent="$emit('nav', 'reviews')" href="#" class="text-sm font-medium text-slate-300 hover:text-amber-400 transition-colors flex items-center gap-1.5">
+          <span>⭐ Ulasan Pasien SG</span>
+        </a>
         <a @click.prevent="$emit('open-ferry')" href="#" class="text-sm font-medium text-slate-300 hover:text-emerald-400 transition-colors flex items-center gap-1.5">
           <span>🚢 Feri & Transit</span>
         </a>

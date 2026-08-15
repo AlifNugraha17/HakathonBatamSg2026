@@ -3,6 +3,7 @@
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\Api\PlaceController;
 use App\Http\Controllers\Api\BookingController;
+use App\Http\Controllers\Api\ReviewController;
 
 /*
 |--------------------------------------------------------------------------
@@ -13,6 +14,11 @@ use App\Http\Controllers\Api\BookingController;
 Route::get('/places', [PlaceController::class, 'index']);
 Route::get('/places/{id}', [PlaceController::class, 'show']);
 Route::post('/bookings', [BookingController::class, 'store']);
+
+// Verified Reviews & Ratings Endpoints
+Route::get('/reviews', [ReviewController::class, 'index']);
+Route::post('/reviews', [ReviewController::class, 'store']);
+Route::post('/reviews/{id}/helpful', [ReviewController::class, 'helpful']);
 
 // Live Exchange Rate API Endpoint (SGD ⇄ IDR)
 Route::get('/exchange-rate', function () {

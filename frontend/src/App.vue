@@ -44,6 +44,13 @@
         />
       </div>
 
+      <!-- Verified Cross-Border Testimonials & Rating System (Singapore Visitors) -->
+      <TestimonialsSection 
+        :currency="currency"
+        :exchange-rate="exchangeRate"
+        :places="places"
+      />
+
       <!-- Features & Why Batam Section -->
       <section class="py-16 bg-slate-950 relative overflow-hidden">
         <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
@@ -133,6 +140,7 @@ import MapView from './components/MapView.vue'
 import AiItineraryModal from './components/AiItineraryModal.vue'
 import FerryGuideModal from './components/FerryGuideModal.vue'
 import BookingModal from './components/BookingModal.vue'
+import TestimonialsSection from './components/TestimonialsSection.vue'
 
 // State
 const currency = ref('SGD')
@@ -416,6 +424,9 @@ const handleNav = (target) => {
   } else if (target === 'resorts') {
     selectedCategory.value = 'golf'
     scrollToMedical()
+  } else if (target === 'reviews') {
+    const el = document.getElementById('testimonials-section')
+    if (el) el.scrollIntoView({ behavior: 'smooth' })
   } else {
     window.scrollTo({ top: 0, behavior: 'smooth' })
   }
