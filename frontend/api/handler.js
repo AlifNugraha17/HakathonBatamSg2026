@@ -21,357 +21,9 @@ async function supabaseFetch(endpoint, options = {}) {
   }
   return null;
 }
-const SPAS = [
-  {
-    id: 'salon-1',
-    name: 'Martha Heritage Herbal Spa Grand Batam',
-    tagline: 'Authentic Balinese Touch & Warm Jamu Herbal Steam',
-    region: 'batam',
-    landmark: '3 mins walk from Harbour Bay Ferry Terminal',
-    distanceMinutes: 3,
-    rating: 4.9,
-    reviewCount: 248,
-    hygieneScore: 99,
-    hygieneBadges: [
-      'Single-Use Organic Bed Linens',
-      'UV Sanitized Tools (Hospital Grade)',
-      '100% Certified Master Therapists',
-      'Individual Fresh Herbal Infusion'
-    ],
-    phone: '+6281270088990',
-    address: 'Komplek Harbour Bay Mall Ruko No. 8-9, Batu Ampar, Batam',
-    imageUrl: 'https://images.unsplash.com/photo-1540555700478-4be289fbecef?auto=format&fit=crop&w=900&q=80',
-    gallery: [
-      'https://images.unsplash.com/photo-1540555700478-4be289fbecef?auto=format&fit=crop&w=900&q=80',
-      'https://images.unsplash.com/photo-1600334089648-b0d9d3028eb2?auto=format&fit=crop&w=900&q=80',
-      'https://images.unsplash.com/photo-1544161515-4ab6ce6db874?auto=format&fit=crop&w=900&q=80'
-    ],
-    categories: ['massage', 'reflexology', 'spa'],
-    openNow: true,
-    operatingHours: '09:00 - 22:00 (WIB)',
-    therapists: [
-      { name: 'Ibu Ratna', experience: '12 yrs exp', specialty: 'Balinese Pressure & Acupressure', rating: 4.9 },
-      { name: 'Mas Budi', experience: '8 yrs exp', specialty: 'Reflexology & Sciatica Release', rating: 4.8 },
-      { name: 'Mbak Dewi', experience: '6 yrs exp', specialty: 'Aroma Therapy & Head Spa', rating: 4.9 }
-    ],
-    flashSlots: [
-      {
-        id: 'slot-101',
-        time: '14:15 - 15:15',
-        durationMinutes: 60,
-        therapistName: 'Ibu Ratna',
-        discountPercent: 20,
-        chair: 'Private VIP Room 1',
-        serviceName: 'Balinese Herbal Oil Deep Tissue',
-        priceIdr: 200000,
-        originalPriceIdr: 250000,
-        isFlashActive: true,
-        expiresInMinutes: 12
-      },
-      {
-        id: 'slot-102',
-        time: '15:30 - 16:15',
-        durationMinutes: 45,
-        therapistName: 'Mas Budi',
-        discountPercent: 25,
-        chair: 'Reflexology Recliner 3',
-        serviceName: 'Express Travel Foot & Calf Revival',
-        priceIdr: 135000,
-        originalPriceIdr: 180000,
-        isFlashActive: true,
-        expiresInMinutes: 28
-      }
-    ],
-    services: [
-      {
-        id: 'srv-101',
-        name: 'Balinese Herbal Oil Deep Tissue',
-        durationMinutes: 60,
-        priceIdr: 250000,
-        category: 'massage',
-        popular: true,
-        desc: 'Traditional Indonesian palm kneading, skin rolling, and warm infused ginger-clove oil targeting tight lower back and shoulder knots.'
-      },
-      {
-        id: 'srv-102',
-        name: 'Express Travel Foot & Calf Revival',
-        durationMinutes: 45,
-        priceIdr: 180000,
-        category: 'reflexology',
-        popular: true,
-        desc: 'Specialized foot pressure-point relief designed to restore circulation after maritime ferry transit and duty-free shopping.'
-      },
-      {
-        id: 'srv-103',
-        name: 'Royal Javanese Lulur & Body Polish',
-        durationMinutes: 90,
-        priceIdr: 380000,
-        category: 'spa',
-        popular: false,
-        desc: 'Full body botanical scrub with turmeric, rice powder, jasmine essence followed by yoghurt skin hydration.'
-      }
-    ]
-  },
-  {
-    id: 'salon-2',
-    name: 'Eska Wellness & Reflexology Harbour Bay',
-    tagline: 'Modern Hydrotherapy & Rapid Pre-Ferry Decompression',
-    region: 'batam',
-    landmark: 'Directly linked to Harbour Bay Ferry Terminal Walkway',
-    distanceMinutes: 2,
-    rating: 4.85,
-    reviewCount: 312,
-    hygieneScore: 98,
-    hygieneBadges: [
-      'Medical Grade Sanitization',
-      'Disposable Slippers & Underwear',
-      'BNSP Licensed Senior Practitioners',
-      'Allergy Free Natural Carrier Oils'
-    ],
-    phone: '+6281364551122',
-    address: 'Bayfront Promenade Block C-12, Harbour Bay, Batam',
-    imageUrl: 'https://images.unsplash.com/photo-1544161515-4ab6ce6db874?auto=format&fit=crop&w=900&q=80',
-    gallery: [
-      'https://images.unsplash.com/photo-1544161515-4ab6ce6db874?auto=format&fit=crop&w=900&q=80',
-      'https://images.unsplash.com/photo-1519823551278-64ac92734fb1?auto=format&fit=crop&w=900&q=80'
-    ],
-    categories: ['massage', 'reflexology', 'headspa'],
-    openNow: true,
-    operatingHours: '09:00 - 22:30 (WIB)',
-    therapists: [
-      { name: 'Kak Sarah', experience: '9 yrs exp', specialty: 'Upper Trapezius & Migraine Relief', rating: 4.9 },
-      { name: 'Pak Agus', experience: '14 yrs exp', specialty: 'Deep Shiatsu & Spinal Alignment', rating: 4.8 }
-    ],
-    flashSlots: [
-      {
-        id: 'slot-201',
-        time: '14:30 - 15:00',
-        durationMinutes: 30,
-        therapistName: 'Kak Sarah',
-        discountPercent: 15,
-        chair: 'Chair 4 (Fast Track)',
-        serviceName: 'Express 30-Min Head, Neck & Shoulder Blitz',
-        priceIdr: 120000,
-        originalPriceIdr: 140000,
-        isFlashActive: true,
-        expiresInMinutes: 8
-      }
-    ],
-    services: [
-      {
-        id: 'srv-201',
-        name: 'Express 30-Min Head, Neck & Shoulder Blitz',
-        durationMinutes: 30,
-        priceIdr: 140000,
-        category: 'massage',
-        popular: true,
-        desc: 'Quick targeted relief for passengers with less than 45 minutes before ferry boarding calls.'
-      },
-      {
-        id: 'srv-202',
-        name: 'Japanese Scalp Waterfall & Herbal Head Spa',
-        durationMinutes: 60,
-        priceIdr: 320000,
-        category: 'headspa',
-        popular: true,
-        desc: 'Warm water circulator ring, volcanic clay scalp detox, and therapeutic temple acupressure.'
-      }
-    ]
-  },
-  {
-    id: 'salon-3',
-    name: 'Nagoya Hill Reflexology & Aromatherapy Sanctuary',
-    tagline: 'Premium Thai Acupressure & Reflexology Center',
-    region: 'batam_centre',
-    landmark: '5 mins from Batam Centre Ferry Terminal',
-    distanceMinutes: 5,
-    rating: 4.78,
-    reviewCount: 194,
-    hygieneScore: 96,
-    hygieneBadges: [
-      'Fresh Laundered Sheets Every Guest',
-      'UV Sterilized Hot Towel Cabinets',
-      'Non-Greasy Aromatherapy Formulas'
-    ],
-    phone: '+6281233445566',
-    address: 'Nagoya City Walk Complex Blok A No. 1-3, Batam',
-    imageUrl: 'https://images.unsplash.com/photo-1519823551278-64ac92734fb1?auto=format&fit=crop&w=900&q=80',
-    gallery: [
-      'https://images.unsplash.com/photo-1519823551278-64ac92734fb1?auto=format&fit=crop&w=900&q=80'
-    ],
-    categories: ['reflexology', 'massage'],
-    openNow: true,
-    operatingHours: '10:00 - 22:00 (WIB)',
-    therapists: [
-      { name: 'Ibu Maya', experience: '7 yrs exp', specialty: 'Reflexology & Lymphatic Drainage', rating: 4.8 },
-      { name: 'Mas Dian', experience: '10 yrs exp', specialty: 'Deep Tissue Shiatsu', rating: 4.7 }
-    ],
-    flashSlots: [
-      {
-        id: 'slot-301',
-        time: '15:00 - 15:45',
-        durationMinutes: 45,
-        therapistName: 'Ibu Maya',
-        discountPercent: 18,
-        chair: 'Recliner Suite 2',
-        serviceName: 'Acupressure Foot & Arm Restoration',
-        priceIdr: 145000,
-        originalPriceIdr: 175000,
-        isFlashActive: true,
-        expiresInMinutes: 20
-      }
-    ],
-    services: [
-      {
-        id: 'srv-301',
-        name: 'Acupressure Foot & Arm Restoration',
-        durationMinutes: 45,
-        priceIdr: 175000,
-        category: 'reflexology',
-        popular: true,
-        desc: 'Concentrated pressure points targeting feet, calves, palms, and forearms with warming ginger balm.'
-      }
-    ]
-  },
-  {
-    id: 'salon-4',
-    name: 'Nongsa Pura Coastal Botanical Spa',
-    tagline: 'Seaside Pavilion Relaxation by the Marina',
-    region: 'batam_nongsa',
-    landmark: '2 mins walk from Nongsa Pura Ferry Terminal',
-    distanceMinutes: 2,
-    rating: 4.95,
-    reviewCount: 180,
-    hygieneScore: 99,
-    hygieneBadges: [
-      'Private Oceanfront Suites',
-      'Single-Use Organic Bed Linens',
-      'Hospital Grade Autoclave Tools',
-      'Hypoallergenic Virgin Coconut Oils'
-    ],
-    phone: '+6281198765432',
-    address: 'Nongsa Marina Promenade, Nongsa, Batam',
-    imageUrl: 'https://images.unsplash.com/photo-1600334089648-b0d9d3028eb2?auto=format&fit=crop&w=900&q=80',
-    gallery: [
-      'https://images.unsplash.com/photo-1600334089648-b0d9d3028eb2?auto=format&fit=crop&w=900&q=80'
-    ],
-    categories: ['massage', 'spa', 'reflexology'],
-    openNow: true,
-    operatingHours: '09:00 - 21:00 (WIB)',
-    therapists: [
-      { name: 'Ibu Wayan', experience: '15 yrs exp', specialty: 'Coastal Warm Stone Deep Therapy', rating: 5.0 },
-      { name: 'Mbak Cindy', experience: '8 yrs exp', specialty: 'Organic Herbal Jamu Compress', rating: 4.9 }
-    ],
-    flashSlots: [
-      {
-        id: 'slot-401',
-        time: '16:00 - 17:00',
-        durationMinutes: 60,
-        therapistName: 'Ibu Wayan',
-        discountPercent: 20,
-        chair: 'Oceanfront Pavilion 1',
-        serviceName: 'Nongsa Ocean Breeze Herbal Massage',
-        priceIdr: 280000,
-        originalPriceIdr: 350000,
-        isFlashActive: true,
-        expiresInMinutes: 15
-      }
-    ],
-    services: [
-      {
-        id: 'srv-401',
-        name: 'Nongsa Ocean Breeze Herbal Massage',
-        durationMinutes: 60,
-        priceIdr: 350000,
-        category: 'massage',
-        popular: true,
-        desc: 'Deep thumb pressure along meridian lines combined with palm kneading and organic virgin coconut massage oil overlooking the Singapore strait.'
-      }
-    ]
-  }
-];
 
-const ADMIN_METRICS = {
-  totalGmvIdr: 335000,
-  totalGmvSgd: 28.27,
-  total_gmv_idr: 335000,
-  total_gmv_sgd: 28.27,
-  monthlyGrowthPercent: 24.8,
-  activeMerchantsCount: 4,
-  active_partners_count: 4,
-  total_merchants: 4,
-  pendingVerificationMerchants: 0,
-  pending_kyc_count: 0,
-  totalBookings: 1,
-  total_bookings: 1,
-  totalUsers: 3,
-  total_users: 3,
-  totalAiTranslationsMonth: 0,
-  total_ai_queries: 0,
-  aiSafetyFilterTriggers: 0,
-  avgTranslationLatencyMs: 165,
-  avg_edge_latency_ms: 165,
-  totalPlatformCommissionIdr: 40200,
-  total_platform_commission_idr: 40200,
-  regional_distribution: [
-    { zone: 'Batam Harbour Bay (HarbourFront SG)', share: 50 },
-    { zone: 'Batam Centre (Tanah Merah SG)', share: 30 },
-    { zone: 'Nongsa Pura Coast (Tanah Merah SG)', share: 20 },
-  ]
-};
-
-const AI_LOGS = [
-  {
-    id: 'ai-log-1',
-    timestamp: 'Just now',
-    sourceLang: 'EN',
-    inputSnippet: 'Tight lower back and right shoulder, allergic to peanut oil, medium pressure.',
-    outputSnippet: 'Tolong hindari minyak kacang (gunakan VCO). Fokus area pinggang bawah dan bahu kanan dengan tekanan sedang.',
-    detectedAllergy: 'Peanut Oil Allergy',
-    latencyMs: 145,
-    model: 'Zentura-MedNLP v3.2',
-    safetyFlag: 'ALLERGY_ALERT'
-  },
-  {
-    id: 'ai-log-2',
-    timestamp: '5 mins ago',
-    sourceLang: 'ZH',
-    inputSnippet: '肩颈酸痛，力度要中等，不要按脊椎骨。',
-    outputSnippet: 'Bahu dan leher tegang. Tekanan sedang. Hindari penekanan langsung pada ruas tulang belakang.',
-    detectedAllergy: 'None',
-    latencyMs: 160,
-    model: 'Zentura-MedNLP v3.2',
-    safetyFlag: 'NORMAL'
-  }
-];
-
-let liveBookings = [
-  {
-    id: 'ZEN-7821',
-    booking_code: 'ZEN-7821',
-    spa_id: 'salon-1',
-    salonId: 'salon-1',
-    salonName: 'Martha Heritage Herbal Spa Grand Batam',
-    service_name: 'Balinese Herbal Oil Deep Relief (45m)',
-    serviceName: 'Balinese Herbal Oil Deep Relief (45m)',
-    guest_name: 'Marcus Lim',
-    guestName: 'Marcus Lim',
-    guest_phone: '+65 9123 4567',
-    guestPhone: '+65 9123 4567',
-    therapist_name: 'Ibu Ratna Dewi',
-    therapistName: 'Ibu Ratna Dewi',
-    booking_time: '14:30 WIB',
-    time: '14:30 WIB',
-    duration_minutes: 45,
-    durationMinutes: 45,
-    price_idr: 280000,
-    priceIdr: 280000,
-    ferry_time: '17:30 Batam Fast Ferry',
-    ferryTime: '17:30 Batam Fast Ferry',
-    status: 'confirmed',
-    payment_method: 'PayNow SGD (Instant BI-FAST)'
-  }
-];
+let SPAS = [];
+let liveBookings = [];
 
 export default async function handler(req, res) {
   // CORS Headers
@@ -430,8 +82,27 @@ export default async function handler(req, res) {
 
   if (cleanPath === '/auth/register') {
     const b = req.body || {};
+    const newUser = {
+      id: Date.now(),
+      name: b.name || 'User',
+      email: b.email,
+      role: b.role || 'tourist',
+      country: b.country || 'Singapore'
+    };
+
+    // Save to Supabase if available
+    await supabaseFetch('users', {
+      method: 'POST',
+      body: JSON.stringify({
+        name: newUser.name,
+        email: newUser.email,
+        role: newUser.role,
+        country: newUser.country
+      })
+    });
+
     return send(201, {
-      user: { id: Date.now(), name: b.name || 'User', email: b.email, role: b.role || 'tourist', country: b.country || 'Singapore' },
+      user: newUser,
       token: 'demo-jwt-token-new',
       role: b.role || 'tourist'
     });
@@ -443,8 +114,41 @@ export default async function handler(req, res) {
 
   // 2. SPAS & CATALOG
   if (cleanPath === '/spas') {
+    if (req.method === 'POST') {
+      const b = req.body || {};
+      const newSpa = {
+        id: `salon-${Date.now()}`,
+        name: b.name || 'New Spa Partner',
+        tagline: b.tagline || 'Wellness Retreat',
+        region: b.region || 'batam',
+        landmark: b.landmark || 'Batam Hub',
+        distanceMinutes: b.distanceMinutes || 5,
+        rating: b.rating || 5.0,
+        reviewCount: 0,
+        hygieneScore: b.hygieneScore || 99,
+        hygieneBadges: b.hygieneBadges || ['Verified Clean'],
+        phone: b.phone || '+6281200000000',
+        address: b.address || 'Batam, Indonesia',
+        imageUrl: b.imageUrl || 'https://images.unsplash.com/photo-1540555700478-4be289fbecef?auto=format&fit=crop&w=900&q=80',
+        categories: b.categories || ['massage', 'spa'],
+        openNow: true,
+        operatingHours: '09:00 - 22:00 (WIB)',
+        therapists: b.therapists || [],
+        flashSlots: b.flashSlots || [],
+        services: b.services || []
+      };
+
+      await supabaseFetch('spas', {
+        method: 'POST',
+        body: JSON.stringify(newSpa)
+      });
+
+      SPAS.unshift(newSpa);
+      return send(201, newSpa, 'Spa created successfully');
+    }
+
     const fromDb = await supabaseFetch('spas?select=*');
-    if (fromDb && Array.isArray(fromDb) && fromDb.length > 0) {
+    if (fromDb && Array.isArray(fromDb)) {
       return send(200, fromDb);
     }
     return send(200, SPAS);
@@ -456,14 +160,16 @@ export default async function handler(req, res) {
     if (fromDb && Array.isArray(fromDb) && fromDb.length > 0) {
       return send(200, fromDb[0]);
     }
-    const spa = SPAS.find(s => s.id === id) || SPAS[0];
+    const spa = SPAS.find(s => s.id === id || String(s.id) === String(id)) || null;
     return send(200, spa);
   }
 
   // 3. FLASH MATCHER
   if (cleanPath === '/matcher/find-gaps') {
+    const fromDb = await supabaseFetch('spas?select=*');
+    const sourceSpas = (fromDb && Array.isArray(fromDb)) ? fromDb : SPAS;
     const gaps = [];
-    SPAS.forEach(s => {
+    sourceSpas.forEach(s => {
       s.flashSlots?.forEach(slot => {
         gaps.push({ ...slot, salonName: s.name, salonId: s.id, landmark: s.landmark, distanceMinutes: s.distanceMinutes });
       });
@@ -492,15 +198,15 @@ export default async function handler(req, res) {
         booking_code: `ZEN-${Math.floor(1000 + Math.random() * 9000)}`,
         spa_id: b.spa_id || 'salon-1',
         salonId: b.spa_id || 'salon-1',
-        salonName: 'Martha Heritage Herbal Spa Grand Batam',
-        service_name: b.service_name || 'Balinese Traditional Massage',
-        serviceName: b.service_name || 'Balinese Traditional Massage',
-        guest_name: b.guest_name || 'Marcus Lim',
-        guestName: b.guest_name || 'Marcus Lim',
-        guest_phone: b.guest_phone || '+65 9123 4567',
-        therapist_name: b.therapist_name || 'Ibu Ratna Dewi',
-        booking_time: b.booking_time || '14:30 WIB',
-        price_idr: b.price_idr || 280000,
+        salonName: b.salonName || b.salon_name || 'Spa Partner Facility',
+        service_name: b.service_name || b.serviceName || 'Wellness Treatment',
+        serviceName: b.service_name || b.serviceName || 'Wellness Treatment',
+        guest_name: b.guest_name || b.guestName || 'Guest User',
+        guestName: b.guest_name || b.guestName || 'Guest User',
+        guest_phone: b.guest_phone || b.guestPhone || '+65 9123 4567',
+        therapist_name: b.therapist_name || b.therapistName || 'Assigned Therapist',
+        booking_time: b.booking_time || b.time || '14:30 WIB',
+        price_idr: Number(b.price_idr || b.priceIdr || 200000),
         status: 'confirmed'
       };
 
@@ -515,7 +221,7 @@ export default async function handler(req, res) {
     }
 
     const fromDb = await supabaseFetch('bookings?select=*&order=created_at.desc');
-    if (fromDb && Array.isArray(fromDb) && fromDb.length > 0) {
+    if (fromDb && Array.isArray(fromDb)) {
       return send(200, fromDb);
     }
     return send(200, liveBookings);
@@ -523,53 +229,92 @@ export default async function handler(req, res) {
 
   // 6. ADMIN
   if (cleanPath === '/admin/dashboard-metrics') {
-    return send(200, ADMIN_METRICS);
+    const fromSpas = await supabaseFetch('spas?select=*');
+    const fromBookings = await supabaseFetch('bookings?select=*');
+    const sourceSpas = (fromSpas && Array.isArray(fromSpas)) ? fromSpas : SPAS;
+    const sourceBookings = (fromBookings && Array.isArray(fromBookings)) ? fromBookings : liveBookings;
+
+    const totalIdr = sourceBookings.reduce((sum, b) => sum + (Number(b.price_idr || b.priceIdr) || 0), 0);
+    const totalSgd = totalIdr > 0 ? Number((totalIdr / 11850).toFixed(2)) : 0;
+    const feeIdr = Math.round(totalIdr * 0.12);
+
+    return send(200, {
+      totalGmvIdr: totalIdr,
+      totalGmvSgd: totalSgd,
+      total_gmv_idr: totalIdr,
+      total_gmv_sgd: totalSgd,
+      activeMerchantsCount: sourceSpas.length,
+      active_partners_count: sourceSpas.length,
+      total_merchants: sourceSpas.length,
+      pendingVerificationMerchants: 0,
+      pending_kyc_count: 0,
+      totalBookings: sourceBookings.length,
+      total_bookings: sourceBookings.length,
+      totalUsers: 3,
+      total_users: 3,
+      totalAiTranslationsMonth: 0,
+      total_ai_queries: 0,
+      aiSafetyFilterTriggers: 0,
+      avgTranslationLatencyMs: 165,
+      avg_edge_latency_ms: 165,
+      totalPlatformCommissionIdr: feeIdr,
+      total_platform_commission_idr: feeIdr,
+      regional_distribution: [
+        { zone: 'Batam Harbour Bay (HarbourFront SG)', share: 50 },
+        { zone: 'Batam Centre (Tanah Merah SG)', share: 30 },
+        { zone: 'Nongsa Pura Coast (Tanah Merah SG)', share: 20 },
+      ]
+    });
   }
 
   if (cleanPath === '/admin/merchants') {
-    return send(200, SPAS.map((s, idx) => ({
+    const fromSpas = await supabaseFetch('spas?select=*');
+    const sourceSpas = (fromSpas && Array.isArray(fromSpas)) ? fromSpas : SPAS;
+    return send(200, sourceSpas.map(s => ({
       id: 'merch-' + s.id,
       db_id: s.id,
       name: s.name,
-      owner_name: s.ownerName || (idx === 0 ? 'Ratna Dewi' : 'Spa Partner Director'),
-      ownerName: s.ownerName || (idx === 0 ? 'Ratna Dewi' : 'Spa Partner Director'),
-      region: s.region,
-      city: s.landmark || 'Batam Ferry Zone',
-      rating: s.rating,
-      hygiene_score: s.hygieneScore,
-      hygieneScore: s.hygieneScore,
+      owner_name: s.owner_name || s.ownerName || 'Spa Partner Director',
+      ownerName: s.owner_name || s.ownerName || 'Spa Partner Director',
+      region: s.region || 'batam',
+      city: s.landmark || s.city || 'Batam Ferry Zone',
+      rating: s.rating || 5.0,
+      hygiene_score: s.hygiene_score || s.hygieneScore || 99,
+      hygieneScore: s.hygiene_score || s.hygieneScore || 99,
       kyc_verified: true,
       kycDocumentsVerified: true,
-      status: 'active',
-      total_bookings: idx === 0 ? 1 : 0,
-      totalBookings: idx === 0 ? 1 : 0,
-      revenueIdr: idx === 0 ? 335000 : 0,
+      status: s.status || 'active',
+      total_bookings: s.total_bookings || 0,
+      totalBookings: s.total_bookings || 0,
+      revenueIdr: s.revenueIdr || 0,
       commission_rate: 12,
       commissionRate: 12,
-      created_at: '2026-08-15'
+      created_at: s.created_at || '2026-08-15'
     })));
   }
 
   if (cleanPath === '/admin/users') {
+    const fromUsers = await supabaseFetch('users?select=*');
+    if (fromUsers && Array.isArray(fromUsers) && fromUsers.length > 0) {
+      return send(200, fromUsers);
+    }
     return send(200, [
       { id: 'usr-1', db_id: 1, name: 'Super Admin HQ', email: 'admin@zentura.com', role: 'admin', country: 'Singapore', phone: '+65 8123 9900', totalSpentSgd: 0, status: 'active', lastActive: 'Online now' },
       { id: 'usr-2', db_id: 2, name: 'Ratna Dewi (Merchant)', email: 'partner@heritage-spa.id', role: 'merchant', country: 'Indonesia', phone: '+62 812 7008 8990', totalSpentSgd: 0, status: 'active', lastActive: 'Online now' },
-      { id: 'usr-3', db_id: 3, name: 'Alexandre Tan', email: 'traveler@singapore.sg', role: 'tourist', country: 'Singapore', phone: '+65 9123 4567', totalSpentSgd: 28.27, status: 'active', lastActive: 'Online now' }
+      { id: 'usr-3', db_id: 3, name: 'Alexandre Tan', email: 'traveler@singapore.sg', role: 'tourist', country: 'Singapore', phone: '+65 9123 4567', totalSpentSgd: 0, status: 'active', lastActive: 'Online now' }
     ]);
   }
 
   if (cleanPath === '/admin/ai-logs') {
-    return send(200, AI_LOGS);
+    return send(200, []);
   }
 
   if (cleanPath === '/admin/treasury-summary') {
     return send(200, {
-      total_vault_idr: 850000000,
-      sgd_pool: 72000,
+      total_vault_idr: 0,
+      sgd_pool: 0,
       fx_rate: 11850,
-      recent_payouts: [
-        { id: 'TXN-8841', merchantName: 'Martha Tilaar Spa', amountSgd: 32, payoutStatus: 'settled', date: 'Just now' }
-      ]
+      recent_payouts: []
     });
   }
 

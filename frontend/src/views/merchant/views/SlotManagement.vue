@@ -60,33 +60,73 @@
 
         <form class="modal-form" @submit.prevent="handleCreateSlot">
           <div class="form-group">
-            <label>Spa Service</label>
-            <select v-model="newSlot.serviceName" class="input-styled" required>
-              <option v-for="s in merchantSalon.services" :key="s.id" :value="s.name">
-                {{ s.name }} ({{ s.durationMinutes }} mins)
+            <label>Spa Service Name</label>
+            <input 
+              v-model="newSlot.serviceName" 
+              list="service-suggestions" 
+              class="input-styled" 
+              placeholder="Select or type service (e.g. Balinese Traditional Massage)" 
+              required 
+            />
+            <datalist id="service-suggestions">
+              <option v-for="s in (merchantSalon.services || [])" :key="s.id" :value="s.name">
+                {{ s.name }} ({{ s.durationMinutes || 60 }} mins)
               </option>
-            </select>
+              <option value="Balinese Herbal Oil Deep Tissue">Balinese Herbal Oil Deep Tissue (60 mins)</option>
+              <option value="Express Travel Foot & Calf Revival">Express Travel Foot & Calf Revival (45 mins)</option>
+              <option value="Royal Javanese Lulur & Body Polish">Royal Javanese Lulur & Body Polish (90 mins)</option>
+              <option value="Japanese Scalp Waterfall & Herbal Head Spa">Japanese Scalp Waterfall & Herbal Head Spa (60 mins)</option>
+              <option value="Express 30-Min Head, Neck & Shoulder Blitz">Express 30-Min Head, Neck & Shoulder Blitz (30 mins)</option>
+              <option value="Acupressure Foot & Arm Restoration">Acupressure Foot & Arm Restoration (45 mins)</option>
+            </datalist>
           </div>
 
           <div class="form-row">
             <div class="form-group">
-              <label>Chair / Suite Room</label>
-              <input v-model="newSlot.chair" type="text" class="input-styled" placeholder="Chair 3 / VIP 2" required />
+              <label>Assigned Therapist</label>
+              <input 
+                v-model="newSlot.therapistName" 
+                list="therapist-suggestions" 
+                class="input-styled" 
+                placeholder="Therapist name (e.g. Ibu Ratna)" 
+                required 
+              />
+              <datalist id="therapist-suggestions">
+                <option v-for="th in (merchantSalon.therapists || [])" :key="th.id || th.name" :value="th.name">
+                  {{ th.name }}
+                </option>
+                <option value="Ibu Ratna">Ibu Ratna (12 yrs exp - Balinese)</option>
+                <option value="Mas Budi">Mas Budi (8 yrs exp - Reflexology)</option>
+                <option value="Kak Sarah">Kak Sarah (9 yrs exp - Senior)</option>
+                <option value="Mbak Dewi">Mbak Dewi (6 yrs exp - Head Spa)</option>
+              </datalist>
             </div>
+
+            <div class="form-group">
+              <label>Chair / Suite Room</label>
+              <input v-model="newSlot.chair" type="text" class="input-styled" placeholder="VIP Suite 1 / Chair 3" required />
+            </div>
+          </div>
+
+          <div class="form-row">
             <div class="form-group">
               <label>Time Slot Window</label>
-              <input v-model="newSlot.time" type="text" class="input-styled" placeholder="14:30 - 15:15" required />
+              <input v-model="newSlot.time" type="text" class="input-styled" placeholder="14:30 - 15:15 (WIB)" required />
+            </div>
+            <div class="form-group">
+              <label>Duration (Minutes)</label>
+              <input v-model.number="newSlot.durationMinutes" type="number" class="input-styled" placeholder="45" required />
             </div>
           </div>
 
           <div class="form-row">
             <div class="form-group">
               <label>Original Price (IDR)</label>
-              <input v-model.number="newSlot.originalPriceIdr" type="number" class="input-styled" required />
+              <input v-model.number="newSlot.originalPriceIdr" type="number" class="input-styled" placeholder="250000" required />
             </div>
             <div class="form-group">
               <label>Flash Promo Price (IDR)</label>
-              <input v-model.number="newSlot.priceIdr" type="number" class="input-styled" required />
+              <input v-model.number="newSlot.priceIdr" type="number" class="input-styled" placeholder="200000" required />
             </div>
           </div>
 
