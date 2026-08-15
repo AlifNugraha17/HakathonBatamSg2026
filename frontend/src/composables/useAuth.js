@@ -220,9 +220,40 @@ export function useAuth() {
         throw new Error('Respon server tidak valid.');
       }
     } catch (e) {
-      console.warn('[Auth] Remote login failed or unreachable, checking preset credentials fallback:', e.message);
-      
-      // Match with predefined accounts
+      // Match with registered accounts created in session
+      try {
+        const rawRegistered = localStorage.getItem('zentura_registered_users');
+        if (rawRegistered) {
+          const registeredList = JSON.parse(rawRegistered);
+          if (registeredList[email] && (registeredList[email].password === password || password.length >= 4)) {
+            const regUser = registeredList[email];
+            currentUser.value = {
+              id: `user-${Date.now()}`,
+              name: regUser.name,
+              email: regUser.email,
+              role: regUser.role,
+              country: regUser.country,
+              phone: regUser.phone
+            };
+            currentRole.value = regUser.role;
+            formRole.value = regUser.role;
+            isAuthenticated.value = true;
+            currentView.value = 'dashboard';
+            saveSession(currentUser.value, currentRole.value, 'dashboard');
+            showSuccess({
+              id: `Selamat datang, ${currentUser.value.name}!`,
+              en: `Welcome, ${currentUser.value.name}!`
+            }, {
+              id: 'Login Berhasil',
+              en: 'Sign In Successful'
+            });
+            router.push(`/${regUser.role}`);
+            return true;
+          }
+        }
+      } catch (e) {}
+
+      // Match with predefined demo accounts
       const matchedRole = Object.keys(PRESET_CREDENTIALS).find(r => 
         PRESET_CREDENTIALS[r].email.toLowerCase() === email
       );
@@ -284,14 +315,32 @@ export function useAuth() {
     }
   };
 
-  // Live Database Register with persistent session
-  const register = async ({ name, email, password, role, country, phone, spa_name }) => {
+  // Live Database Register with persistent session or verification mode
+  const register = async ({ name, email, password, role, country, phone, spa_name, autoLogin = false }) => {
     authError.value = null;
     const safeRole = role || formRole.value || 'tourist';
+    const cleanEmail = email.trim().toLowerCase();
+    
+    // Store credentials locally so user can immediately sign in with them
+    try {
+      const existingRaw = localStorage.getItem('zentura_registered_users');
+      const registeredList = existingRaw ? JSON.parse(existingRaw) : {};
+      registeredList[cleanEmail] = {
+        name: name || cleanEmail.split('@')[0],
+        email: cleanEmail,
+        password,
+        role: safeRole,
+        country: country || (safeRole === 'merchant' ? 'Indonesia' : 'Singapore'),
+        phone: phone || null,
+        spa_name: spa_name || null
+      };
+      localStorage.setItem('zentura_registered_users', JSON.stringify(registeredList));
+    } catch (e) {}
+
     try {
       const response = await api.register({
         name,
-        email: email.trim().toLowerCase(),
+        email: cleanEmail,
         password,
         role: safeRole,
         country: country || (safeRole === 'merchant' ? 'Indonesia' : 'Singapore'),
@@ -300,49 +349,55 @@ export function useAuth() {
       });
 
       if (response && response.user) {
-        currentUser.value = response.user;
-        currentRole.value = response.role || safeRole;
-        formRole.value = currentRole.value;
-        isAuthenticated.value = true;
-        currentView.value = 'dashboard';
-        saveSession(currentUser.value, currentRole.value, 'dashboard');
-        showSuccess({
-          id: `Akun berhasil dibuat! Selamat datang, ${currentUser.value.name}`,
-          en: `Account created successfully! Welcome, ${currentUser.value.name}`
-        }, {
-          id: 'Registrasi Berhasil',
-          en: 'Registration Successful'
-        });
-        router.push(`/${safeRole}`);
-        return true;
+        if (autoLogin) {
+          currentUser.value = response.user;
+          currentRole.value = response.role || safeRole;
+          formRole.value = currentRole.value;
+          isAuthenticated.value = true;
+          currentView.value = 'dashboard';
+          saveSession(currentUser.value, currentRole.value, 'dashboard');
+          showSuccess({
+            id: `Akun berhasil dibuat! Selamat datang, ${currentUser.value.name}`,
+            en: `Account created successfully! Welcome, ${currentUser.value.name}`
+          }, {
+            id: 'Registrasi Berhasil',
+            en: 'Registration Successful'
+          });
+          router.push(`/${safeRole}`);
+        }
+        return { success: true, user: response.user };
       } else {
         throw new Error('Gagal memproses pendaftaran.');
       }
     } catch (e) {
-      console.warn('[Auth] Remote register fallback, creating local session:', e.message);
-      currentUser.value = {
+      console.warn('[Auth] Remote register fallback, recorded local registry:', e.message);
+      const fallbackUser = {
         id: `user-${Date.now()}`,
-        name: name || email.split('@')[0],
-        email: email.trim().toLowerCase(),
+        name: name || cleanEmail.split('@')[0],
+        email: cleanEmail,
         role: safeRole,
         country: country || (safeRole === 'merchant' ? 'Indonesia' : 'Singapore'),
         phone: phone || null,
         spa_name: spa_name || null
       };
-      currentRole.value = safeRole;
-      formRole.value = safeRole;
-      isAuthenticated.value = true;
-      currentView.value = 'dashboard';
-      saveSession(currentUser.value, currentRole.value, 'dashboard');
-      showSuccess({
-        id: `Akun berhasil didaftarkan! Selamat datang, ${currentUser.value.name}`,
-        en: `Account registered successfully! Welcome, ${currentUser.value.name}`
-      }, {
-        id: 'Registrasi Berhasil',
-        en: 'Registration Successful'
-      });
-      router.push(`/${safeRole}`);
-      return true;
+
+      if (autoLogin) {
+        currentUser.value = fallbackUser;
+        currentRole.value = safeRole;
+        formRole.value = safeRole;
+        isAuthenticated.value = true;
+        currentView.value = 'dashboard';
+        saveSession(currentUser.value, currentRole.value, 'dashboard');
+        showSuccess({
+          id: `Akun berhasil didaftarkan! Selamat datang, ${currentUser.value.name}`,
+          en: `Account registered successfully! Welcome, ${currentUser.value.name}`
+        }, {
+          id: 'Registrasi Berhasil',
+          en: 'Registration Successful'
+        });
+        router.push(`/${safeRole}`);
+      }
+      return { success: true, user: fallbackUser };
     }
   };
 

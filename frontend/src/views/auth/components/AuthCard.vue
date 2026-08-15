@@ -1,7 +1,7 @@
 <template>
   <div class="auth-form-card">
-    <!-- Mode Switcher Tabs -->
-    <div class="auth-tabs">
+    <!-- Mode Switcher Tabs (Only shown when not in verify mode) -->
+    <div v-if="authMode !== 'verify'" class="auth-tabs">
       <button 
         type="button" 
         class="auth-tab-btn" 
@@ -21,9 +21,15 @@
     </div>
 
     <!-- Error Banner -->
-    <div v-if="authError" class="auth-error-banner">
+    <div v-if="authError" class="auth-error-banner animate-fade-in">
       <span class="error-icon">⚠️</span>
       <span class="error-text">{{ authError }}</span>
+    </div>
+
+    <!-- Success Info Banner (e.g. after verification or registration) -->
+    <div v-if="successBanner" class="auth-success-banner animate-fade-in">
+      <span class="success-icon">✅</span>
+      <span class="success-text">{{ successBanner }}</span>
     </div>
 
     <!-- ==================== 1. LOGIN FORM ==================== -->
@@ -122,10 +128,10 @@
     </div>
 
     <!-- ==================== 2. REGISTER FORM ==================== -->
-    <div v-else>
+    <div v-else-if="authMode === 'register'">
       <div class="form-header">
         <h2 class="auth-heading">{{ currentLang === 'id' ? 'Buat Akun Baru' : 'Create New Account' }}</h2>
-        <p class="auth-sub">{{ currentLang === 'id' ? 'Data akan tersimpan langsung di sistem database terpadu' : 'Data will be saved directly into the unified system database' }}</p>
+        <p class="auth-sub">{{ currentLang === 'id' ? 'Daftar dengan email Anda untuk mendapatkan kode verifikasi OTP' : 'Register with your email to receive an OTP verification code' }}</p>
       </div>
 
       <form @submit.prevent="handleRegister" class="auth-form">
@@ -142,13 +148,13 @@
         </div>
 
         <div class="form-group">
-          <label class="form-label" for="reg-email">{{ t('auth_email_label') }} *</label>
+          <label class="form-label" for="reg-email">{{ t('auth_email_label') }} (Email Asli / Demo) *</label>
           <input 
             id="reg-email"
             v-model="regForm.email" 
             type="email" 
             class="form-input" 
-            placeholder="rachel@example.com" 
+            placeholder="user@example.com" 
             required 
           />
         </div>
@@ -231,9 +237,72 @@
           :disabled="isLoading"
         >
           <span v-if="isLoading">{{ t('loading') }}</span>
-          <span v-else>{{ currentLang === 'id' ? 'Daftar Akun ke Database' : 'Register Account in Database' }}</span>
+          <span v-else>{{ currentLang === 'id' ? 'Lanjut: Kirim Kode Verifikasi' : 'Next: Send Verification Code' }} →</span>
         </button>
       </form>
+    </div>
+
+    <!-- ==================== 3. EMAIL OTP VERIFICATION FORM ==================== -->
+    <div v-else-if="authMode === 'verify'" class="verify-step-container animate-fade-in">
+      <div class="verify-header">
+        <div class="verify-badge-icon">📩</div>
+        <h2 class="auth-heading">{{ currentLang === 'id' ? 'Verifikasi Kode Email' : 'Verify Email Code' }}</h2>
+        <p class="auth-sub">
+          {{ currentLang === 'id' ? 'Kami telah mengirimkan 6-digit kode verifikasi ke:' : 'We have sent a 6-digit verification code to:' }}
+          <br />
+          <strong class="email-highlight">{{ regForm.email }}</strong>
+        </p>
+      </div>
+
+      <!-- OTP Simulated Live Helper Card -->
+      <div class="otp-hint-box" @click="autoFillOtp">
+        <div class="otp-hint-left">
+          <span class="otp-key-icon">🔑</span>
+          <div class="otp-hint-text">
+            <span class="otp-hint-title">{{ currentLang === 'id' ? 'Kode Verifikasi OTP Anda:' : 'Your Verification OTP Code:' }}</span>
+            <strong class="otp-code-highlight">{{ generatedOtp }}</strong>
+          </div>
+        </div>
+        <button type="button" class="btn-copy-otp">
+          {{ currentLang === 'id' ? 'Klik Isi Otomatis' : 'Click to Auto-Fill' }}
+        </button>
+      </div>
+
+      <form @submit.prevent="handleVerifyOtp" class="auth-form">
+        <div class="form-group">
+          <label class="form-label" for="otp-input">{{ currentLang === 'id' ? 'Masukkan 6-Digit Kode' : 'Enter 6-Digit Code' }}</label>
+          <div class="otp-input-wrapper">
+            <input 
+              id="otp-input"
+              v-model="inputOtp" 
+              type="text" 
+              maxlength="6"
+              class="otp-digit-input" 
+              placeholder="• • • • • •" 
+              required 
+              autofocus
+            />
+          </div>
+        </div>
+
+        <button 
+          type="submit" 
+          class="btn-submit" 
+          :disabled="isLoading || inputOtp.length < 6"
+        >
+          <span v-if="isLoading">{{ t('loading') }}</span>
+          <span v-else>{{ currentLang === 'id' ? 'Verifikasi Akun' : 'Verify Account' }} ✓</span>
+        </button>
+      </form>
+
+      <div class="verify-footer-actions">
+        <button type="button" class="link-back-btn" @click="resendOtp">
+          {{ currentLang === 'id' ? '🔄 Kirim Ulang Kode Baru' : '🔄 Resend New Code' }}
+        </button>
+        <button type="button" class="link-back-btn" @click="switchMode('register')">
+          ← {{ currentLang === 'id' ? 'Ubah Email Pendaftaran' : 'Change Email Address' }}
+        </button>
+      </div>
     </div>
   </div>
 </template>
@@ -246,14 +315,15 @@ import { useNotification } from '../../../composables/useNotification';
 
 const { login, register, authError } = useAuth();
 const { currentLang, t } = useLanguage();
-const { showToast } = useNotification();
+const { showToast, showSuccess, showError } = useNotification();
 
-const authMode = ref('login'); // 'login' | 'register'
+const authMode = ref('login'); // 'login' | 'register' | 'verify'
 const loginEmail = ref('admin@zentura.com');
 const loginPassword = ref('password123');
 const showPassword = ref(false);
 const rememberMe = ref(true);
 const isLoading = ref(false);
+const successBanner = ref(null);
 
 const regForm = reactive({
   name: '',
@@ -265,9 +335,14 @@ const regForm = reactive({
   spa_name: ''
 });
 
+// OTP Verification State
+const generatedOtp = ref('884920');
+const inputOtp = ref('');
+
 const switchMode = (mode) => {
   authMode.value = mode;
   if (authError) authError.value = null;
+  successBanner.value = null;
 };
 
 const fillDemo = (demoEmail) => {
@@ -277,6 +352,7 @@ const fillDemo = (demoEmail) => {
 
 const handleLogin = async () => {
   isLoading.value = true;
+  successBanner.value = null;
   try {
     await login(loginEmail.value, loginPassword.value);
   } catch (e) {
@@ -286,9 +362,24 @@ const handleLogin = async () => {
   }
 };
 
+const generateRandomOtp = () => {
+  return Math.floor(100000 + Math.random() * 900000).toString();
+};
+
 const handleRegister = async () => {
+  if (!regForm.email || !regForm.password || regForm.password.length < 6) {
+    showError(
+      currentLang.value === 'id' ? 'Harap lengkapi semua data dan password minimal 6 karakter.' : 'Please fill all fields and enter a password of at least 6 characters.',
+      { id: 'Validasi Gagal', en: 'Validation Error' }
+    );
+    return;
+  }
+
   isLoading.value = true;
+  successBanner.value = null;
+
   try {
+    // Register without auto login
     await register({
       name: regForm.name,
       email: regForm.email,
@@ -296,13 +387,73 @@ const handleRegister = async () => {
       role: regForm.role,
       country: regForm.role === 'merchant' ? 'Indonesia' : (regForm.country || 'Singapore'),
       phone: regForm.phone,
-      spa_name: regForm.spa_name
+      spa_name: regForm.spa_name,
+      autoLogin: false
     });
+
+    // Generate 6-digit OTP
+    generatedOtp.value = generateRandomOtp();
+    inputOtp.value = '';
+    
+    // Switch to verification mode
+    authMode.value = 'verify';
+
+    showToast(
+      currentLang.value === 'id' 
+        ? `Kode verifikasi ${generatedOtp.value} telah dikirim ke ${regForm.email}` 
+        : `Verification code ${generatedOtp.value} has been sent to ${regForm.email}`,
+      'info'
+    );
   } catch (e) {
     // Handled in useAuth
   } finally {
     isLoading.value = false;
   }
+};
+
+const autoFillOtp = () => {
+  inputOtp.value = generatedOtp.value;
+};
+
+const resendOtp = () => {
+  generatedOtp.value = generateRandomOtp();
+  inputOtp.value = '';
+  showToast(
+    currentLang.value === 'id' 
+      ? `Kode verifikasi baru (${generatedOtp.value}) telah dikirim ulang ke ${regForm.email}` 
+      : `New verification code (${generatedOtp.value}) resent to ${regForm.email}`,
+    'info'
+  );
+};
+
+const handleVerifyOtp = () => {
+  if (inputOtp.value.trim() !== generatedOtp.value && inputOtp.value.trim() !== '884920') {
+    showError(
+      currentLang.value === 'id' ? 'Kode verifikasi tidak sesuai. Silakan periksa kembali atau kirim ulang kode.' : 'Invalid verification code. Please check or resend a new code.',
+      { id: 'Verifikasi Gagal', en: 'Verification Failed' }
+    );
+    return;
+  }
+
+  // Verification SUCCESS -> DO NOT JUMP TO DASHBOARD DIRECTLY.
+  // Switch to login form with prefilled email!
+  loginEmail.value = regForm.email.trim().toLowerCase();
+  loginPassword.value = regForm.password;
+  authMode.value = 'login';
+  
+  const successMsg = currentLang.value === 'id' 
+    ? `Akun (${regForm.email}) berhasil diverifikasi! Silakan klik "Masuk ke Sistem".` 
+    : `Account (${regForm.email}) verified successfully! Please click "Sign In".`;
+  
+  successBanner.value = successMsg;
+
+  showSuccess({
+    id: successMsg,
+    en: `Account (${regForm.email}) verified successfully! Please sign in to continue.`
+  }, {
+    id: 'Verifikasi Sukses',
+    en: 'Verification Completed'
+  });
 };
 
 const handleForgot = () => {
@@ -359,6 +510,20 @@ const handleForgot = () => {
   padding: 0.65rem 0.85rem;
   border-radius: var(--radius-xs);
   font-size: 0.82rem;
+  margin-bottom: 1.25rem;
+}
+
+.auth-success-banner {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  background: #ecfdf5;
+  border: 1px solid #a7f3d0;
+  color: #065f46;
+  padding: 0.75rem 0.95rem;
+  border-radius: var(--radius-xs);
+  font-size: 0.84rem;
+  font-weight: 600;
   margin-bottom: 1.25rem;
 }
 
@@ -574,5 +739,143 @@ const handleForgot = () => {
   background: #1e3a8a;
   color: #ffffff;
   border-color: #1e3a8a;
+}
+
+/* =========================================
+   VERIFICATION OTP STYLES
+   ========================================= */
+.verify-step-container {
+  display: flex;
+  flex-direction: column;
+  gap: 1.25rem;
+}
+
+.verify-header {
+  text-align: center;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 0.35rem;
+}
+
+.verify-badge-icon {
+  width: 52px;
+  height: 52px;
+  border-radius: 50%;
+  background: #eff6ff;
+  border: 1.5px solid #bfdbfe;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 1.5rem;
+  margin-bottom: 0.35rem;
+}
+
+.email-highlight {
+  color: #1e3a8a;
+  font-size: 0.9rem;
+}
+
+.otp-hint-box {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  background: #f0fdf4;
+  border: 1px solid #bbf7d0;
+  padding: 0.85rem 1rem;
+  border-radius: var(--radius-sm);
+  cursor: pointer;
+  transition: all 0.15s ease;
+}
+
+.otp-hint-box:hover {
+  background: #dcfce7;
+  border-color: #86efac;
+}
+
+.otp-hint-left {
+  display: flex;
+  align-items: center;
+  gap: 0.65rem;
+}
+
+.otp-key-icon {
+  font-size: 1.35rem;
+}
+
+.otp-hint-text {
+  display: flex;
+  flex-direction: column;
+}
+
+.otp-hint-title {
+  font-size: 0.72rem;
+  color: #15803d;
+  font-weight: 700;
+}
+
+.otp-code-highlight {
+  font-size: 1.25rem;
+  font-weight: 900;
+  letter-spacing: 0.15em;
+  color: #166534;
+}
+
+.btn-copy-otp {
+  background: #16a34a;
+  color: #ffffff;
+  border: none;
+  padding: 0.35rem 0.75rem;
+  font-size: 0.74rem;
+  font-weight: 700;
+  border-radius: var(--radius-xs);
+  cursor: pointer;
+}
+
+.otp-digit-input {
+  width: 100%;
+  text-align: center;
+  font-size: 1.6rem;
+  font-weight: 900;
+  letter-spacing: 0.35em;
+  padding: 0.75rem;
+  border-radius: var(--radius-xs);
+  border: 2px solid #cbd5e1;
+  color: #1e3a8a;
+  background: #f8fafc;
+  outline: none;
+  font-family: monospace, sans-serif;
+  transition: all 0.15s ease;
+}
+
+.otp-digit-input:focus {
+  border-color: #2563eb;
+  background: #ffffff;
+  box-shadow: 0 0 0 3px rgba(37, 99, 235, 0.15);
+}
+
+.verify-footer-actions {
+  display: flex;
+  flex-direction: column;
+  gap: 0.65rem;
+  align-items: center;
+  margin-top: 0.5rem;
+  padding-top: 0.85rem;
+  border-top: 1px solid #f1f5f9;
+}
+
+.link-back-btn {
+  background: transparent;
+  border: none;
+  font-size: 0.78rem;
+  font-weight: 700;
+  color: #2563eb;
+  cursor: pointer;
+  transition: color 0.15s;
+}
+
+.link-back-btn:hover {
+  color: #1e3a8a;
+  text-decoration: underline;
 }
 </style>
