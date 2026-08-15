@@ -32,6 +32,7 @@
 
       <!-- Trending & Viral Batam Destinations Carousel -->
       <TrendingCarousel 
+        :t="t"
         @open-ferry="showFerryModal = true"
         @open-ai="showAiModal = true"
         @open-booking="openBookingModal(null)"
