@@ -41,95 +41,252 @@ const SPAS = [
     phone: '+6281270088990',
     address: 'Komplek Harbour Bay Mall Ruko No. 8-9, Batu Ampar, Batam',
     imageUrl: 'https://images.unsplash.com/photo-1540555700478-4be289fbecef?auto=format&fit=crop&w=900&q=80',
-    categories: ['massage', 'spa', 'reflexology'],
-    pricingMinSgd: 24,
-    pricingMinIdr: 280000,
+    gallery: [
+      'https://images.unsplash.com/photo-1540555700478-4be289fbecef?auto=format&fit=crop&w=900&q=80',
+      'https://images.unsplash.com/photo-1600334089648-b0d9d3028eb2?auto=format&fit=crop&w=900&q=80',
+      'https://images.unsplash.com/photo-1544161515-4ab6ce6db874?auto=format&fit=crop&w=900&q=80'
+    ],
+    categories: ['massage', 'reflexology', 'spa'],
+    openNow: true,
+    operatingHours: '09:00 - 22:00 (WIB)',
+    therapists: [
+      { name: 'Ibu Ratna', experience: '12 yrs exp', specialty: 'Balinese Pressure & Acupressure', rating: 4.9 },
+      { name: 'Mas Budi', experience: '8 yrs exp', specialty: 'Reflexology & Sciatica Release', rating: 4.8 },
+      { name: 'Mbak Dewi', experience: '6 yrs exp', specialty: 'Aroma Therapy & Head Spa', rating: 4.9 }
+    ],
     flashSlots: [
       {
         id: 'slot-101',
-        serviceName: 'Balinese Herbal Oil Deep Relief (45m)',
-        therapistName: 'Ibu Ratna Dewi (Master Practitioner)',
-        therapistRating: 4.95,
-        therapistAvatar: 'https://images.unsplash.com/photo-1573496359142-b8d87734a5a2?auto=format&fit=crop&w=200&q=80',
-        chair: 'Suite VIP 02',
-        time: '14:30 - 15:15 WIB',
-        durationMinutes: 45,
-        originalPriceSgd: 40,
-        originalPriceIdr: 450000,
-        priceSgd: 24,
-        priceIdr: 280000,
-        discountPercent: 38,
+        time: '14:15 - 15:15',
+        durationMinutes: 60,
+        therapistName: 'Ibu Ratna',
+        discountPercent: 20,
+        chair: 'Private VIP Room 1',
+        serviceName: 'Balinese Herbal Oil Deep Tissue',
+        priceIdr: 200000,
+        originalPriceIdr: 250000,
         isFlashActive: true,
-        reason: 'Ferry Schedule Gap (Next Singapore Departure 16:30)'
+        expiresInMinutes: 12
       },
       {
         id: 'slot-102',
-        serviceName: 'Quick Revive Foot Reflexology (30m)',
-        therapistName: 'Pak Hendra (Reflexology Lead)',
-        therapistRating: 4.88,
-        therapistAvatar: 'https://images.unsplash.com/photo-1560250097-0b93528c311a?auto=format&fit=crop&w=200&q=80',
-        chair: 'Recliner Chair #04',
-        time: '15:00 - 15:30 WIB',
-        durationMinutes: 30,
-        originalPriceSgd: 25,
-        originalPriceIdr: 280000,
-        priceSgd: 16,
-        priceIdr: 185000,
-        discountPercent: 34,
+        time: '15:30 - 16:15',
+        durationMinutes: 45,
+        therapistName: 'Mas Budi',
+        discountPercent: 25,
+        chair: 'Reflexology Recliner 3',
+        serviceName: 'Express Travel Foot & Calf Revival',
+        priceIdr: 135000,
+        originalPriceIdr: 180000,
         isFlashActive: true,
-        reason: 'Client finished early, 30 min open slot'
+        expiresInMinutes: 28
       }
     ],
     services: [
-      { id: 'srv-1', name: 'Balinese Deep Bodywork', durationMinutes: 60, priceSgd: 32, priceIdr: 375000, description: 'Traditional thumb and palm pressure technique targeting deep muscle fatigue.' },
-      { id: 'srv-2', name: 'Herbal Warm Compress Ritual', durationMinutes: 90, priceSgd: 48, priceIdr: 560000, description: 'Steamed lemongrass, ginger & turmeric compresses applied along energy meridians.' },
-      { id: 'srv-3', name: 'Maritime Express Foot Reflex', durationMinutes: 45, priceSgd: 22, priceIdr: 255000, description: 'Acupressure foot reflexology ideal for day-trippers waiting for afternoon ferries.' }
-    ],
-    therapists: [
-      { id: 'th-1', name: 'Ibu Ratna Dewi', role: 'Senior Master Therapist', experienceYears: 12, rating: 4.95, completedSessions: 1420, specialties: ['Deep Tissue', 'Jamu Herbal Compress', 'Pregnancy Safe'] },
-      { id: 'th-2', name: 'Pak Hendra', role: 'Reflexology Specialist', experienceYears: 8, rating: 4.88, completedSessions: 980, specialties: ['Acupressure Foot Reflex', 'Neck & Shoulder Knots'] }
+      {
+        id: 'srv-101',
+        name: 'Balinese Herbal Oil Deep Tissue',
+        durationMinutes: 60,
+        priceIdr: 250000,
+        category: 'massage',
+        popular: true,
+        desc: 'Traditional Indonesian palm kneading, skin rolling, and warm infused ginger-clove oil targeting tight lower back and shoulder knots.'
+      },
+      {
+        id: 'srv-102',
+        name: 'Express Travel Foot & Calf Revival',
+        durationMinutes: 45,
+        priceIdr: 180000,
+        category: 'reflexology',
+        popular: true,
+        desc: 'Specialized foot pressure-point relief designed to restore circulation after maritime ferry transit and duty-free shopping.'
+      },
+      {
+        id: 'srv-103',
+        name: 'Royal Javanese Lulur & Body Polish',
+        durationMinutes: 90,
+        priceIdr: 380000,
+        category: 'spa',
+        popular: false,
+        desc: 'Full body botanical scrub with turmeric, rice powder, jasmine essence followed by yoghurt skin hydration.'
+      }
     ]
   },
   {
     id: 'salon-2',
-    name: 'Eska Wellness Spa Harbour Bay',
-    tagline: 'Modern Oceanfront Hydrotherapy & Aromatherapy',
+    name: 'Eska Wellness & Reflexology Harbour Bay',
+    tagline: 'Modern Hydrotherapy & Rapid Pre-Ferry Decompression',
     region: 'batam',
-    landmark: '5 mins from Harbour Bay Terminal',
-    distanceMinutes: 5,
-    rating: 4.8,
-    reviewCount: 195,
+    landmark: 'Directly linked to Harbour Bay Ferry Terminal Walkway',
+    distanceMinutes: 2,
+    rating: 4.85,
+    reviewCount: 312,
     hygieneScore: 98,
-    hygieneBadges: ['Hospital Grade Sanitization', 'Single-Use Linens', 'Certified Specialists'],
+    hygieneBadges: [
+      'Medical Grade Sanitization',
+      'Disposable Slippers & Underwear',
+      'BNSP Licensed Senior Practitioners',
+      'Allergy Free Natural Carrier Oils'
+    ],
     phone: '+6281364551122',
-    address: 'Harbour Bay Downtown Block R-12, Batam',
+    address: 'Bayfront Promenade Block C-12, Harbour Bay, Batam',
     imageUrl: 'https://images.unsplash.com/photo-1544161515-4ab6ce6db874?auto=format&fit=crop&w=900&q=80',
-    categories: ['massage', 'spa', 'headspa'],
-    pricingMinSgd: 28,
-    pricingMinIdr: 320000,
+    gallery: [
+      'https://images.unsplash.com/photo-1544161515-4ab6ce6db874?auto=format&fit=crop&w=900&q=80',
+      'https://images.unsplash.com/photo-1519823551278-64ac92734fb1?auto=format&fit=crop&w=900&q=80'
+    ],
+    categories: ['massage', 'reflexology', 'headspa'],
+    openNow: true,
+    operatingHours: '09:00 - 22:30 (WIB)',
+    therapists: [
+      { name: 'Kak Sarah', experience: '9 yrs exp', specialty: 'Upper Trapezius & Migraine Relief', rating: 4.9 },
+      { name: 'Pak Agus', experience: '14 yrs exp', specialty: 'Deep Shiatsu & Spinal Alignment', rating: 4.8 }
+    ],
     flashSlots: [
       {
         id: 'slot-201',
-        serviceName: 'Aromatherapy Back Relief (45m)',
-        therapistName: 'Siti Rahma',
-        therapistRating: 4.9,
-        chair: 'Room 3',
-        time: '14:45 - 15:30 WIB',
-        durationMinutes: 45,
-        originalPriceSgd: 42,
-        originalPriceIdr: 480000,
-        priceSgd: 28,
-        priceIdr: 320000,
-        discountPercent: 33,
+        time: '14:30 - 15:00',
+        durationMinutes: 30,
+        therapistName: 'Kak Sarah',
+        discountPercent: 15,
+        chair: 'Chair 4 (Fast Track)',
+        serviceName: 'Express 30-Min Head, Neck & Shoulder Blitz',
+        priceIdr: 120000,
+        originalPriceIdr: 140000,
         isFlashActive: true,
-        reason: 'Midday vacancy window'
+        expiresInMinutes: 8
       }
     ],
     services: [
-      { id: 'srv-4', name: 'Hydrotherapy & Ocean Body Scrub', durationMinutes: 75, priceSgd: 45, priceIdr: 520000, description: 'Sea salt mineral exfoliation followed by gentle essential oil massage.' }
+      {
+        id: 'srv-201',
+        name: 'Express 30-Min Head, Neck & Shoulder Blitz',
+        durationMinutes: 30,
+        priceIdr: 140000,
+        category: 'massage',
+        popular: true,
+        desc: 'Quick targeted relief for passengers with less than 45 minutes before ferry boarding calls.'
+      },
+      {
+        id: 'srv-202',
+        name: 'Japanese Scalp Waterfall & Herbal Head Spa',
+        durationMinutes: 60,
+        priceIdr: 320000,
+        category: 'headspa',
+        popular: true,
+        desc: 'Warm water circulator ring, volcanic clay scalp detox, and therapeutic temple acupressure.'
+      }
+    ]
+  },
+  {
+    id: 'salon-3',
+    name: 'Nagoya Hill Reflexology & Aromatherapy Sanctuary',
+    tagline: 'Premium Thai Acupressure & Reflexology Center',
+    region: 'batam_centre',
+    landmark: '5 mins from Batam Centre Ferry Terminal',
+    distanceMinutes: 5,
+    rating: 4.78,
+    reviewCount: 194,
+    hygieneScore: 96,
+    hygieneBadges: [
+      'Fresh Laundered Sheets Every Guest',
+      'UV Sterilized Hot Towel Cabinets',
+      'Non-Greasy Aromatherapy Formulas'
     ],
+    phone: '+6281233445566',
+    address: 'Nagoya City Walk Complex Blok A No. 1-3, Batam',
+    imageUrl: 'https://images.unsplash.com/photo-1519823551278-64ac92734fb1?auto=format&fit=crop&w=900&q=80',
+    gallery: [
+      'https://images.unsplash.com/photo-1519823551278-64ac92734fb1?auto=format&fit=crop&w=900&q=80'
+    ],
+    categories: ['reflexology', 'massage'],
+    openNow: true,
+    operatingHours: '10:00 - 22:00 (WIB)',
     therapists: [
-      { id: 'th-3', name: 'Siti Rahma', role: 'Aromatherapy Specialist', experienceYears: 7, rating: 4.9, completedSessions: 810, specialties: ['Head Spa', 'Aroma Bodywork'] }
+      { name: 'Ibu Maya', experience: '7 yrs exp', specialty: 'Reflexology & Lymphatic Drainage', rating: 4.8 },
+      { name: 'Mas Dian', experience: '10 yrs exp', specialty: 'Deep Tissue Shiatsu', rating: 4.7 }
+    ],
+    flashSlots: [
+      {
+        id: 'slot-301',
+        time: '15:00 - 15:45',
+        durationMinutes: 45,
+        therapistName: 'Ibu Maya',
+        discountPercent: 18,
+        chair: 'Recliner Suite 2',
+        serviceName: 'Acupressure Foot & Arm Restoration',
+        priceIdr: 145000,
+        originalPriceIdr: 175000,
+        isFlashActive: true,
+        expiresInMinutes: 20
+      }
+    ],
+    services: [
+      {
+        id: 'srv-301',
+        name: 'Acupressure Foot & Arm Restoration',
+        durationMinutes: 45,
+        priceIdr: 175000,
+        category: 'reflexology',
+        popular: true,
+        desc: 'Concentrated pressure points targeting feet, calves, palms, and forearms with warming ginger balm.'
+      }
+    ]
+  },
+  {
+    id: 'salon-4',
+    name: 'Nongsa Pura Coastal Botanical Spa',
+    tagline: 'Seaside Pavilion Relaxation by the Marina',
+    region: 'batam_nongsa',
+    landmark: '2 mins walk from Nongsa Pura Ferry Terminal',
+    distanceMinutes: 2,
+    rating: 4.95,
+    reviewCount: 180,
+    hygieneScore: 99,
+    hygieneBadges: [
+      'Private Oceanfront Suites',
+      'Single-Use Organic Bed Linens',
+      'Hospital Grade Autoclave Tools',
+      'Hypoallergenic Virgin Coconut Oils'
+    ],
+    phone: '+6281198765432',
+    address: 'Nongsa Marina Promenade, Nongsa, Batam',
+    imageUrl: 'https://images.unsplash.com/photo-1600334089648-b0d9d3028eb2?auto=format&fit=crop&w=900&q=80',
+    gallery: [
+      'https://images.unsplash.com/photo-1600334089648-b0d9d3028eb2?auto=format&fit=crop&w=900&q=80'
+    ],
+    categories: ['massage', 'spa', 'reflexology'],
+    openNow: true,
+    operatingHours: '09:00 - 21:00 (WIB)',
+    therapists: [
+      { name: 'Ibu Wayan', experience: '15 yrs exp', specialty: 'Coastal Warm Stone Deep Therapy', rating: 5.0 },
+      { name: 'Mbak Cindy', experience: '8 yrs exp', specialty: 'Organic Herbal Jamu Compress', rating: 4.9 }
+    ],
+    flashSlots: [
+      {
+        id: 'slot-401',
+        time: '16:00 - 17:00',
+        durationMinutes: 60,
+        therapistName: 'Ibu Wayan',
+        discountPercent: 20,
+        chair: 'Oceanfront Pavilion 1',
+        serviceName: 'Nongsa Ocean Breeze Herbal Massage',
+        priceIdr: 280000,
+        originalPriceIdr: 350000,
+        isFlashActive: true,
+        expiresInMinutes: 15
+      }
+    ],
+    services: [
+      {
+        id: 'srv-401',
+        name: 'Nongsa Ocean Breeze Herbal Massage',
+        durationMinutes: 60,
+        priceIdr: 350000,
+        category: 'massage',
+        popular: true,
+        desc: 'Deep thumb pressure along meridian lines combined with palm kneading and organic virgin coconut massage oil overlooking the Singapore strait.'
+      }
     ]
   }
 ];
