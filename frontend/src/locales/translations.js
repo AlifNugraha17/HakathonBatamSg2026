@@ -2,10 +2,10 @@ export const translations = {
   id: {
     // Navbar
     nav_subtitle: 'Portal Wisata Medis & Travel Lintas Batas',
-    nav_medical: 'Medis & Spa',
-    nav_tourism: 'Wisata & Kafe',
-    nav_resorts: 'Golf & Resort',
-    nav_pricecheck: 'Price Check & OCR',
+    nav_medical: 'Medis',
+    nav_tourism: 'Wisata',
+    nav_resorts: 'Resort',
+    nav_pricecheck: 'Price Check',
     nav_ferry: 'Jadwal Feri',
     nav_ai: 'AI Itinerary',
     nav_cta: 'Janji Layanan',
@@ -126,11 +126,11 @@ export const translations = {
   en: {
     // Navbar
     nav_subtitle: 'Cross-Border Medical & Travel Hub',
-    nav_medical: 'Medical & Spa',
-    nav_tourism: 'Tourism & Cafes',
-    nav_resorts: 'Golf & Resort',
-    nav_pricecheck: 'Price Check & OCR',
-    nav_ferry: 'Ferry Schedule',
+    nav_medical: 'Medical',
+    nav_tourism: 'Tourism',
+    nav_resorts: 'Resorts',
+    nav_pricecheck: 'Price Check',
+    nav_ferry: 'Ferries',
     nav_ai: 'AI Itinerary',
     nav_cta: 'Book Service',
     rate_label: 'Live Exchange:',

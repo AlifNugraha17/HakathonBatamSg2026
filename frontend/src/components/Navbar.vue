@@ -37,7 +37,7 @@
       <div class="flex items-center justify-between h-16 sm:h-18">
         
         <!-- Left Group: Brand Logo & Nav Links with Ample Spacing -->
-        <div class="flex items-center gap-4 sm:gap-6 lg:gap-8">
+        <div class="flex items-center gap-4 sm:gap-6 lg:gap-7">
           
           <!-- Brand Logo (Single Line, Crisp) -->
           <div 
@@ -57,53 +57,53 @@
             </div>
           </div>
 
-          <!-- Navigation Links (Left-Aligned next to Logo, Single Icon) -->
+          <!-- Navigation Links (Left-Aligned next to Logo, Single Icon, Compact) -->
           <nav class="hidden lg:flex items-center space-x-1 sm:space-x-1.5 whitespace-nowrap">
             
-            <!-- Medis & Spa -->
+            <!-- Medis -->
             <a 
               @click.prevent="$emit('nav', 'medical')" 
               href="#" 
-              class="px-3 py-1.5 rounded-xl text-xs transition-all flex items-center gap-1.5 cursor-pointer"
+              class="px-2.5 sm:px-3 py-1.5 rounded-xl text-xs transition-all flex items-center gap-1.5 cursor-pointer"
               :class="activeNav === 'medical' 
                 ? 'bg-sky-100 text-sky-950 font-black shadow-sm border-2 border-sky-400' 
                 : 'text-slate-800 hover:text-slate-950 hover:bg-slate-100 font-bold border-2 border-transparent'"
             >
               <span>🩺</span>
-              <span>{{ t?.nav_medical || 'Medis & Spa' }}</span>
+              <span>{{ t?.nav_medical || 'Medis' }}</span>
             </a>
 
-            <!-- Golf & Resort -->
+            <!-- Resort -->
             <a 
               @click.prevent="$emit('nav', 'resorts')" 
               href="#" 
-              class="px-3 py-1.5 rounded-xl text-xs transition-all flex items-center gap-1.5 cursor-pointer"
+              class="px-2.5 sm:px-3 py-1.5 rounded-xl text-xs transition-all flex items-center gap-1.5 cursor-pointer"
               :class="activeNav === 'resorts' 
                 ? 'bg-emerald-100 text-emerald-950 font-black shadow-sm border-2 border-emerald-400' 
                 : 'text-slate-800 hover:text-slate-950 hover:bg-slate-100 font-bold border-2 border-transparent'"
             >
               <span>⛳</span>
-              <span>{{ t?.nav_resorts || 'Golf & Resort' }}</span>
+              <span>{{ t?.nav_resorts || 'Resort' }}</span>
             </a>
 
-            <!-- Price Check & OCR -->
+            <!-- Price Check -->
             <a 
               @click.prevent="$emit('open-price-check', 'CALCULATOR')" 
               href="#" 
-              class="px-3 py-1.5 rounded-xl text-xs transition-all flex items-center gap-1.5 cursor-pointer"
+              class="px-2.5 sm:px-3 py-1.5 rounded-xl text-xs transition-all flex items-center gap-1.5 cursor-pointer"
               :class="activeNav === 'price-check' 
                 ? 'bg-sky-100 text-sky-950 font-black shadow-sm border-2 border-sky-400' 
                 : 'text-slate-800 hover:text-slate-950 hover:bg-slate-100 font-bold border-2 border-transparent'"
             >
               <span>💰</span>
-              <span>{{ t?.nav_pricecheck || 'Price Check & OCR' }}</span>
+              <span>{{ t?.nav_pricecheck || 'Price Check' }}</span>
             </a>
 
             <!-- Jadwal Feri -->
             <a 
               @click.prevent="$emit('open-ferry')" 
               href="#" 
-              class="px-3 py-1.5 rounded-xl text-xs transition-all flex items-center gap-1.5 cursor-pointer"
+              class="px-2.5 sm:px-3 py-1.5 rounded-xl text-xs transition-all flex items-center gap-1.5 cursor-pointer"
               :class="activeNav === 'ferry' 
                 ? 'bg-amber-100 text-amber-950 font-black shadow-sm border-2 border-amber-400' 
                 : 'text-slate-800 hover:text-amber-950 hover:bg-amber-50 font-bold border-2 border-transparent'"
@@ -116,7 +116,7 @@
             <a 
               @click.prevent="$emit('open-ai')" 
               href="#" 
-              class="px-3 py-1.5 rounded-xl text-xs transition-all flex items-center gap-1.5 cursor-pointer"
+              class="px-2.5 sm:px-3 py-1.5 rounded-xl text-xs transition-all flex items-center gap-1.5 cursor-pointer"
               :class="activeNav === 'ai' 
                 ? 'bg-purple-100 text-purple-950 font-black shadow-sm border-2 border-purple-400' 
                 : 'text-slate-800 hover:text-purple-950 hover:bg-purple-50 font-bold border-2 border-transparent'"
@@ -129,7 +129,7 @@
         </div>
 
         <!-- Right Side: Language Switcher & Compact CTA Button -->
-        <div class="flex items-center space-x-2.5 shrink-0 whitespace-nowrap">
+        <div class="flex items-center space-x-2 sm:space-x-3 shrink-0 whitespace-nowrap">
           
           <!-- Language Toggle Pill (ID / EN) -->
           <div class="flex items-center bg-slate-100 p-0.5 rounded-xl border-2 border-slate-200 shadow-xs">
