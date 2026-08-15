@@ -10,7 +10,7 @@
         </div>
       </div>
 
-      <!-- Center: Standard SaaS Navigation Links (Home, About, Solutions, Simulator, Impact) -->
+      <!-- Center: Navigation Links -->
       <nav class="nav-links-center">
         <button 
           class="nav-tab" 
@@ -19,37 +19,13 @@
         >
           <span>{{ t('nav_home') }}</span>
         </button>
-
-        <button 
-          class="nav-tab" 
-          @click="handleNavClick('about')"
-        >
-          <span>{{ t('nav_about') }}</span>
-        </button>
-
-        <button 
-          class="nav-tab" 
-          @click="handleNavClick('solutions')"
-        >
-          <span>{{ t('nav_solutions') }}</span>
-        </button>
-
-        <button 
-          class="nav-tab" 
-          @click="handleNavClick('simulator')"
-        >
-          <span>{{ t('nav_simulator') }}</span>
-        </button>
-
-        <button 
-          class="nav-tab" 
-          @click="handleNavClick('impact')"
-        >
-          <span>{{ t('nav_impact') }}</span>
-        </button>
+        <button class="nav-tab" @click="handleNavClick('about')"><span>{{ t('nav_about') }}</span></button>
+        <button class="nav-tab" @click="handleNavClick('solutions')"><span>{{ t('nav_solutions') }}</span></button>
+        <button class="nav-tab" @click="handleNavClick('simulator')"><span>{{ t('nav_simulator') }}</span></button>
+        <button class="nav-tab" @click="handleNavClick('impact')"><span>{{ t('nav_impact') }}</span></button>
       </nav>
 
-      <!-- Right: Language Switcher & Sign In Button -->
+      <!-- Right: Language Switcher & Auth Controls -->
       <div class="user-status-section">
         <!-- Bilingual Language Switcher -->
         <div class="lang-switcher-box">
@@ -107,14 +83,7 @@ import { ref } from 'vue';
 import { useAuth } from '../../composables/useAuth';
 import { useLanguage } from '../../composables/useLanguage';
 
-const { 
-  currentView, 
-  currentRole, 
-  isAuthenticated, 
-  logout, 
-  navigateTo 
-} = useAuth();
-
+const { currentView, currentRole, isAuthenticated, logout, navigateTo } = useAuth();
 const { currentLang, setLanguage, t } = useLanguage();
 const activeSection = ref('home');
 
@@ -145,18 +114,20 @@ const handleNavClick = (section) => {
 .top-role-header {
   background: linear-gradient(135deg, #0f172a 0%, #1e3a8a 60%, #1d4ed8 100%);
   border-radius: var(--radius-md);
-  padding: 0.75rem 1.5rem;
+  padding: 0.75rem 1.25rem;
   box-shadow: 0 4px 20px -3px rgba(30, 58, 138, 0.25);
   margin-bottom: 1.25rem;
   border: 1px solid rgba(255, 255, 255, 0.12);
   width: 100%;
+  box-sizing: border-box;
 }
 
 .top-nav-container {
   display: flex;
   align-items: center;
   justify-content: space-between;
-  gap: 1.5rem;
+  gap: 1rem;
+  flex-wrap: wrap;
 }
 
 .brand-section {
@@ -165,6 +136,7 @@ const handleNavClick = (section) => {
   gap: 0.75rem;
   cursor: pointer;
   user-select: none;
+  flex-shrink: 0;
 }
 
 .brand-logo-mark {
@@ -205,19 +177,21 @@ const handleNavClick = (section) => {
 .nav-links-center {
   display: flex;
   align-items: center;
-  gap: 0.5rem;
+  gap: 0.35rem;
+  flex-wrap: wrap;
 }
 
 .nav-tab {
   background: transparent;
   border: none;
   color: #cbd5e1;
-  font-size: 0.85rem;
+  font-size: 0.82rem;
   font-weight: 600;
-  padding: 0.45rem 0.95rem;
+  padding: 0.4rem 0.8rem;
   border-radius: var(--radius-xs);
   cursor: pointer;
   transition: all 0.15s ease;
+  white-space: nowrap;
 }
 
 .nav-tab:hover {
@@ -234,27 +208,29 @@ const handleNavClick = (section) => {
 .user-status-section {
   display: flex;
   align-items: center;
-  gap: 0.85rem;
+  gap: 0.6rem;
+  flex-wrap: wrap;
 }
 
 .lang-switcher-box {
   display: flex;
   align-items: center;
-  gap: 0.25rem;
+  gap: 0.2rem;
   background: rgba(255, 255, 255, 0.12);
   border: 1px solid rgba(255, 255, 255, 0.22);
-  padding: 0.2rem 0.5rem;
+  padding: 0.18rem 0.45rem;
   border-radius: var(--radius-full);
+  flex-shrink: 0;
 }
 
 .lang-pill {
   background: transparent;
   border: none;
   color: #cbd5e1;
-  font-size: 0.74rem;
+  font-size: 0.72rem;
   font-weight: 700;
   cursor: pointer;
-  padding: 0.15rem 0.4rem;
+  padding: 0.12rem 0.35rem;
   border-radius: 99px;
   transition: all 0.15s ease;
 }
@@ -270,21 +246,22 @@ const handleNavClick = (section) => {
 }
 
 .lang-divider {
-  font-size: 0.68rem;
+  font-size: 0.65rem;
   color: rgba(255, 255, 255, 0.4);
 }
 
 .btn-signin-nav {
   background: #ffffff;
   color: #1e3a8a;
-  font-size: 0.85rem;
+  font-size: 0.82rem;
   font-weight: 800;
-  padding: 0.5rem 1.25rem;
+  padding: 0.45rem 1.1rem;
   border-radius: var(--radius-xs);
   border: none;
   cursor: pointer;
   box-shadow: 0 2px 8px rgba(0, 0, 0, 0.15);
   transition: all 0.15s ease;
+  white-space: nowrap;
 }
 
 .btn-signin-nav:hover {
@@ -295,16 +272,17 @@ const handleNavClick = (section) => {
 .btn-dashboard-link {
   display: flex;
   align-items: center;
-  gap: 0.45rem;
+  gap: 0.4rem;
   background: rgba(56, 189, 248, 0.15);
   border: 1px solid rgba(56, 189, 248, 0.4);
   color: #38bdf8;
-  font-size: 0.8rem;
+  font-size: 0.78rem;
   font-weight: 700;
-  padding: 0.4rem 0.85rem;
+  padding: 0.38rem 0.75rem;
   border-radius: var(--radius-xs);
   cursor: pointer;
   transition: all 0.15s ease;
+  white-space: nowrap;
 }
 
 .btn-dashboard-link:hover {
@@ -323,12 +301,13 @@ const handleNavClick = (section) => {
   background: rgba(239, 68, 68, 0.2);
   border: 1px solid rgba(239, 68, 68, 0.4);
   color: #fca5a5;
-  font-size: 0.78rem;
+  font-size: 0.76rem;
   font-weight: 600;
-  padding: 0.4rem 0.8rem;
+  padding: 0.38rem 0.75rem;
   border-radius: var(--radius-xs);
   cursor: pointer;
   transition: all 0.15s ease;
+  white-space: nowrap;
 }
 
 .btn-logout:hover {
@@ -336,9 +315,23 @@ const handleNavClick = (section) => {
   color: #ffffff;
 }
 
-@media (max-width: 840px) {
+@media (max-width: 768px) {
+  .top-nav-container {
+    justify-content: space-between;
+    gap: 0.75rem;
+  }
   .nav-links-center {
-    display: none;
+    order: 3;
+    width: 100%;
+    justify-content: center;
+    border-top: 1px solid rgba(255, 255, 255, 0.08);
+    padding-top: 0.5rem;
+    gap: 0.25rem;
+  }
+  .nav-tab {
+    font-size: 0.76rem;
+    padding: 0.3rem 0.55rem;
   }
 }
 </style>
+

@@ -24,12 +24,12 @@
       >
         <!-- Image & Badges Banner -->
         <div class="salon-image-wrap">
-          <img :src="salon.imageUrl" :alt="salon.name" class="salon-image" loading="lazy" />
+          <img :src="salon.imageUrl || salon.image_url || 'https://images.unsplash.com/photo-1540555700478-4be289fbecef?auto=format&fit=crop&w=900&q=80'" :alt="salon.name" class="salon-image" loading="lazy" />
 
           <!-- Top Overlay Badges -->
           <div class="overlay-top">
             <span class="badge-hygiene">
-              Hygiene {{ salon.hygieneScore }}%
+              Hygiene {{ salon.hygieneScore || salon.hygiene_score || 99 }}%
             </span>
             <button
               class="save-btn"
@@ -43,7 +43,7 @@
           <!-- Bottom Overlay Tags -->
           <div class="overlay-bottom">
             <span class="distance-pill">
-              {{ salon.distanceMinutes }}m from Ferry
+              {{ salon.distanceMinutes || salon.distance_minutes || 5 }}m from Ferry
             </span>
             <span v-if="getActiveFlashCount(salon) > 0" class="flash-avail-pill">
               {{ getActiveFlashCount(salon) }} Flash Slots
@@ -57,7 +57,7 @@
             <div class="title-row">
               <h4 class="salon-name">{{ salon.name }}</h4>
               <span class="rating-badge">
-                ★ {{ salon.rating }} ({{ salon.reviewCount }})
+                ★ {{ salon.rating }} ({{ salon.reviewCount || salon.review_count || 0 }})
               </span>
             </div>
             <p class="salon-tagline">{{ salon.tagline }}</p>
@@ -67,7 +67,7 @@
           <!-- Hygiene Trust Features Preview -->
           <div class="hygiene-chips">
             <span
-              v-for="(badge, idx) in salon.hygieneBadges.slice(0, 2)"
+              v-for="(badge, idx) in (salon.hygieneBadges || salon.hygiene_badges || []).slice(0, 2)"
               :key="idx"
               class="hygiene-chip"
             >
@@ -111,12 +111,12 @@ const openSalonDetail = (salon) => {
 
 const getActiveFlashCount = (salon) => {
   if (!salon.flashSlots) return 0;
-  return salon.flashSlots.filter(s => s.isFlashActive).length;
+  return salon.flashSlots.filter(s => s.isFlashActive || s.is_flash_active).length;
 };
 
 const getMinPrice = (salon) => {
-  if (!salon.services || salon.services.length === 0) return 'SGD 0';
-  const min = Math.min(...salon.services.map(s => s.priceIdr));
+  if (!salon.services || salon.services.length === 0) return 'IDR 150,000';
+  const min = Math.min(...salon.services.map(s => Number(s.priceIdr || s.price_idr || 150000)));
   return formatPrice(min);
 };
 </script>

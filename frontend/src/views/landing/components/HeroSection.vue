@@ -33,6 +33,20 @@
       </button>
     </div>
 
+    <!-- Hero Showcase Image Banner (Singapore ⇄ Batam Maritime Corridor) -->
+    <div class="hero-image-wrapper">
+      <img 
+        src="/images/hero_maritime_wellness.jpg" 
+        alt="Zentura Singapore - Batam Cross-Border Maritime Wellness Sanctuary" 
+        class="hero-banner-img"
+        loading="eager"
+      />
+      <div class="hero-image-overlay-badge">
+        <span class="live-beacon"></span>
+        <span class="beacon-text">Singapore ⇄ Batam Maritime Corridor • 65,000+ Weekly Transit Travelers</span>
+      </div>
+    </div>
+
     <!-- Luxury Trust Highlights with i18n -->
     <div class="hero-trust-bar">
       <div class="trust-item">
@@ -205,6 +219,72 @@ const { t } = useLanguage();
 .btn-outline-luxury:hover {
   background: #f8fafc;
   color: #0f172a;
+}
+
+/* Hero Showcase Image Banner */
+.hero-image-wrapper {
+  position: relative;
+  width: 100%;
+  max-width: 1100px;
+  margin: 2.25rem auto 2rem;
+  border-radius: var(--radius-md);
+  overflow: hidden;
+  box-shadow: 0 20px 35px -10px rgba(15, 23, 42, 0.15), 0 0 0 1px rgba(226, 232, 240, 0.8);
+}
+
+.hero-banner-img {
+  width: 100%;
+  height: 440px;
+  object-fit: cover;
+  display: block;
+  transition: transform 0.4s ease;
+}
+
+.hero-image-wrapper:hover .hero-banner-img {
+  transform: scale(1.015);
+}
+
+.hero-image-overlay-badge {
+  position: absolute;
+  bottom: 1.25rem;
+  left: 1.25rem;
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+  background: rgba(15, 23, 42, 0.75);
+  backdrop-filter: blur(12px);
+  padding: 0.5rem 1rem;
+  border-radius: 9999px;
+  border: 1px solid rgba(255, 255, 255, 0.2);
+  color: #ffffff;
+  font-size: 0.82rem;
+  font-weight: 600;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
+}
+
+.live-beacon {
+  width: 8px;
+  height: 8px;
+  background: #10b981;
+  border-radius: 50%;
+  box-shadow: 0 0 8px #10b981;
+  animation: pulse 2s infinite;
+}
+
+.beacon-text {
+  letter-spacing: 0.02em;
+}
+
+@media (max-width: 768px) {
+  .hero-banner-img {
+    height: 240px;
+  }
+  .hero-image-overlay-badge {
+    bottom: 0.75rem;
+    left: 0.75rem;
+    font-size: 0.72rem;
+    padding: 0.35rem 0.75rem;
+  }
 }
 
 .hero-trust-bar {

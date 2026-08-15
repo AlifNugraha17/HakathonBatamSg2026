@@ -229,13 +229,15 @@ const toggleTag = (tagId) => {
   runTranslation();
 };
 
-const runTranslation = () => {
-  const res = translateAndFormatRequest({
+const runTranslation = async () => {
+  const res = await translateAndFormatRequest({
     textEn: freeTextEn.value,
     selectedTagIds: selectedTags.value,
     serviceName: bookingContext.value.serviceName
   });
-  aiResult.value = res;
+  if (res) {
+    aiResult.value = res;
+  }
 };
 
 const closeModal = () => {

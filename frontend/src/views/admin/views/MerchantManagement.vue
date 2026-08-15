@@ -1,122 +1,85 @@
 <template>
   <div class="merchant-mgmt-view animate-fade-in">
-    <!-- Header Controls & Filter in English -->
-    <div class="mgmt-header-row">
-      <div class="filter-tabs">
-        <button 
-          class="tab-btn" 
-          :class="{ active: filterStatus === 'all' }"
-          @click="filterStatus = 'all'"
-        >
-          All Partners ({{ merchants.length }})
-        </button>
-        <button 
-          class="tab-btn" 
-          :class="{ active: filterStatus === 'pending' }"
-          @click="filterStatus = 'pending'"
-        >
-          Pending KYC ({{ pendingCount }})
-        </button>
-        <button 
-          class="tab-btn" 
-          :class="{ active: filterStatus === 'active' }"
-          @click="filterStatus = 'active'"
-        >
-          Verified Active
-        </button>
-        <button 
-          class="tab-btn" 
-          :class="{ active: filterStatus === 'suspended' }"
-          @click="filterStatus = 'suspended'"
-        >
-          Suspended
-        </button>
-      </div>
+    <ZenDataTable
+      :columns="columns"
+      :rows="filteredMerchants"
+      search-placeholder="Search partner name, region..."
+      empty-text="No spa partners found for this filter."
+    >
+      <template #toolbar>
+        <div class="filter-tabs">
+          <button class="tab-btn" :class="{ active: filterStatus === 'all' }" @click="filterStatus = 'all'">
+            All ({{ merchants.length }})
+          </button>
+          <button class="tab-btn" :class="{ active: filterStatus === 'pending' }" @click="filterStatus = 'pending'">
+            Pending KYC ({{ pendingCount }})
+          </button>
+          <button class="tab-btn" :class="{ active: filterStatus === 'active' }" @click="filterStatus = 'active'">
+            Verified
+          </button>
+          <button class="tab-btn" :class="{ active: filterStatus === 'suspended' }" @click="filterStatus = 'suspended'">
+            Suspended
+          </button>
+        </div>
+        <button class="btn-add-partner" @click="showAddModal = true">+ Register Partner</button>
+      </template>
 
-      <button class="btn-add-merchant" @click="showAddModal = true">
-        + Register New Partner
-      </button>
-    </div>
+      <template #cell-spa="{ row }">
+        <div class="cell-stack">
+          <span class="cell-name">{{ row.name || 'Spa Partner' }}</span>
+          <span class="cell-sub">{{ row.ownerName || row.owner_name || 'Owner' }}</span>
+        </div>
+      </template>
 
-    <!-- Merchants Table -->
-    <div class="table-container">
-      <table class="custom-table">
-        <thead>
-          <tr>
-            <th>SPA NAME & OWNER</th>
-            <th>CORRIDOR / CITY</th>
-            <th>HYGIENE SCORE</th>
-            <th>TAKE RATE</th>
-            <th>KYC STATUS</th>
-            <th>TOTAL GMV</th>
-            <th>ADMIN ACTIONS</th>
-          </tr>
-        </thead>
-        <tbody>
-          <tr v-for="m in filteredMerchants" :key="m.id" class="table-row">
-            <td>
-              <div class="merchant-info">
-                <span class="m-name">{{ m.name }}</span>
-                <span class="m-owner">{{ m.ownerName }} • {{ m.phone }}</span>
-              </div>
-            </td>
-            <td>
-              <div class="location-cell">
-                <span class="region-pill">{{ m.region.toUpperCase() }}</span>
-                <span class="city-text">{{ m.city }}</span>
-              </div>
-            </td>
-            <td>
-              <span class="hygiene-text">{{ m.hygieneScore }}/100</span>
-            </td>
-            <td>
-              <span class="commission-text">{{ m.commissionRate }}%</span>
-            </td>
-            <td>
-              <span class="status-pill" :class="m.status">
-                {{ m.status === 'active' ? 'VERIFIED' : (m.status === 'pending' ? 'PENDING KYC' : 'SUSPENDED') }}
-              </span>
-            </td>
-            <td>
-              <div class="revenue-cell">
-                <span class="rev-val">IDR {{ (m.revenueIdr / 1000000).toFixed(1) }}M</span>
-                <span class="rev-sub">{{ m.totalBookings }} bookings</span>
-              </div>
-            </td>
-            <td>
-              <div class="actions-cell">
-                <button 
-                  v-if="m.status === 'pending'"
-                  class="btn-action approve"
-                  @click="approveMerchant(m.id)"
-                >
-                  Approve KYC
-                </button>
-                <button 
-                  v-else
-                  class="btn-action suspend"
-                  :class="{ 'reactivate': m.status === 'suspended' }"
-                  @click="suspendMerchant(m.id)"
-                >
-                  {{ m.status === 'suspended' ? 'Reactivate' : 'Suspend' }}
-                </button>
-              </div>
-            </td>
-          </tr>
-        </tbody>
-      </table>
+      <template #cell-region="{ row }">
+        <div class="cell-stack">
+          <span class="badge-region">{{ String(row.region || 'batam').toUpperCase() }}</span>
+          <span class="cell-sub">{{ row.city || 'Batam' }}</span>
+        </div>
+      </template>
 
-      <div v-if="filteredMerchants.length === 0" class="empty-state">
-        <span>No spa partners found with this filter status.</span>
-      </div>
-    </div>
+      <template #cell-hygiene="{ row }">
+        <span class="cell-score">{{ row.hygieneScore || row.hygiene_score || 98 }}/100</span>
+      </template>
 
-    <!-- Modal for Adding Demo Merchant -->
-    <div v-if="showAddModal" class="modal-backdrop">
-      <div class="modal-content">
-        <h3 class="modal-title">Register New Spa Partner</h3>
+      <template #cell-commission="{ row }">
+        <span class="cell-commission">{{ row.commissionRate || row.commission_rate || 12 }}%</span>
+      </template>
+
+      <template #cell-kyc="{ row }">
+        <span class="badge-kyc" :class="row.status || 'active'">
+          {{ (row.status || 'active') === 'active' ? 'VERIFIED' : (row.status === 'pending' ? 'PENDING KYC' : 'SUSPENDED') }}
+        </span>
+      </template>
+
+      <template #cell-gmv="{ row }">
+        <div class="cell-stack" style="text-align: right">
+          <span class="cell-amount">IDR {{ ((row.revenueIdr || row.revenue_idr || 0) / 1000000).toFixed(1) }}M</span>
+          <span class="cell-sub">{{ row.totalBookings || row.total_bookings || 0 }} bookings</span>
+        </div>
+      </template>
+
+      <template #cell-actions="{ row }">
+        <div class="actions-cell">
+          <button v-if="row.status === 'pending'" class="btn-action approve" @click.stop="approveMerchant(row.id)">
+            Approve KYC
+          </button>
+          <button v-else class="btn-action" :class="row.status === 'suspended' ? 'reactivate' : 'suspend'"
+            @click.stop="suspendMerchant(row.id)">
+            {{ row.status === 'suspended' ? 'Reactivate' : 'Suspend' }}
+          </button>
+        </div>
+      </template>
+    </ZenDataTable>
+
+    <!-- Add Partner Modal -->
+    <div v-if="showAddModal" class="modal-backdrop" @click.self="showAddModal = false">
+      <div class="modal-box">
+        <div class="modal-header">
+          <h3 class="modal-title">Register New Spa Partner</h3>
+          <button class="modal-close" @click="showAddModal = false">x</button>
+        </div>
         <p class="modal-sub">Add partner details, operating region, and hygiene audit score.</p>
-
         <div class="modal-form">
           <div class="form-group">
             <label>Spa / Center Name</label>
@@ -141,7 +104,6 @@
             <input v-model="newSpa.commission" type="number" class="input-styled" placeholder="12" />
           </div>
         </div>
-
         <div class="modal-actions">
           <button class="btn-cancel" @click="showAddModal = false">Cancel</button>
           <button class="btn-save" @click="handleCreateMerchant">Save Partner</button>
@@ -155,357 +117,138 @@
 import { ref, computed } from 'vue';
 import { useAdminStore } from '../../../composables/useAdminStore';
 import { useNotification } from '../../../composables/useNotification';
+import ZenDataTable from '../../../components/shared/ZenDataTable.vue';
 
 const { merchants, approveMerchant, suspendMerchant } = useAdminStore();
 const { showToast } = useNotification();
 
 const filterStatus = ref('all');
 const showAddModal = ref(false);
+const newSpa = ref({ name: '', owner: '', region: 'batam', commission: 12 });
 
-const newSpa = ref({
-  name: '',
-  owner: '',
-  region: 'batam',
-  commission: 12
-});
+const columns = [
+  { key: 'spa', label: 'Spa Name & Owner', sortable: false },
+  { key: 'region', label: 'Corridor / City', sortable: true },
+  { key: 'hygiene', label: 'Hygiene Score', sortable: false, align: 'center' },
+  { key: 'commission', label: 'Take Rate', sortable: false, align: 'center' },
+  { key: 'kyc', label: 'KYC Status', sortable: true },
+  { key: 'gmv', label: 'Total GMV', sortable: false, align: 'right' },
+  { key: 'actions', label: 'Admin Actions', sortable: false, align: 'center' },
+];
 
-const pendingCount = computed(() => {
-  return merchants.value.filter(m => m.status === 'pending').length;
-});
-
-const filteredMerchants = computed(() => {
-  if (filterStatus.value === 'all') return merchants.value;
-  return merchants.value.filter(m => m.status === filterStatus.value);
-});
+const pendingCount = computed(() => merchants.value.filter(m => m.status === 'pending').length);
+const filteredMerchants = computed(() =>
+  filterStatus.value === 'all' ? merchants.value : merchants.value.filter(m => m.status === filterStatus.value)
+);
 
 const handleCreateMerchant = () => {
   if (!newSpa.value.name) return;
   merchants.value.unshift({
-    id: `merch-${Date.now()}`,
-    name: newSpa.value.name,
-    ownerName: newSpa.value.owner || 'New Partner',
-    region: newSpa.value.region,
-    city: newSpa.value.region === 'batam' ? 'Harbour Bay, Batam' : (newSpa.value.region === 'batam_centre' ? 'Batam Centre' : 'Nongsa, Batam'),
-    email: 'contact@' + newSpa.value.name.toLowerCase().replace(/\s+/g, '') + '.id',
-    phone: '+62 812-9900-1122',
-    joinedDate: '2026-08-15',
-    status: 'pending',
-    hygieneScore: 95,
-    commissionRate: Number(newSpa.value.commission) || 12,
-    totalBookings: 0,
-    revenueIdr: 0,
-    kycDocumentsVerified: false,
-    rating: 4.8
+    id: `merch-${Date.now()}`, name: newSpa.value.name,
+    ownerName: newSpa.value.owner || 'New Partner', region: newSpa.value.region,
+    city: newSpa.value.region === 'batam' ? 'Harbour Bay, Batam' : newSpa.value.region === 'batam_centre' ? 'Batam Centre' : 'Nongsa, Batam',
+    status: 'pending', hygieneScore: 95, commissionRate: Number(newSpa.value.commission) || 12,
+    totalBookings: 0, revenueIdr: 0, kycDocumentsVerified: false, rating: 4.8,
   });
-  showToast(`Partner "${newSpa.value.name}" added successfully!`, 'success');
+  showToast(`Partner "${newSpa.value.name}" added!`, 'success');
   showAddModal.value = false;
   newSpa.value = { name: '', owner: '', region: 'batam', commission: 12 };
 };
 </script>
 
 <style scoped>
-.merchant-mgmt-view {
-  display: flex;
-  flex-direction: column;
-  gap: 1rem;
-}
+.merchant-mgmt-view { display: flex; flex-direction: column; }
 
-.mgmt-header-row {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  padding: 0.85rem 1.25rem;
-  border-radius: var(--radius-lg);
-  background: #ffffff;
-  border: 1px solid #e2e8f0;
-  box-shadow: 0 4px 20px -2px rgba(30, 58, 138, 0.06);
-  flex-wrap: wrap;
-  gap: 0.75rem;
-}
-
-.filter-tabs {
-  display: flex;
-  gap: 0.4rem;
-  flex-wrap: wrap;
-}
-
+.filter-tabs { display: flex; gap: 0.35rem; flex-wrap: wrap; }
 .tab-btn {
-  padding: 0.4rem 0.85rem;
-  border-radius: var(--radius-xs);
+  padding: 0.35rem 0.85rem; border-radius: 6px;
   border: 1px solid #e2e8f0;
-  background: #f8fafc;
-  color: #475569;
-  font-size: 0.78rem;
-  font-weight: 600;
-  cursor: pointer;
-  transition: all 0.15s;
+  background: #f8fafc; color: #475569;
+  font-size: 0.75rem; font-weight: 600; cursor: pointer; transition: all 0.15s;
 }
+.tab-btn:hover { background: #f1f5f9; color: #1e3a8a; }
+.tab-btn.active { background: #eff6ff; border-color: #bfdbfe; color: #1d4ed8; font-weight: 700; }
 
-.tab-btn:hover {
-  background: #ffffff;
-  color: #1e3a8a;
-  border-color: #93c5fd;
+.btn-add-partner {
+  padding: 0.4rem 1rem; border-radius: 8px;
+  background: linear-gradient(135deg, #1e3a8a, #1d4ed8);
+  border: none; color: #fff; font-size: 0.78rem; font-weight: 700;
+  cursor: pointer; white-space: nowrap; transition: opacity 0.15s;
 }
+.btn-add-partner:hover { opacity: 0.9; }
 
-.tab-btn.active {
-  background: #1e3a8a;
-  color: #ffffff;
-  font-weight: 700;
-  border-color: #1e3a8a;
-}
+.cell-stack { display: flex; flex-direction: column; gap: 0.1rem; }
+.cell-name { font-weight: 700; color: #0f172a; font-size: 0.83rem; }
+.cell-sub { font-size: 0.72rem; color: #64748b; }
+.cell-score { font-weight: 800; color: #047857; }
+.cell-commission { font-weight: 700; color: #1e3a8a; }
+.cell-amount { font-weight: 800; color: #0f172a; font-size: 0.83rem; }
 
-.btn-add-merchant {
-  background: linear-gradient(135deg, #1e3a8a 0%, #1d4ed8 100%);
-  color: #ffffff;
-  border: none;
-  font-size: 0.8rem;
-  font-weight: 700;
-  padding: 0.45rem 1rem;
-  border-radius: var(--radius-xs);
-  cursor: pointer;
-  box-shadow: 0 2px 6px rgba(29, 78, 216, 0.2);
-}
-
-.btn-add-merchant:hover {
-  background: #0f172a;
-}
-
-.table-container {
-  padding: 0.5rem;
-  border-radius: var(--radius-lg);
-  background: #ffffff;
-  border: 1px solid #e2e8f0;
-  box-shadow: 0 4px 20px -2px rgba(30, 58, 138, 0.06);
-  overflow-x: auto;
-}
-
-.custom-table {
-  width: 100%;
-  border-collapse: collapse;
-  text-align: left;
-}
-
-.custom-table th {
-  font-size: 0.72rem;
-  font-weight: 800;
-  color: #1e3a8a;
-  letter-spacing: 0.04em;
-  padding: 0.85rem 1rem;
-  border-bottom: 1px solid #e2e8f0;
-  white-space: nowrap;
-}
-
-.custom-table td {
-  padding: 0.85rem 1rem;
-  border-bottom: 1px solid #f1f5f9;
-  font-size: 0.82rem;
-  vertical-align: middle;
-}
-
-.table-row:hover {
-  background: #f8fafc;
-}
-
-.merchant-info {
-  display: flex;
-  flex-direction: column;
-}
-
-.m-name {
-  font-weight: 700;
-  color: #0f172a;
-}
-
-.m-owner {
-  font-size: 0.72rem;
-  color: #64748b;
-}
-
-.region-pill {
-  font-size: 0.65rem;
-  font-weight: 700;
-  padding: 0.12rem 0.45rem;
-  border-radius: 4px;
-  background: #eff6ff;
-  color: #1d4ed8;
+.badge-region {
+  display: inline-block; font-size: 0.62rem; font-weight: 700; padding: 0.1rem 0.4rem;
+  border-radius: 4px; background: #eff6ff; color: #1d4ed8;
   border: 1px solid #bfdbfe;
-  display: inline-block;
 }
-
-.city-text {
-  display: block;
-  font-size: 0.72rem;
-  color: #64748b;
+.badge-kyc {
+  font-size: 0.65rem; font-weight: 700; padding: 0.15rem 0.5rem; border-radius: 4px;
 }
+.badge-kyc.active { background: #ecfdf5; color: #047857; border: 1px solid #a7f3d0; }
+.badge-kyc.pending { background: #fffbeb; color: #b45309; border: 1px solid #fde68a; }
+.badge-kyc.suspended { background: #fef2f2; color: #b91c1c; border: 1px solid #fecaca; }
 
-.hygiene-text {
-  font-weight: 700;
-  color: #047857;
-}
-
-.commission-text {
-  font-weight: 700;
-  color: #0f172a;
-}
-
-.status-pill {
-  font-size: 0.68rem;
-  font-weight: 700;
-  padding: 0.15rem 0.5rem;
-  border-radius: 4px;
-}
-
-.status-pill.active { background: #ecfdf5; color: #047857; border: 1px solid #a7f3d0; }
-.status-pill.pending { background: #fefce8; color: #854d0e; border: 1px solid #fef08a; }
-.status-pill.suspended { background: #fef2f2; color: #991b1b; border: 1px solid #fecaca; }
-
-.revenue-cell {
-  display: flex;
-  flex-direction: column;
-}
-
-.rev-val {
-  font-weight: 700;
-  color: #0f172a;
-}
-
-.rev-sub {
-  font-size: 0.7rem;
-  color: #64748b;
-}
-
-.actions-cell {
-  display: flex;
-  gap: 0.4rem;
-}
-
+.actions-cell { display: flex; justify-content: center; }
 .btn-action {
-  padding: 0.35rem 0.75rem;
-  border-radius: var(--radius-xs);
-  font-size: 0.74rem;
-  font-weight: 700;
-  border: 1px solid transparent;
-  cursor: pointer;
+  padding: 0.3rem 0.75rem; border-radius: 6px; font-size: 0.73rem; font-weight: 700;
+  border: 1px solid transparent; cursor: pointer; transition: all 0.15s;
 }
-
-.btn-action.approve {
-  background: #1e3a8a;
-  color: #ffffff;
-}
-
-.btn-action.approve:hover {
-  background: #1d4ed8;
-}
-
-.btn-action.suspend {
-  background: #ffffff;
-  color: #991b1b;
-  border-color: #fecaca;
-}
-
-.btn-action.suspend:hover {
-  background: #fef2f2;
-}
-
-.btn-action.suspend.reactivate {
-  background: #ffffff;
-  color: #047857;
-  border-color: #a7f3d0;
-}
-
-.empty-state {
-  text-align: center;
-  padding: 2.5rem;
-  color: #64748b;
-  font-size: 0.85rem;
-}
+.btn-action.approve { background: #ecfdf5; color: #047857; border: 1px solid #a7f3d0; }
+.btn-action.approve:hover { background: #d1fae5; }
+.btn-action.suspend { background: #fef2f2; color: #b91c1c; border: 1px solid #fecaca; }
+.btn-action.suspend:hover { background: #fee2e2; }
+.btn-action.reactivate { background: #eff6ff; color: #1d4ed8; border: 1px solid #bfdbfe; }
+.btn-action.reactivate:hover { background: #dbeafe; }
 
 /* Modal */
 .modal-backdrop {
-  position: fixed;
-  inset: 0;
-  background: rgba(15, 23, 42, 0.5);
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  z-index: 10000;
+  position: fixed; inset: 0; background: rgba(15,23,42,0.6);
+  display: flex; align-items: center; justify-content: center;
+  z-index: 999; padding: 1rem;
 }
-
-.modal-content {
-  width: 90%;
-  max-width: 440px;
-  padding: 2rem;
-  border-radius: var(--radius-lg);
-  background: #ffffff;
-  border: 1px solid #e2e8f0;
-  box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.1);
+.modal-box {
+  background: #ffffff; border: 1px solid #e2e8f0;
+  border-radius: 16px; padding: 1.75rem; width: 100%; max-width: 520px;
+  box-shadow: 0 25px 50px -12px rgba(0,0,0,0.25);
 }
-
-.modal-title {
-  font-size: 1.2rem;
-  font-weight: 800;
-  color: #0f172a;
-  margin-bottom: 0.25rem;
-}
-
-.modal-sub {
-  font-size: 0.8rem;
-  color: #64748b;
-  margin-bottom: 1.25rem;
-}
-
-.modal-form {
-  display: flex;
-  flex-direction: column;
-  gap: 0.85rem;
-}
-
-.form-row {
-  display: grid;
-  grid-template-columns: 1fr 1fr;
-  gap: 0.75rem;
-}
-
+.modal-header { display: flex; align-items: center; justify-content: space-between; margin-bottom: 0.25rem; }
+.modal-title { font-size: 1.1rem; font-weight: 800; color: #0f172a; margin: 0; }
+.modal-close { background: none; border: none; color: #64748b; font-size: 1.2rem; cursor: pointer; }
+.modal-sub { font-size: 0.8rem; color: #64748b; margin: 0 0 1.25rem; }
+.modal-form { display: flex; flex-direction: column; gap: 0.85rem; }
+.form-row { display: grid; grid-template-columns: 1fr 1fr; gap: 0.75rem; }
+.form-group { display: flex; flex-direction: column; gap: 0.35rem; }
+.form-group label { font-size: 0.75rem; font-weight: 700; color: #334155; }
 .input-styled {
-  width: 100%;
-  padding: 0.6rem 0.85rem;
-  background: #ffffff;
-  border: 1px solid #cbd5e1;
-  border-radius: var(--radius-xs);
-  color: #0f172a;
-  font-size: 0.84rem;
-  outline: none;
-}
-
-.input-styled:focus {
-  border-color: #2563eb;
-}
-
-.modal-actions {
-  display: flex;
-  justify-content: flex-end;
-  gap: 0.5rem;
-  margin-top: 1.5rem;
-}
-
-.btn-cancel {
-  background: transparent;
+  padding: 0.55rem 0.85rem;
+  background: #f8fafc;
   border: 1px solid #e2e8f0;
-  color: #475569;
-  padding: 0.5rem 1rem;
-  border-radius: var(--radius-xs);
-  font-size: 0.82rem;
-  cursor: pointer;
+  border-radius: 8px; color: #0f172a;
+  font-size: 0.82rem; outline: none;
+}
+.input-styled:focus { border-color: #1d4ed8; background: #ffffff; }
+.modal-actions { display: flex; gap: 0.75rem; justify-content: flex-end; margin-top: 1rem; }
+.btn-cancel {
+  padding: 0.5rem 1.25rem; border-radius: 8px;
+  background: #f8fafc; border: 1px solid #e2e8f0;
+  color: #475569; font-size: 0.82rem; font-weight: 600; cursor: pointer;
+}
+.btn-save {
+  padding: 0.5rem 1.25rem; border-radius: 8px;
+  background: linear-gradient(135deg, #1e3a8a, #1d4ed8);
+  border: none; color: #fff; font-size: 0.82rem; font-weight: 700; cursor: pointer;
 }
 
-.btn-save {
-  background: #1e3a8a;
-  color: #ffffff;
-  border: none;
-  padding: 0.5rem 1.25rem;
-  border-radius: var(--radius-xs);
-  font-size: 0.82rem;
-  font-weight: 700;
-  cursor: pointer;
+@media (max-width: 480px) {
+  .form-row { grid-template-columns: 1fr; }
 }
 </style>
+

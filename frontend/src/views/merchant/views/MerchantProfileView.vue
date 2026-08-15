@@ -102,7 +102,7 @@
 </template>
 
 <script setup>
-import { reactive } from 'vue';
+import { reactive, watchEffect } from 'vue';
 import { useZenturaStore } from '../../../composables/useZenturaStore';
 import { useNotification } from '../../../composables/useNotification';
 
@@ -110,22 +110,37 @@ const { merchantSalon } = useZenturaStore();
 const { showToast } = useNotification();
 
 const form = reactive({
-  name: merchantSalon.value.name,
-  tagline: merchantSalon.value.tagline,
-  phone: merchantSalon.value.phone,
-  distanceMinutes: merchantSalon.value.distanceMinutes,
-  address: merchantSalon.value.address,
-  landmark: merchantSalon.value.landmark,
-  openHours: merchantSalon.value.openHours || '10:00 - 22:00 WIB'
+  name: merchantSalon.value?.name || 'Martha Heritage Herbal Spa Grand Batam',
+  tagline: merchantSalon.value?.tagline || 'Premier Cross-Border Authentic Wellness Center',
+  phone: merchantSalon.value?.phone || '+62 812-7788-9900',
+  distanceMinutes: merchantSalon.value?.distanceMinutes || merchantSalon.value?.distance_minutes || 5,
+  address: merchantSalon.value?.address || 'Komplek Harbour Bay Blok B No. 12-14, Batu Ampar, Batam',
+  landmark: merchantSalon.value?.landmark || 'Harbour Bay Ferry Terminal Gate 2 (2 Mins Walk)',
+  openHours: merchantSalon.value?.openHours || '10:00 - 22:00 WIB'
+});
+
+watchEffect(() => {
+  if (merchantSalon.value) {
+    if (merchantSalon.value.name) form.name = merchantSalon.value.name;
+    if (merchantSalon.value.tagline) form.tagline = merchantSalon.value.tagline;
+    if (merchantSalon.value.phone) form.phone = merchantSalon.value.phone;
+    if (merchantSalon.value.distanceMinutes || merchantSalon.value.distance_minutes) {
+      form.distanceMinutes = merchantSalon.value.distanceMinutes || merchantSalon.value.distance_minutes;
+    }
+    if (merchantSalon.value.address) form.address = merchantSalon.value.address;
+    if (merchantSalon.value.landmark) form.landmark = merchantSalon.value.landmark;
+  }
 });
 
 const handleSaveProfile = () => {
-  merchantSalon.value.name = form.name;
-  merchantSalon.value.tagline = form.tagline;
-  merchantSalon.value.phone = form.phone;
-  merchantSalon.value.distanceMinutes = form.distanceMinutes;
-  merchantSalon.value.address = form.address;
-  merchantSalon.value.landmark = form.landmark;
+  if (merchantSalon.value) {
+    merchantSalon.value.name = form.name;
+    merchantSalon.value.tagline = form.tagline;
+    merchantSalon.value.phone = form.phone;
+    merchantSalon.value.distanceMinutes = form.distanceMinutes;
+    merchantSalon.value.address = form.address;
+    merchantSalon.value.landmark = form.landmark;
+  }
   showToast('Spa profile saved successfully!', 'success');
 };
 </script>

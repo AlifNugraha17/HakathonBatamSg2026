@@ -13,31 +13,50 @@
         </p>
       </div>
 
-      <!-- Region Switcher: Batam Ferry Zones -->
-      <div class="region-selector-box">
-        <span class="box-label">Select Batam Ferry Terminal Zone:</span>
-        <div class="region-chips">
-          <button 
-            class="region-chip" 
-            :class="{ active: currentRegion === 'batam' }"
-            @click="currentRegion = 'batam'"
-          >
-            <span>Harbour Bay</span>
-          </button>
-          <button 
-            class="region-chip" 
-            :class="{ active: currentRegion === 'batam_centre' }"
-            @click="currentRegion = 'batam_centre'"
-          >
-            <span>Batam Centre</span>
-          </button>
-          <button 
-            class="region-chip" 
-            :class="{ active: currentRegion === 'batam_nongsa' }"
-            @click="currentRegion = 'batam_nongsa'"
-          >
-            <span>Nongsa Pura</span>
-          </button>
+      <!-- Region & Live FX Currency Switcher -->
+      <div class="header-controls-group">
+        <!-- Live FX Currency Switcher -->
+        <div class="currency-selector-box">
+          <span class="box-label">Currency (Live FX Rates):</span>
+          <div class="currency-chips">
+            <button
+              v-for="curr in availableCurrencies"
+              :key="curr"
+              class="curr-chip"
+              :class="{ active: currentCurrency === curr }"
+              @click="setCurrency(curr)"
+            >
+              {{ curr }}
+            </button>
+          </div>
+        </div>
+
+        <!-- Region Switcher: Batam Ferry Zones -->
+        <div class="region-selector-box">
+          <span class="box-label">Ferry Terminal Zone:</span>
+          <div class="region-chips">
+            <button 
+              class="region-chip" 
+              :class="{ active: currentRegion === 'batam' }"
+              @click="currentRegion = 'batam'"
+            >
+              <span>Harbour Bay</span>
+            </button>
+            <button 
+              class="region-chip" 
+              :class="{ active: currentRegion === 'batam_centre' }"
+              @click="currentRegion = 'batam_centre'"
+            >
+              <span>Batam Centre</span>
+            </button>
+            <button 
+              class="region-chip" 
+              :class="{ active: currentRegion === 'batam_nongsa' }"
+              @click="currentRegion = 'batam_nongsa'"
+            >
+              <span>Nongsa Pura</span>
+            </button>
+          </div>
         </div>
       </div>
     </div>
@@ -46,8 +65,10 @@
 
 <script setup>
 import { useZenturaStore } from '../../../composables/useZenturaStore';
+import { useCurrency } from '../../../composables/useCurrency';
 
 const { currentRegion, activeRegionObj } = useZenturaStore();
+const { currentCurrency, setCurrency, availableCurrencies } = useCurrency();
 </script>
 
 <style scoped>
@@ -100,43 +121,55 @@ const { currentRegion, activeRegionObj } = useZenturaStore();
   margin: 0;
 }
 
+.header-controls-group {
+  display: flex;
+  flex-direction: column;
+  gap: 0.85rem;
+}
+
+.currency-selector-box,
 .region-selector-box {
   display: flex;
   flex-direction: column;
-  gap: 0.4rem;
+  gap: 0.35rem;
 }
 
 .box-label {
-  font-size: 0.74rem;
+  font-size: 0.72rem;
   color: #1e3a8a;
-  font-weight: 700;
+  font-weight: 800;
   text-transform: uppercase;
   letter-spacing: 0.04em;
 }
 
+.currency-chips,
 .region-chips {
   display: flex;
-  gap: 0.4rem;
+  gap: 0.35rem;
+  flex-wrap: wrap;
 }
 
+.curr-chip,
 .region-chip {
-  padding: 0.4rem 0.85rem;
+  padding: 0.35rem 0.75rem;
   border-radius: var(--radius-xs);
   border: 1px solid #e2e8f0;
   background: #f8fafc;
   color: #475569;
-  font-size: 0.8rem;
-  font-weight: 600;
+  font-size: 0.78rem;
+  font-weight: 700;
   cursor: pointer;
   transition: all 0.15s ease;
 }
 
+.curr-chip:hover,
 .region-chip:hover {
-  background: #ffffff;
+  background: #eff6ff;
   color: #1e3a8a;
   border-color: #93c5fd;
 }
 
+.curr-chip.active,
 .region-chip.active {
   background: #1e3a8a;
   color: #ffffff;

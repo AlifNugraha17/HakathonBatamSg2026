@@ -204,11 +204,13 @@ export function useLanguage() {
   };
 
   const t = (key) => {
-    const langObj = translations[currentLang.value] || translations.en;
-    return langObj[key] || translations.en[key] || key;
+    if (!key) return '';
+    const lang = currentLang?.value || 'en';
+    const langObj = translations[lang] || translations.en || {};
+    return langObj[key] || (translations.en && translations.en[key]) || key;
   };
 
-  const isIndonesian = computed(() => currentLang.value === 'id');
+  const isIndonesian = computed(() => (currentLang?.value || 'en') === 'id');
 
   return {
     currentLang,

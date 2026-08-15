@@ -65,8 +65,9 @@ const openSalonDetail = (salon) => {
 };
 
 const getStartingPrice = (salon) => {
-  if (!salon.services || salon.services.length === 0) return 0;
-  return Math.min(...salon.services.map(s => s.priceIdr));
+  if (!salon || !salon.services || salon.services.length === 0) return 150000;
+  const prices = salon.services.map(s => Number(s.priceIdr || s.price_idr || 150000)).filter(p => p > 0);
+  return prices.length > 0 ? Math.min(...prices) : 150000;
 };
 </script>
 

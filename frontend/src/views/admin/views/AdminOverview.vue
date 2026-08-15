@@ -4,33 +4,33 @@
     <div class="kpi-grid">
       <AdminKpiCard
         title="Total Ecosystem GMV"
-        :value="'SGD ' + metrics.totalGmvSgd.toLocaleString()"
-        :subtitle="'≈ IDR ' + (metrics.totalGmvIdr / 1000000).toFixed(1) + 'M'"
-        trend="+24.8% MoM"
+        :value="'SGD ' + Number(metrics.totalGmvSgd || 0).toLocaleString()"
+        :subtitle="'≈ IDR ' + Number(metrics.totalGmvIdr || 0).toLocaleString('id-ID')"
+        trend="Live Sync"
         :trendPositive="true"
       />
 
       <AdminKpiCard
         title="Verified Spa Partners"
-        :value="metrics.activeMerchantsCount"
-        :subtitle="metrics.pendingVerificationMerchants + ' Pending KYC Review'"
-        trend="+6 New"
+        :value="metrics.activeMerchantsCount || 0"
+        :subtitle="(metrics.pendingVerificationMerchants || 0) + ' Pending KYC Review'"
+        trend="Active"
         :trendPositive="true"
       />
 
       <AdminKpiCard
         title="AI Translation Volume"
-        :value="metrics.totalAiTranslationsMonth.toLocaleString()"
-        :subtitle="metrics.avgTranslationLatencyMs + 'ms Avg Latency'"
-        trend="99.4% Safety"
+        :value="Number(metrics.totalAiTranslationsMonth || 0).toLocaleString()"
+        :subtitle="(metrics.avgTranslationLatencyMs || 0) + 'ms Avg Latency'"
+        trend="Zentura NLP"
         :trendPositive="true"
       />
 
       <AdminKpiCard
         title="Platform Take-Rate"
-        :value="'IDR ' + (metrics.totalPlatformCommissionIdr / 1000000).toFixed(1) + 'M'"
+        :value="'IDR ' + Number(metrics.totalPlatformCommissionIdr || 0).toLocaleString('id-ID')"
         subtitle="12% Standard Commission"
-        trend="+19.2%"
+        trend="Automated"
         :trendPositive="true"
       />
     </div>

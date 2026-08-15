@@ -2,17 +2,17 @@
   <aside class="merchant-sidebar">
     <div class="sidebar-brand">
       <span class="brand-chip">Merchant Hub</span>
-      <h3 class="brand-name">{{ merchantSalon.name }}</h3>
-      <span class="brand-loc">Batam Harbour Bay Ferry Terminal</span>
+      <h3 class="brand-name">{{ merchantSalon?.name || 'Martha Heritage Spa' }}</h3>
+      <span class="brand-loc">{{ merchantSalon?.landmark || 'Batam Harbour Bay Ferry Terminal' }}</span>
     </div>
 
-    <!-- Navigation Items with Clean SVG Icons -->
+    <!-- Navigation Items -->
     <nav class="sidebar-nav">
       <!-- 1. Spa Dashboard -->
       <button 
         class="nav-item" 
-        :class="{ active: activeMerchantTab === 'overview' }"
-        @click="activeMerchantTab = 'overview'"
+        :class="{ active: modelValue === 'overview' }"
+        @click="$emit('update:modelValue', 'overview')"
       >
         <svg class="nav-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
           <rect x="3" y="3" width="7" height="7"></rect>
@@ -26,8 +26,8 @@
       <!-- 2. Incoming Orders -->
       <button 
         class="nav-item" 
-        :class="{ active: activeMerchantTab === 'orders' }"
-        @click="activeMerchantTab = 'orders'"
+        :class="{ active: modelValue === 'orders' }"
+        @click="$emit('update:modelValue', 'orders')"
       >
         <svg class="nav-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
           <path d="M6 2L3 6v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2V6l-3-4z"></path>
@@ -41,8 +41,8 @@
       <!-- 3. Flash Slot Broadcast -->
       <button 
         class="nav-item" 
-        :class="{ active: activeMerchantTab === 'slots' }"
-        @click="activeMerchantTab = 'slots'"
+        :class="{ active: modelValue === 'slots' }"
+        @click="$emit('update:modelValue', 'slots')"
       >
         <svg class="nav-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
           <polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2"></polygon>
@@ -54,8 +54,8 @@
       <!-- 4. Therapist Roster -->
       <button 
         class="nav-item" 
-        :class="{ active: activeMerchantTab === 'therapists' }"
-        @click="activeMerchantTab = 'therapists'"
+        :class="{ active: modelValue === 'therapists' }"
+        @click="$emit('update:modelValue', 'therapists')"
       >
         <svg class="nav-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
           <path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"></path>
@@ -69,8 +69,8 @@
       <!-- 5. Profile & Hygiene -->
       <button 
         class="nav-item" 
-        :class="{ active: activeMerchantTab === 'profile' }"
-        @click="activeMerchantTab = 'profile'"
+        :class="{ active: modelValue === 'profile' }"
+        @click="$emit('update:modelValue', 'profile')"
       >
         <svg class="nav-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
           <path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"></path>
@@ -99,11 +99,20 @@ import { computed } from 'vue';
 import { useZenturaStore } from '../../../composables/useZenturaStore';
 import { useAuth } from '../../../composables/useAuth';
 
-const { activeMerchantTab, merchantSalon, merchantBookings } = useZenturaStore();
+defineProps({
+  modelValue: {
+    type: String,
+    default: 'overview'
+  }
+});
+
+defineEmits(['update:modelValue']);
+
+const { merchantSalon, merchantBookings } = useZenturaStore();
 const { quickLogin } = useAuth();
 
 const pendingCount = computed(() => {
-  return merchantBookings.value.filter(b => b.status === 'pending').length;
+  return (merchantBookings.value || []).filter(b => b.status === 'pending').length;
 });
 </script>
 
@@ -119,6 +128,7 @@ const pendingCount = computed(() => {
   box-shadow: 0 4px 20px -2px rgba(30, 58, 138, 0.06);
   flex-shrink: 0;
   gap: 1.25rem;
+  box-sizing: border-box;
 }
 
 .sidebar-brand {
@@ -174,6 +184,7 @@ const pendingCount = computed(() => {
   text-align: left;
   transition: all 0.15s ease;
   width: 100%;
+  box-sizing: border-box;
 }
 
 .nav-icon {
@@ -269,10 +280,32 @@ const pendingCount = computed(() => {
 @media (max-width: 900px) {
   .merchant-sidebar {
     width: 100%;
+    padding: 1rem;
+    gap: 0.75rem;
+  }
+  .sidebar-brand {
+    display: none;
   }
   .sidebar-nav {
     display: grid;
-    grid-template-columns: repeat(3, 1fr);
+    grid-template-columns: repeat(auto-fit, minmax(130px, 1fr));
+    gap: 0.4rem;
+  }
+  .nav-item {
+    padding: 0.5rem 0.65rem;
+    font-size: 0.78rem;
+    justify-content: center;
+    text-align: center;
+    border: 1px solid #e2e8f0;
+    border-radius: 8px;
+    background: #f8fafc;
+  }
+  .nav-item.active {
+    background: #eff6ff;
+    border-color: #bfdbfe;
+  }
+  .sidebar-footer {
+    display: none;
   }
 }
 </style>

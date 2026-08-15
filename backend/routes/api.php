@@ -31,6 +31,7 @@ Route::prefix('v1')->group(function () {
     // 1. Authentication
     Route::prefix('auth')->group(function () {
         Route::post('/login', [AuthController::class, 'login']);
+        Route::post('/register', [AuthController::class, 'register']);
         Route::post('/quick-login', [AuthController::class, 'quickLogin']);
         Route::post('/logout', [AuthController::class, 'logout']);
         Route::get('/me', [AuthController::class, 'me']);

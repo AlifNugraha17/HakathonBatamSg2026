@@ -4,49 +4,65 @@
       <div class="stat-card">
         <div class="stat-header">
           <span class="stat-label">Total Platform GMV</span>
-          <span class="trend-pill">+24.8% MoM</span>
+          <span class="trend-pill">Live Database</span>
         </div>
         <div class="stat-val-row">
-          <span class="stat-value">SGD 36,120</span>
-          <span class="stat-sub">≈ Rp 428.5M (Singapore ⇄ Batam)</span>
+          <span class="stat-value">SGD {{ (metrics.totalGmvSgd || 0).toLocaleString('en-SG', { minimumFractionDigits: 2 }) }}</span>
+          <span class="stat-sub">≈ Rp {{ (metrics.totalGmvIdr || 0).toLocaleString('id-ID') }} (PayNow ⇄ BI-FAST)</span>
         </div>
       </div>
 
       <div class="stat-card">
         <div class="stat-header">
           <span class="stat-label">Active Partner Spas</span>
-          <span class="trend-pill blue">Verified</span>
+          <span class="trend-pill blue">Supabase Vetted</span>
         </div>
         <div class="stat-val-row">
-          <span class="stat-value">24 Centers</span>
-          <span class="stat-sub">6 Pending KYC Review</span>
+          <span class="stat-value">{{ salons.length || metrics.activeMerchantsCount || 0 }} Centers</span>
+          <span class="stat-sub">{{ metrics.pendingVerificationMerchants || 0 }} Pending KYC Review</span>
         </div>
       </div>
 
       <div class="stat-card">
         <div class="stat-header">
-          <span class="stat-label">AI Translations</span>
-          <span class="trend-pill">99.4% Accurate</span>
+          <span class="stat-label">Total Reservations</span>
+          <span class="trend-pill">Live Orders</span>
         </div>
         <div class="stat-val-row">
-          <span class="stat-value">18,450 Queries</span>
-          <span class="stat-sub">185ms Avg Edge Latency</span>
+          <span class="stat-value">{{ metrics.totalBookings || bookings.length || 0 }} Bookings</span>
+          <span class="stat-sub">Singapore ⇄ Batam Corridor</span>
         </div>
       </div>
 
       <div class="stat-card">
         <div class="stat-header">
-          <span class="stat-label">Flash Chair Fill-Rate</span>
-          <span class="trend-pill blue">84.2%</span>
+          <span class="stat-label">Registered Accounts</span>
+          <span class="trend-pill blue">PostgreSQL</span>
         </div>
         <div class="stat-val-row">
-          <span class="stat-value">4.2x Faster</span>
-          <span class="stat-sub">Last-minute Ferry Travelers</span>
+          <span class="stat-value">{{ metrics.totalUsers || 0 }} Users</span>
+          <span class="stat-sub">Tourists, Spa Partners, & Admins</span>
         </div>
       </div>
     </div>
   </section>
 </template>
+
+<script setup>
+import { onMounted } from 'vue';
+import { useAdminStore } from '../../../composables/useAdminStore';
+import { useZenturaStore } from '../../../composables/useZenturaStore';
+
+const { metrics, loadAdminDataFromApi } = useAdminStore();
+const { salons, bookings, loadSalonsFromApi, loadBookingsFromApi } = useZenturaStore();
+
+onMounted(() => {
+  // Light background sync only if empty
+  if (salons.value.length === 0) loadSalonsFromApi();
+  if (bookings.value.length === 0) loadBookingsFromApi();
+  if (!metrics.value.totalUsers) loadAdminDataFromApi();
+});
+</script>
 
 <style scoped>
 .live-stats-bar {

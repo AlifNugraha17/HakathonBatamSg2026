@@ -6,13 +6,8 @@
     <!-- Main Content Area -->
     <div class="merchant-layout-main">
       <MerchantHeader :activeTab="activeTab" />
-
-      <!-- Active Tab Views -->
       <main class="merchant-views-container">
-        <MerchantOverview 
-          v-if="activeTab === 'overview'" 
-          @switch-tab="activeTab = $event" 
-        />
+        <MerchantOverview v-if="activeTab === 'overview'" @switch-tab="activeTab = $event" />
         <OrdersManagement v-else-if="activeTab === 'orders'" />
         <SlotManagement v-else-if="activeTab === 'slots'" />
         <TherapistRoster v-else-if="activeTab === 'therapists'" />
@@ -43,24 +38,27 @@ const activeTab = ref('overview');
 .merchant-dashboard-layout {
   display: grid;
   grid-template-columns: 260px 1fr;
-  gap: 1.25rem;
-  max-width: 1400px;
-  margin: 0 auto;
+  gap: 1.5rem;
+  max-width: 1440px;
+  margin: 0.5rem auto 2.5rem;
   min-height: 85vh;
 }
 
 .merchant-layout-main {
   display: flex;
   flex-direction: column;
+  min-width: 0;
 }
 
 .merchant-views-container {
   flex: 1;
 }
 
-@media (max-width: 960px) {
+@media (max-width: 900px) {
   .merchant-dashboard-layout {
     grid-template-columns: 1fr;
+    gap: 1rem;
   }
 }
 </style>
+

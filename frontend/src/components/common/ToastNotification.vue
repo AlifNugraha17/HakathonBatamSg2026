@@ -1,16 +1,39 @@
 <template>
-  <div class="toast-container">
-    <TransitionGroup name="toast-fade">
+  <div class="toast-container" aria-live="polite" aria-atomic="true">
+    <TransitionGroup name="toast-slide">
       <div 
         v-for="toast in notifications" 
         :key="toast.id" 
-        class="toast-item"
+        class="toast-card"
         :class="'toast-' + toast.type"
       >
-        <div class="toast-content">
-          <p class="toast-message">{{ toast.message }}</p>
+        <!-- Status Icon Column -->
+        <div class="toast-icon-wrap">
+          <span v-if="toast.type === 'success'" class="icon-sym success-sym">✓</span>
+          <span v-else-if="toast.type === 'error'" class="icon-sym error-sym">✕</span>
+          <span v-else-if="toast.type === 'warning'" class="icon-sym warning-sym">⚠️</span>
+          <span v-else class="icon-sym info-sym">ℹ</span>
         </div>
-        <button class="toast-close" @click="removeToast(toast.id)">✕</button>
+
+        <!-- Content Column -->
+        <div class="toast-body">
+          <div v-if="toast.title" class="toast-title">
+            {{ toast.title }}
+          </div>
+          <p class="toast-msg">{{ toast.message }}</p>
+        </div>
+
+        <!-- Dismiss Close Button -->
+        <button 
+          class="toast-close-btn" 
+          aria-label="Tutup notifikasi"
+          @click="removeToast(toast.id)"
+        >
+          ✕
+        </button>
+
+        <!-- Progress timer line -->
+        <div class="toast-timer-bar"></div>
       </div>
     </TransitionGroup>
   </div>
@@ -25,57 +48,135 @@ const { notifications, removeToast } = useNotification();
 <style scoped>
 .toast-container {
   position: fixed;
-  bottom: 20px;
-  right: 20px;
-  z-index: 99999;
+  top: 24px;
+  right: 24px;
+  z-index: 999999;
   display: flex;
   flex-direction: column;
-  gap: 8px;
-  max-width: 360px;
+  gap: 10px;
+  width: 100%;
+  max-width: 400px;
   pointer-events: none;
 }
 
-.toast-item {
+.toast-card {
   pointer-events: auto;
+  position: relative;
+  display: flex;
+  align-items: flex-start;
+  gap: 12px;
+  padding: 14px 16px;
+  border-radius: 12px;
+  background: #ffffff;
+  box-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.12), 0 8px 10px -6px rgba(0, 0, 0, 0.08);
+  border: 1px solid #e2e8f0;
+  overflow: hidden;
+  backdrop-filter: blur(8px);
+}
+
+/* Success Card */
+.toast-success {
+  border-left: 5px solid #10b981;
+  background: #f0fdf4;
+}
+.toast-success .success-sym {
+  background: #10b981;
+  color: #ffffff;
+}
+.toast-success .toast-title {
+  color: #065f46;
+}
+.toast-success .toast-msg {
+  color: #047857;
+}
+
+/* Error / Failed Card */
+.toast-error {
+  border-left: 5px solid #ef4444;
+  background: #fef2f2;
+}
+.toast-error .error-sym {
+  background: #ef4444;
+  color: #ffffff;
+}
+.toast-error .toast-title {
+  color: #991b1b;
+}
+.toast-error .toast-msg {
+  color: #b91c1c;
+}
+
+/* Warning Card */
+.toast-warning {
+  border-left: 5px solid #f59e0b;
+  background: #fffbeb;
+}
+.toast-warning .warning-sym {
+  background: #f59e0b;
+  color: #ffffff;
+}
+.toast-warning .toast-title {
+  color: #92400e;
+}
+.toast-warning .toast-msg {
+  color: #b45309;
+}
+
+/* Info Card */
+.toast-info {
+  border-left: 5px solid #2563eb;
+  background: #eff6ff;
+}
+.toast-info .info-sym {
+  background: #2563eb;
+  color: #ffffff;
+}
+.toast-info .toast-title {
+  color: #1e3a8a;
+}
+.toast-info .toast-msg {
+  color: #1d4ed8;
+}
+
+.toast-icon-wrap {
+  flex-shrink: 0;
+  margin-top: 1px;
+}
+
+.icon-sym {
   display: flex;
   align-items: center;
-  justify-content: space-between;
-  gap: 12px;
-  padding: 10px 14px;
-  border-radius: var(--radius-sm);
-  background: #0f172a;
-  color: #ffffff;
-  font-size: 0.84rem;
-  box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
-  border: 1px solid #1e293b;
+  justify-content: center;
+  width: 22px;
+  height: 22px;
+  border-radius: 50%;
+  font-size: 0.76rem;
+  font-weight: 900;
 }
 
-.toast-success {
-  background: #0f172a;
-  border-left: 3px solid #10b981;
-}
-
-.toast-error {
-  background: #0f172a;
-  border-left: 3px solid #ef4444;
-}
-
-.toast-info {
-  background: #0f172a;
-  border-left: 3px solid #3b82f6;
-}
-
-.toast-content {
+.toast-body {
   flex: 1;
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
 }
 
-.toast-message {
+.toast-title {
+  font-size: 0.85rem;
+  font-weight: 800;
+  letter-spacing: -0.01em;
+}
+
+.toast-msg {
   margin: 0;
+  font-size: 0.8rem;
   line-height: 1.4;
   font-weight: 500;
+  word-break: break-word;
 }
 
-.toast-close {
+.toast-close-btn {
+  flex-shrink: 0;
   background: transparent;
   border: none;
   color: #94a3b8;
@@ -83,24 +184,53 @@ const { notifications, removeToast } = useNotification();
   cursor: pointer;
   padding: 2px 4px;
   line-height: 1;
+  transition: color 0.15s;
+  border-radius: 4px;
 }
 
-.toast-close:hover {
-  color: #ffffff;
+.toast-close-btn:hover {
+  color: #0f172a;
+  background: rgba(0, 0, 0, 0.05);
 }
 
-.toast-fade-enter-active,
-.toast-fade-leave-active {
-  transition: all 0.2s ease;
+.toast-timer-bar {
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  height: 3px;
+  width: 100%;
+  background: currentColor;
+  opacity: 0.25;
+  animation: toastTimer 4s linear forwards;
 }
 
-.toast-fade-enter-from {
+@keyframes toastTimer {
+  from { width: 100%; }
+  to { width: 0%; }
+}
+
+/* Animations */
+.toast-slide-enter-active,
+.toast-slide-leave-active {
+  transition: all 0.25s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+.toast-slide-enter-from {
   opacity: 0;
-  transform: translateY(10px);
+  transform: translateX(40px) scale(0.95);
 }
 
-.toast-fade-leave-to {
+.toast-slide-leave-to {
   opacity: 0;
-  transform: translateX(30px);
+  transform: translateX(60px) scale(0.9);
+}
+
+@media (max-width: 600px) {
+  .toast-container {
+    top: 12px;
+    right: 12px;
+    left: 12px;
+    max-width: calc(100% - 24px);
+  }
 }
 </style>

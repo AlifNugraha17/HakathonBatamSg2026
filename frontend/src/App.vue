@@ -45,14 +45,14 @@ const { currentView, currentRole } = useAuth();
 <style scoped>
 .app-wrapper {
   min-height: 100vh;
-  padding: 0.75rem 1.25rem 3rem;
-  max-width: 1280px;
+  padding: 0.75rem 1.5rem 3rem;
+  max-width: 1440px;
   margin: 0 auto;
   width: 100%;
 }
 
 .main-content-view {
-  margin-top: 0.85rem;
+  margin-top: 1.25rem;
 }
 
 @media (max-width: 768px) {

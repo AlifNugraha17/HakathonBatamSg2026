@@ -1,301 +1,163 @@
 <template>
   <div class="finance-revenue-view animate-fade-in">
-    <!-- Summary Financial Cards in English -->
+    <!-- Summary KPI Cards (Real Database) -->
     <div class="finance-summary-row">
       <div class="fin-card">
         <span class="fin-label">Total Settled Volume</span>
-        <span class="fin-value">IDR 428.5M</span>
-        <span class="fin-sub">≈ SGD 36,120 (Gross Platform GMV)</span>
+        <span class="fin-value">IDR {{ totalSettledIdr.toLocaleString("id-ID") }}</span>
+        <span class="fin-sub">SGD {{ totalSettledSgd.toFixed(2) }} (Gross Platform GMV)</span>
       </div>
-
       <div class="fin-card">
         <span class="fin-label">Retained Platform Take-Rate</span>
-        <span class="fin-value">IDR 51.4M</span>
+        <span class="fin-value">IDR {{ totalRetainedFeeIdr.toLocaleString("id-ID") }}</span>
         <span class="fin-sub">12.0% Average Take Rate</span>
       </div>
-
       <div class="fin-card">
         <span class="fin-label">Pending Merchant Payouts</span>
-        <span class="fin-value">IDR 12.8M</span>
+        <span class="fin-value">IDR {{ pendingPayoutsIdr.toLocaleString("id-ID") }}</span>
         <span class="fin-sub">Scheduled for Automated BI-FAST Batch</span>
       </div>
     </div>
 
-    <!-- Cross-Border Transactions Table -->
-    <div class="transactions-card">
-      <div class="card-header">
-        <div>
-          <h3 class="card-title">Cross-Border Settlement & Payout Ledger</h3>
-          <span class="card-sub">Multi-currency exchange reconciliation between tourist origin currency (SGD/MYR) and partner payout (IDR)</span>
+    <!-- Cross-Border Settlement DataTable -->
+    <ZenDataTable
+      :columns="columns"
+      :rows="transactions"
+      search-placeholder="Search by transaction, spa name, or status..."
+      empty-text="No transactions yet. Transactions will appear here after the first tourist booking is paid."
+    >
+      <template #toolbar>
+        <div class="table-title-group">
+          <h3 class="table-title">Cross-Border Settlement & Payout Ledger</h3>
+          <span class="table-sub">Multi-currency reconciliation between tourist origin currency (SGD) and partner payout (IDR)</span>
         </div>
         <button class="btn-export">Download Audit CSV</button>
-      </div>
+      </template>
 
-      <div class="table-container">
-        <table class="custom-table">
-          <thead>
-            <tr>
-              <th>TRANSACTION ID</th>
-              <th>TOURIST & PAYMENT</th>
-              <th>RECIPIENT SPA</th>
-              <th>GROSS AMOUNT</th>
-              <th>FEE (12%)</th>
-              <th>NET PAYOUT</th>
-              <th>STATUS / ACTION</th>
-            </tr>
-          </thead>
-          <tbody>
-            <tr v-for="txn in transactions" :key="txn.id" class="table-row">
-              <td>
-                <div class="txn-meta">
-                  <span class="txn-id">{{ txn.id }}</span>
-                  <span class="txn-date">{{ txn.date }}</span>
-                </div>
-              </td>
-              <td>
-                <div class="cust-info">
-                  <span class="cust-name">{{ txn.customer }}</span>
-                  <span class="cust-method">{{ txn.paymentMethod }}</span>
-                </div>
-              </td>
-              <td>
-                <div class="merch-info">
-                  <span class="merch-name">{{ txn.merchant }}</span>
-                  <span class="merch-svc">{{ txn.service }}</span>
-                </div>
-              </td>
-              <td>
-                <div class="amount-info">
-                  <span class="amount-orig">{{ txn.amountOriginal }}</span>
-                  <span class="amount-idr">IDR {{ txn.amountIdr.toLocaleString('id-ID') }}</span>
-                </div>
-              </td>
-              <td>
-                <span class="fee-text">IDR {{ txn.platformFeeIdr.toLocaleString('id-ID') }}</span>
-              </td>
-              <td>
-                <span class="payout-val">IDR {{ txn.merchantPayoutIdr.toLocaleString('id-ID') }}</span>
-              </td>
-              <td>
-                <div class="payout-action-cell">
-                  <span 
-                    v-if="txn.payoutStatus === 'settled'" 
-                    class="badge-settled"
-                  >
-                    SETTLED
-                  </span>
-                  <button 
-                    v-else 
-                    class="btn-process-payout"
-                    @click="processPayout(txn.id)"
-                  >
-                    Execute BI-FAST
-                  </button>
-                </div>
-              </td>
-            </tr>
-          </tbody>
-        </table>
-      </div>
-    </div>
+      <template #cell-txnId="{ row }">
+        <div class="cell-stack">
+          <span class="cell-txn-id">{{ row.id || row.ref || 'TXN-...' }}</span>
+          <span class="cell-sub">{{ row.date || 'Today' }}</span>
+        </div>
+      </template>
+
+      <template #cell-tourist="{ row }">
+        <div class="cell-stack">
+          <span class="cell-name">{{ row.customer || row.guest_name || 'Traveler' }}</span>
+          <span class="cell-sub">{{ row.paymentMethod || row.payment_method || 'PayNow SG' }}</span>
+        </div>
+      </template>
+
+      <template #cell-spa="{ row }">
+        <div class="cell-stack">
+          <span class="cell-name">{{ row.merchant || row.merchant_name || 'Spa Partner' }}</span>
+          <span class="cell-sub">{{ row.service || row.service_name || 'Spa Service' }}</span>
+        </div>
+      </template>
+
+      <template #cell-gross="{ row }">
+        <div class="cell-stack" style="text-align:right">
+          <span class="cell-amount-primary">SGD {{ row.amountSgd || row.gross_sgd || 0 }}</span>
+          <span class="cell-sub">IDR {{ Number(row.amountIdr || row.gross_idr || 0).toLocaleString("id-ID") }}</span>
+        </div>
+      </template>
+
+      <template #cell-fee="{ row }">
+        <span class="cell-fee">IDR {{ Number(row.platformFeeIdr || row.commission_idr || 0).toLocaleString("id-ID") }}</span>
+      </template>
+
+      <template #cell-payout="{ row }">
+        <span class="cell-amount-primary">IDR {{ Number(row.merchantPayoutIdr || row.payout_idr || 0).toLocaleString("id-ID") }}</span>
+      </template>
+
+      <template #cell-status="{ row }">
+        <div style="display:flex; align-items:center; justify-content:center;">
+          <span v-if="row.payoutStatus === 'settled' || row.status === 'settled'" class="badge-settled">SETTLED</span>
+          <button v-else class="btn-bifast" @click.stop="processPayout(row.id)">Execute BI-FAST</button>
+        </div>
+      </template>
+    </ZenDataTable>
   </div>
 </template>
 
 <script setup>
+import { computed } from 'vue';
+import ZenDataTable from '../../../components/shared/ZenDataTable.vue';
 import { useAdminStore } from '../../../composables/useAdminStore';
 
 const { transactions, processPayout } = useAdminStore();
+
+const columns = [
+  { key: 'txnId', label: 'Transaction ID', sortable: false },
+  { key: 'tourist', label: 'Tourist & Payment', sortable: false },
+  { key: 'spa', label: 'Recipient Spa', sortable: false },
+  { key: 'gross', label: 'Gross Amount', sortable: false, align: 'right' },
+  { key: 'fee', label: 'Fee (12%)', sortable: false, align: 'right' },
+  { key: 'payout', label: 'Net Payout', sortable: false, align: 'right' },
+  { key: 'status', label: 'Status / Action', sortable: false, align: 'center' },
+];
+
+const totalSettledIdr = computed(() =>
+  (transactions.value || []).filter(t => t.payoutStatus === 'settled' || t.status === 'settled')
+    .reduce((acc, t) => acc + (Number(t.amountIdr || t.gross_idr) || 0), 0)
+);
+const totalSettledSgd = computed(() => totalSettledIdr.value / 11850);
+const totalRetainedFeeIdr = computed(() =>
+  (transactions.value || []).reduce((acc, t) => acc + (Number(t.platformFeeIdr || t.commission_idr) || 0), 0)
+);
+const pendingPayoutsIdr = computed(() =>
+  (transactions.value || []).filter(t => t.payoutStatus === 'pending' || t.status === 'pending')
+    .reduce((acc, t) => acc + (Number(t.merchantPayoutIdr || t.net_idr) || 0), 0)
+);
 </script>
 
 <style scoped>
-.finance-revenue-view {
-  display: flex;
-  flex-direction: column;
-  gap: 1.25rem;
-}
+.finance-revenue-view { display: flex; flex-direction: column; gap: 1.25rem; }
 
-.finance-summary-row {
-  display: grid;
-  grid-template-columns: repeat(3, 1fr);
-  gap: 1rem;
-}
-
+/* KPI Cards */
+.finance-summary-row { display: grid; grid-template-columns: repeat(3, 1fr); gap: 1rem; }
 .fin-card {
-  padding: 1.5rem;
-  border-radius: var(--radius-lg);
-  background: #ffffff;
-  border: 1px solid #e2e8f0;
+  padding: 1.25rem 1.5rem; border-radius: var(--radius-lg);
+  background: #ffffff; border: 1px solid #e2e8f0;
   box-shadow: 0 4px 20px -2px rgba(30, 58, 138, 0.06);
-  display: flex;
-  flex-direction: column;
+  display: flex; flex-direction: column; gap: 0.35rem;
 }
+.fin-label { font-size: 0.72rem; font-weight: 800; letter-spacing: 0.05em; text-transform: uppercase; color: #1e3a8a; }
+.fin-value { font-size: 1.45rem; font-weight: 800; color: #0f172a; line-height: 1.2; }
+.fin-sub { font-size: 0.75rem; color: #64748b; }
 
-.fin-label {
-  font-size: 0.78rem;
-  color: #1e3a8a;
-  font-weight: 700;
-  text-transform: uppercase;
-  letter-spacing: 0.04em;
-  margin-bottom: 0.35rem;
-}
-
-.fin-value {
-  font-size: 1.6rem;
-  font-weight: 800;
-  color: #0f172a;
-}
-
-.fin-sub {
-  font-size: 0.74rem;
-  color: #64748b;
-  margin-top: 0.25rem;
-}
-
-.transactions-card {
-  padding: 1.5rem;
-  border-radius: var(--radius-lg);
-  background: #ffffff;
-  border: 1px solid #e2e8f0;
-  box-shadow: 0 4px 20px -2px rgba(30, 58, 138, 0.06);
-}
-
-.card-header {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  margin-bottom: 1.25rem;
-  flex-wrap: wrap;
-  gap: 0.75rem;
-}
-
-.card-title {
-  font-size: 1rem;
-  color: #0f172a;
-  font-weight: 700;
-  margin: 0;
-}
-
-.card-sub {
-  font-size: 0.76rem;
-  color: #64748b;
-}
-
+/* Table header area */
+.table-title-group { flex: 1; }
+.table-title { font-size: 0.95rem; font-weight: 800; color: #0f172a; margin: 0 0 0.2rem; }
+.table-sub { font-size: 0.75rem; color: #64748b; }
 .btn-export {
-  background: #eff6ff;
-  border: 1px solid #bfdbfe;
-  color: #1d4ed8;
-  font-size: 0.78rem;
-  font-weight: 700;
-  padding: 0.4rem 0.85rem;
-  border-radius: var(--radius-xs);
-  cursor: pointer;
-  transition: all 0.15s;
+  padding: 0.4rem 0.9rem; border-radius: 7px;
+  background: #f8fafc; border: 1px solid #e2e8f0;
+  color: #475569; font-size: 0.75rem; font-weight: 600; cursor: pointer; white-space: nowrap;
 }
+.btn-export:hover { background: #f1f5f9; color: #1e3a8a; }
 
-.btn-export:hover {
-  background: #1e3a8a;
-  color: #ffffff;
-}
-
-.table-container {
-  overflow-x: auto;
-}
-
-.custom-table {
-  width: 100%;
-  border-collapse: collapse;
-  text-align: left;
-}
-
-.custom-table th {
-  font-size: 0.72rem;
-  font-weight: 800;
-  color: #1e3a8a;
-  letter-spacing: 0.04em;
-  padding: 0.85rem 1rem;
-  border-bottom: 1px solid #e2e8f0;
-}
-
-.custom-table td {
-  padding: 0.85rem 1rem;
-  border-bottom: 1px solid #f1f5f9;
-  font-size: 0.82rem;
-  vertical-align: middle;
-}
-
-.txn-meta {
-  display: flex;
-  flex-direction: column;
-}
-
-.txn-id {
-  font-weight: 700;
-  color: #0f172a;
-}
-
-.txn-date {
-  font-size: 0.72rem;
-  color: #64748b;
-}
-
-.cust-info, .merch-info, .amount-info {
-  display: flex;
-  flex-direction: column;
-}
-
-.cust-name, .merch-name {
-  font-weight: 700;
-  color: #0f172a;
-}
-
-.cust-method, .merch-svc, .amount-idr {
-  font-size: 0.74rem;
-  color: #64748b;
-}
-
-.amount-orig {
-  font-weight: 700;
-  color: #1e3a8a;
-}
-
-.fee-text {
-  font-weight: 600;
-  color: #64748b;
-}
-
-.payout-val {
-  font-weight: 800;
-  color: #0f172a;
-}
+.cell-stack { display: flex; flex-direction: column; gap: 0.1rem; }
+.cell-name { font-weight: 700; color: #0f172a; font-size: 0.83rem; }
+.cell-txn-id { font-family: monospace; font-size: 0.78rem; color: #1d4ed8; font-weight: 700; }
+.cell-sub { font-size: 0.72rem; color: #64748b; }
+.cell-amount-primary { font-weight: 800; color: #0f172a; font-size: 0.83rem; }
+.cell-fee { font-weight: 700; color: #b91c1c; font-size: 0.82rem; }
 
 .badge-settled {
-  font-size: 0.68rem;
-  font-weight: 700;
-  color: #047857;
-  background: #ecfdf5;
-  border: 1px solid #a7f3d0;
-  padding: 0.15rem 0.5rem;
-  border-radius: 4px;
+  font-size: 0.65rem; font-weight: 700; padding: 0.18rem 0.6rem; border-radius: 4px;
+  background: #ecfdf5; color: #047857; border: 1px solid #a7f3d0;
 }
-
-.btn-process-payout {
-  background: #1e3a8a;
-  color: #ffffff;
-  border: none;
-  font-size: 0.74rem;
-  font-weight: 700;
-  padding: 0.35rem 0.75rem;
-  border-radius: var(--radius-xs);
-  cursor: pointer;
+.btn-bifast {
+  padding: 0.35rem 0.85rem; border-radius: 7px;
+  background: linear-gradient(135deg, #1e3a8a, #1d4ed8);
+  border: none; color: #fff; font-size: 0.74rem; font-weight: 700; cursor: pointer;
 }
+.btn-bifast:hover { opacity: 0.9; }
 
-.btn-process-payout:hover {
-  background: #1d4ed8;
-}
-
-@media (max-width: 900px) {
-  .finance-summary-row {
-    grid-template-columns: 1fr;
-  }
+@media (max-width: 768px) {
+  .finance-summary-row { grid-template-columns: 1fr; gap: 0.75rem; }
+  .fin-value { font-size: 1.25rem; }
 }
 </style>
+

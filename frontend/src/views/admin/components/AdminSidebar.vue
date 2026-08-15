@@ -5,7 +5,7 @@
       <h3 class="brand-name">Master Console</h3>
     </div>
 
-    <!-- Navigation Items with Clean SVG Icons -->
+    <!-- Navigation Items -->
     <nav class="sidebar-nav">
       <!-- 1. Executive Overview -->
       <button 
@@ -127,6 +127,7 @@ const { quickLogin } = useAuth();
   box-shadow: 0 4px 20px -2px rgba(30, 58, 138, 0.06);
   flex-shrink: 0;
   gap: 1.25rem;
+  box-sizing: border-box;
 }
 
 .sidebar-brand {
@@ -147,7 +148,7 @@ const { quickLogin } = useAuth();
 }
 
 .brand-name {
-  font-size: 1.15rem;
+  font-size: 1.1rem;
   font-weight: 800;
   color: #0f172a;
   margin: 0;
@@ -176,6 +177,7 @@ const { quickLogin } = useAuth();
   text-align: left;
   transition: all 0.15s ease;
   width: 100%;
+  box-sizing: border-box;
 }
 
 .nav-icon {
@@ -261,10 +263,33 @@ const { quickLogin } = useAuth();
 @media (max-width: 900px) {
   .admin-sidebar {
     width: 100%;
+    padding: 1rem;
+    gap: 0.75rem;
+  }
+  .sidebar-brand {
+    display: none;
   }
   .sidebar-nav {
     display: grid;
-    grid-template-columns: repeat(3, 1fr);
+    grid-template-columns: repeat(auto-fit, minmax(130px, 1fr));
+    gap: 0.4rem;
+  }
+  .nav-item {
+    padding: 0.5rem 0.65rem;
+    font-size: 0.78rem;
+    justify-content: center;
+    text-align: center;
+    border: 1px solid #e2e8f0;
+    border-radius: 8px;
+    background: #f8fafc;
+  }
+  .nav-item.active {
+    background: #eff6ff;
+    border-color: #bfdbfe;
+  }
+  .sidebar-footer {
+    display: none;
   }
 }
 </style>
+

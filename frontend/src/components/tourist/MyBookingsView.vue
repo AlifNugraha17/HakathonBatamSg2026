@@ -28,8 +28,8 @@
         <!-- Top Status Bar -->
         <div class="card-header-bar">
           <div class="code-block">
-            <span class="booking-code">#{{ booking.id }}</span>
-            <span class="booking-date">{{ booking.appointmentDate }}</span>
+            <span class="booking-code">#{{ booking.booking_code || booking.bookingCode || booking.id }}</span>
+            <span class="booking-date">{{ booking.createdAt || booking.appointmentDate || 'Today' }}</span>
           </div>
 
           <div class="status-pill-wrap">
@@ -43,28 +43,28 @@
         </div>
 
         <!-- Ferry Departure Sync Notice -->
-        <div v-if="booking.ferryDepartureTime" class="ferry-sync-notice">
-          <strong>Ferry Departure Sync:</strong> {{ booking.ferryDepartureTime }}
+        <div v-if="booking.ferry_time || booking.ferryDepartureTime" class="ferry-sync-notice">
+          <strong>Ferry Departure Sync:</strong> {{ booking.ferry_time || booking.ferryDepartureTime }}
         </div>
 
         <!-- Service & Salon Details -->
         <div class="booking-body">
-          <h4 class="service-title">{{ booking.serviceName }}</h4>
+          <h4 class="service-title">{{ booking.service_name || booking.serviceName }}</h4>
           <div class="salon-name-row">
-            <span><strong>{{ booking.salonName }}</strong></span>
+            <span><strong>{{ booking.spa_name || booking.salonName }}</strong></span>
           </div>
           <div class="meta-tags">
-            <span class="meta-tag">Time: {{ booking.appointmentTime }}</span>
-            <span class="meta-tag">Duration: {{ booking.durationMinutes }} mins</span>
-            <span class="meta-tag">Practitioner: {{ booking.therapistName || 'Master Therapist' }}</span>
+            <span class="meta-tag">Time: {{ booking.booking_time || booking.appointmentTime || booking.time || '14:30 WIB' }}</span>
+            <span class="meta-tag">Duration: {{ booking.duration_minutes || booking.durationMinutes || 60 }} mins</span>
+            <span class="meta-tag">Practitioner: {{ booking.therapist_name || booking.therapistName || 'Senior Therapist' }}</span>
           </div>
 
-          <!-- AI Translated Card Preview Trigger -->
-          <div v-if="booking.aiTranslatedCard" class="ai-card-trigger" @click="openTherapistCard(booking)">
+          <!-- Medical / Allergy brief notice if present -->
+          <div v-if="booking.allergy_alert || booking.medical_notes" class="ai-card-trigger" @click="openTherapistCard(booking)">
             <div class="ai-trigger-left">
-              <span class="ai-badge-sm">AI Therapist Brief Card</span>
+              <span class="ai-badge-sm">AI Therapist Instruction</span>
               <span class="ai-summary-text">
-                {{ booking.aiTranslatedCard.chiefComplaintId }}
+                {{ booking.allergy_alert || booking.medical_notes }}
               </span>
             </div>
             <span class="view-card-btn">View Card →</span>
@@ -74,8 +74,8 @@
         <!-- Bottom Action Bar -->
         <div class="booking-footer">
           <div class="price-box">
-            <span class="price-val">{{ formatPrice(booking.totalPriceIdr) }}</span>
-            <span class="payment-method">Settlement: PayNow / On-Site</span>
+            <span class="price-val">{{ formatPrice(booking.price_idr || booking.totalPriceIdr || booking.priceIdr || 200000) }}</span>
+            <span class="payment-method">Settlement: PayNow SGD / BI-FAST IDR</span>
           </div>
 
           <div class="footer-actions">
@@ -111,7 +111,11 @@ const openTherapistCard = (booking) => {
 
 const getWhatsAppLink = (booking) => {
   const phone = '6281277889901';
-  const text = encodeURIComponent(`Hello ${booking.salonName}, I am inquiring regarding booking #${booking.id} (${booking.serviceName}) scheduled for ${booking.appointmentTime}.`);
+  const salon = booking.spa_name || booking.salonName || 'Zentura Partner Spa';
+  const id = booking.booking_code || booking.bookingCode || booking.id;
+  const srv = booking.service_name || booking.serviceName || 'Massage';
+  const time = booking.booking_time || booking.appointmentTime || booking.time || '15:00';
+  const text = encodeURIComponent(`Hello ${salon}, I am inquiring regarding my Zentura booking #${id} (${srv}) scheduled for ${time}.`);
   return `https://wa.me/${phone}?text=${text}`;
 };
 </script>

@@ -1,10 +1,12 @@
 import { ref, computed } from 'vue';
 import { useNotification } from './useNotification';
+import { api } from '../services/api';
 
 const currentView = ref('landing'); // 'landing' | 'login' | 'dashboard'
-const currentRole = ref('admin'); // 'admin' | 'merchant' | 'tourist'
-const formRole = ref('admin'); // 'admin' | 'merchant' | 'tourist'
+const currentRole = ref('tourist'); // 'admin' | 'merchant' | 'tourist'
+const formRole = ref('tourist'); // 'admin' | 'merchant' | 'tourist'
 const isAuthenticated = ref(false);
+const authError = ref(null);
 
 export const PRESET_CREDENTIALS = {
   admin: {
@@ -24,17 +26,10 @@ export const PRESET_CREDENTIALS = {
   }
 };
 
-const currentUser = ref({
-  id: 'usr-admin',
-  name: 'Admin HQ',
-  email: 'admin@zentura.com',
-  role: 'admin',
-  avatar: 'https://images.unsplash.com/photo-1534528741775-53994a69daeb?auto=format&fit=crop&w=150&q=80',
-  title: 'Platform Master Admin'
-});
+const currentUser = ref(null);
 
 export function useAuth() {
-  const { showToast } = useNotification();
+  const { showSuccess, showError, showInfo } = useNotification();
 
   const isRoleAdmin = computed(() => currentRole.value === 'admin');
   const isRoleMerchant = computed(() => currentRole.value === 'merchant');
@@ -47,78 +42,154 @@ export function useAuth() {
   const setRole = (role) => {
     currentRole.value = role;
     formRole.value = role;
-    if (role === 'admin') {
-      currentUser.value = {
-        id: 'usr-admin',
-        name: 'Super Admin HQ',
-        email: 'admin@zentura.com',
-        role: 'admin',
-        avatar: 'https://images.unsplash.com/photo-1534528741775-53994a69daeb?auto=format&fit=crop&w=150&q=80',
-        title: 'Platform Master Admin'
-      };
-    } else if (role === 'merchant') {
-      currentUser.value = {
-        id: 'usr-merch',
-        name: 'Ratna Dewi',
-        email: 'partner@heritage-spa.id',
-        role: 'merchant',
-        avatar: 'https://images.unsplash.com/photo-1580489944761-15a19d654956?auto=format&fit=crop&w=150&q=80',
-        title: 'Owner — Martha Tilaar Spa'
-      };
-    } else {
-      currentUser.value = {
-        id: 'usr-tourist',
-        name: 'Alexandre Tan',
-        email: 'traveler@singapore.sg',
-        role: 'tourist',
-        avatar: 'https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?auto=format&fit=crop&w=150&q=80',
-        title: 'Cross-Border Traveler'
-      };
+  };
+
+  // 1-Click Quick Login directly from PostgreSQL database seed
+  const quickLogin = async (role) => {
+    authError.value = null;
+    try {
+      const response = await api.quickLogin(role);
+      if (response && response.user) {
+        currentUser.value = response.user;
+        currentRole.value = response.role || role;
+        formRole.value = response.role || role;
+        isAuthenticated.value = true;
+        currentView.value = 'dashboard';
+        showSuccess({
+          id: `Berhasil masuk sebagai ${role.toUpperCase()} dari database. Selamat datang, ${currentUser.value.name}!`,
+          en: `Signed in as ${role.toUpperCase()} directly from database. Welcome, ${currentUser.value.name}!`
+        }, {
+          id: 'Login Berhasil',
+          en: 'Sign In Successful'
+        });
+        return true;
+      }
+    } catch (e) {
+      console.warn('[Auth] Quick login error:', e.message);
+      authError.value = e.message;
+      showError({
+        id: e.message || 'Gagal masuk akun. Silakan coba kembali.',
+        en: e.message || 'Sign in failed. Please try again.'
+      }, {
+        id: 'Login Gagal',
+        en: 'Sign In Failed'
+      });
+      return false;
     }
   };
 
-  const quickLogin = (role) => {
-    setRole(role);
-    isAuthenticated.value = true;
-    currentView.value = 'dashboard';
-    showToast(`Signed in as ${role.toUpperCase()}. Welcome, ${currentUser.value.name}!`, 'success');
-  };
-
-  // Dynamic login that infers role directly from email
-  const login = (emailOrObj, passwordParam, roleParam) => {
+  // Live Database Login
+  const login = async (emailOrObj, passwordParam) => {
+    authError.value = null;
     let email = '';
-    let role = '';
+    let password = '';
 
     if (typeof emailOrObj === 'object' && emailOrObj !== null) {
-      email = (emailOrObj.email || '').toLowerCase();
-      role = emailOrObj.role;
+      email = (emailOrObj.email || '').trim().toLowerCase();
+      password = emailOrObj.password || '';
     } else if (typeof emailOrObj === 'string') {
-      email = emailOrObj.toLowerCase();
-      role = roleParam;
+      email = emailOrObj.trim().toLowerCase();
+      password = passwordParam || '';
     }
 
-    // Infer role dynamically from email if not explicitly provided
-    if (!role) {
-      if (email.includes('admin') || email === 'admin@zentura.com') {
-        role = 'admin';
-      } else if (email.includes('partner') || email.includes('merchant') || email.includes('spa') || email === 'partner@heritage-spa.id') {
-        role = 'merchant';
+    if (!email || !password) {
+      const msg = {
+        id: 'Email dan kata sandi wajib diisi.',
+        en: 'Email and password are required.'
+      };
+      authError.value = msg.id;
+      showError(msg, { id: 'Validasi Gagal', en: 'Validation Error' });
+      return false;
+    }
+
+    try {
+      const response = await api.login({ email, password });
+      if (response && response.user) {
+        currentUser.value = response.user;
+        currentRole.value = response.role || response.user.role || 'tourist';
+        formRole.value = currentRole.value;
+        isAuthenticated.value = true;
+        currentView.value = 'dashboard';
+        showSuccess({
+          id: `Selamat datang kembali, ${currentUser.value.name}!`,
+          en: `Welcome back, ${currentUser.value.name}!`
+        }, {
+          id: 'Login Berhasil',
+          en: 'Sign In Successful'
+        });
+        return true;
       } else {
-        role = 'tourist';
+        throw new Error('Respon server tidak valid.');
       }
+    } catch (e) {
+      const msg = {
+        id: e.message || 'Email atau password salah. Periksa kembali akun Anda.',
+        en: e.message || 'Invalid email or password. Please verify your credentials.'
+      };
+      authError.value = msg.id;
+      showError(msg, { id: 'Login Gagal', en: 'Sign In Failed' });
+      throw e;
     }
-
-    setRole(role);
-    isAuthenticated.value = true;
-    currentView.value = 'dashboard';
-    showToast(`Welcome back, ${currentUser.value.name}!`, 'success');
-    return true;
   };
 
-  const logout = () => {
+  // Live Database Register
+  const register = async ({ name, email, password, role, country, phone, spa_name }) => {
+    authError.value = null;
+    try {
+      const response = await api.register({
+        name,
+        email: email.trim().toLowerCase(),
+        password,
+        role: role || 'tourist',
+        country: country || (role === 'merchant' ? 'Indonesia' : 'Singapore'),
+        phone: phone || null,
+        spa_name: spa_name || null,
+      });
+
+      if (response && response.user) {
+        currentUser.value = response.user;
+        currentRole.value = response.role || role;
+        formRole.value = currentRole.value;
+        isAuthenticated.value = true;
+        currentView.value = 'dashboard';
+        showSuccess({
+          id: `Akun berhasil dibuat dan tersimpan di database Supabase! Selamat datang, ${currentUser.value.name}`,
+          en: `Account created and stored in Supabase database! Welcome, ${currentUser.value.name}`
+        }, {
+          id: 'Registrasi Berhasil',
+          en: 'Registration Successful'
+        });
+        return true;
+      } else {
+        throw new Error('Gagal memproses pendaftaran.');
+      }
+    } catch (e) {
+      const msg = {
+        id: e.message || 'Registrasi gagal. Email mungkin sudah terdaftar.',
+        en: e.message || 'Registration failed. Email may already be in use.'
+      };
+      authError.value = msg.id;
+      showError(msg, { id: 'Registrasi Gagal', en: 'Registration Failed' });
+      throw e;
+    }
+  };
+
+  const logout = async () => {
+    try {
+      await api.logout();
+    } catch (e) {
+      // ignore
+    }
+    currentUser.value = null;
     isAuthenticated.value = false;
     currentView.value = 'landing';
-    showToast('You have signed out safely.', 'info');
+    showInfo({
+      id: 'Anda telah berhasil keluar dari akun.',
+      en: 'You have signed out of your account.'
+    }, {
+      id: 'Sesi Berakhir',
+      en: 'Session Ended'
+    });
   };
 
   const navigateTo = (view, role = null) => {
@@ -134,6 +205,7 @@ export function useAuth() {
     formRole,
     currentUser,
     isAuthenticated,
+    authError,
     isRoleAdmin,
     isRoleMerchant,
     isRoleTourist,
@@ -142,6 +214,7 @@ export function useAuth() {
     setFormRole,
     quickLogin,
     login,
+    register,
     logout,
     navigateTo
   };

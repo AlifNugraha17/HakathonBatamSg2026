@@ -6,8 +6,6 @@
     <!-- Main Content Area -->
     <div class="admin-layout-main">
       <AdminHeader />
-
-      <!-- Active Tab Views -->
       <main class="admin-views-container">
         <AdminOverview v-if="activeAdminTab === 'overview'" />
         <MerchantManagement v-else-if="activeAdminTab === 'merchants'" />
@@ -37,15 +35,16 @@ const { activeAdminTab } = useAdminStore();
 <style scoped>
 .admin-dashboard-layout {
   display: grid;
-  grid-template-columns: 240px 1fr;
-  gap: 1.25rem;
-  max-width: 1400px;
-  margin: 0 auto;
+  grid-template-columns: 260px 1fr;
+  gap: 1.5rem;
+  max-width: 1440px;
+  margin: 0.5rem auto 2.5rem;
 }
 
 .admin-layout-main {
   display: flex;
   flex-direction: column;
+  min-width: 0;
 }
 
 .admin-views-container {
@@ -55,6 +54,9 @@ const { activeAdminTab } = useAdminStore();
 @media (max-width: 900px) {
   .admin-dashboard-layout {
     grid-template-columns: 1fr;
+    gap: 1rem;
   }
 }
 </style>
+
+

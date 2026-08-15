@@ -111,14 +111,14 @@ const { showToast } = useNotification();
 const showAddModal = ref(false);
 
 const newSlot = ref({
-  serviceName: merchantSalon.value.services[0]?.name || 'Express Neck & Back Relief',
+  serviceName: merchantSalon.value?.services?.[0]?.name || 'Express Neck & Back Relief',
   chair: 'Chair 3',
   time: '14:45 - 15:30',
   durationMinutes: 45,
   priceIdr: 280000,
   originalPriceIdr: 350000,
   discountPercent: 20,
-  therapistName: 'Mbak Dewi'
+  therapistName: 'Dewi Anggraini'
 });
 
 const handleCreateSlot = () => {

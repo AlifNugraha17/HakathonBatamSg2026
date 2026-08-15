@@ -1,135 +1,318 @@
 <template>
   <div class="auth-form-card">
-    <div class="form-header">
-      <h2 class="auth-heading">{{ t('auth_title') }}</h2>
-      <p class="auth-sub">{{ t('auth_sub') }}</p>
+    <!-- Mode Switcher Tabs -->
+    <div class="auth-tabs">
+      <button 
+        type="button" 
+        class="auth-tab-btn" 
+        :class="{ active: authMode === 'login' }"
+        @click="switchMode('login')"
+      >
+        <span>{{ currentLang === 'id' ? 'Masuk (Login)' : 'Sign In' }}</span>
+      </button>
+      <button 
+        type="button" 
+        class="auth-tab-btn" 
+        :class="{ active: authMode === 'register' }"
+        @click="switchMode('register')"
+      >
+        <span>{{ currentLang === 'id' ? 'Daftar Baru (Register)' : 'Create Account' }}</span>
+      </button>
     </div>
 
-    <!-- Standard Login Form without Role Tabs -->
-    <form @submit.prevent="handleSubmit" class="auth-form">
-      <div class="form-group">
-        <label class="form-label" for="email">{{ t('auth_email_label') }}</label>
-        <input 
-          id="email"
-          v-model="email" 
-          type="email" 
-          class="form-input" 
-          placeholder="name@company.com" 
-          required 
-        />
+    <!-- Error Banner -->
+    <div v-if="authError" class="auth-error-banner">
+      <span class="error-icon">⚠️</span>
+      <span class="error-text">{{ authError }}</span>
+    </div>
+
+    <!-- ==================== 1. LOGIN FORM ==================== -->
+    <div v-if="authMode === 'login'">
+      <div class="form-header">
+        <h2 class="auth-heading">{{ t('auth_title') }}</h2>
+        <p class="auth-sub">{{ currentLang === 'id' ? 'Autentikasi langsung dengan database PostgreSQL Supabase' : 'Direct authentication with PostgreSQL Supabase database' }}</p>
       </div>
 
-      <div class="form-group">
-        <div class="label-row">
-          <label class="form-label" for="password">{{ t('auth_pwd_label') }}</label>
-          <button type="button" class="forgot-link" @click="handleForgot">
-            {{ currentLang === 'id' ? 'Lupa Sandi?' : 'Forgot Password?' }}
-          </button>
-        </div>
-        <div class="input-wrapper">
+      <form @submit.prevent="handleLogin" class="auth-form">
+        <div class="form-group">
+          <label class="form-label" for="login-email">{{ t('auth_email_label') }}</label>
           <input 
-            id="password"
-            v-model="password" 
-            :type="showPassword ? 'text' : 'password'" 
+            id="login-email"
+            v-model="loginEmail" 
+            type="email" 
             class="form-input" 
-            placeholder="••••••••" 
+            placeholder="name@company.com" 
             required 
           />
+        </div>
+
+        <div class="form-group">
+          <div class="label-row">
+            <label class="form-label" for="login-password">{{ t('auth_pwd_label') }}</label>
+            <button type="button" class="forgot-link" @click="handleForgot">
+              {{ currentLang === 'id' ? 'Lupa Sandi?' : 'Forgot Password?' }}
+            </button>
+          </div>
+          <div class="input-wrapper">
+            <input 
+              id="login-password"
+              v-model="loginPassword" 
+              :type="showPassword ? 'text' : 'password'" 
+              class="form-input" 
+              placeholder="••••••••" 
+              required 
+            />
+            <button 
+              type="button" 
+              class="toggle-pwd-btn" 
+              @click="showPassword = !showPassword"
+            >
+              {{ showPassword ? (currentLang === 'id' ? 'Tutup' : 'Hide') : (currentLang === 'id' ? 'Lihat' : 'Show') }}
+            </button>
+          </div>
+        </div>
+
+        <div class="form-options">
+          <label class="remember-checkbox">
+            <input type="checkbox" v-model="rememberMe" />
+            <span>{{ t('auth_remember') }}</span>
+          </label>
+        </div>
+
+        <button 
+          type="submit" 
+          class="btn-submit" 
+          :disabled="isLoading"
+        >
+          <span v-if="isLoading">{{ t('loading') }}</span>
+          <span v-else>{{ currentLang === 'id' ? 'Masuk ke Sistem' : 'Sign In to Account' }}</span>
+        </button>
+      </form>
+
+      <!-- Demo Credentials Quick-Fill Chips -->
+      <div class="quick-fill-section">
+        <span class="quick-fill-label">{{ t('auth_demo_hint') }}</span>
+        <div class="quick-chips">
           <button 
             type="button" 
-            class="toggle-pwd-btn" 
-            @click="showPassword = !showPassword"
+            class="chip-btn" 
+            :class="{ active: loginEmail === 'admin@zentura.com' }"
+            @click="fillDemo('admin@zentura.com')"
           >
-            {{ showPassword ? (currentLang === 'id' ? 'Tutup' : 'Hide') : (currentLang === 'id' ? 'Lihat' : 'Show') }}
+            <span>Admin</span>
+          </button>
+          <button 
+            type="button" 
+            class="chip-btn" 
+            :class="{ active: loginEmail === 'partner@heritage-spa.id' }"
+            @click="fillDemo('partner@heritage-spa.id')"
+          >
+            <span>Merchant</span>
+          </button>
+          <button 
+            type="button" 
+            class="chip-btn" 
+            :class="{ active: loginEmail === 'traveler@singapore.sg' }"
+            @click="fillDemo('traveler@singapore.sg')"
+          >
+            <span>Tourist</span>
           </button>
         </div>
       </div>
+    </div>
 
-      <div class="form-options">
-        <label class="remember-checkbox">
-          <input type="checkbox" v-model="rememberMe" />
-          <span>{{ t('auth_remember') }}</span>
-        </label>
+    <!-- ==================== 2. REGISTER FORM ==================== -->
+    <div v-else>
+      <div class="form-header">
+        <h2 class="auth-heading">{{ currentLang === 'id' ? 'Buat Akun Baru' : 'Create New Account' }}</h2>
+        <p class="auth-sub">{{ currentLang === 'id' ? 'Data akan tersimpan langsung di tabel users database Supabase' : 'Data will be saved directly into Supabase users table' }}</p>
       </div>
 
-      <button 
-        type="submit" 
-        class="btn-submit" 
-        :disabled="isLoading"
-      >
-        <span v-if="isLoading">{{ t('loading') }}</span>
-        <span v-else>{{ t('auth_signin_btn') }}</span>
-      </button>
-    </form>
+      <form @submit.prevent="handleRegister" class="auth-form">
+        <div class="form-group">
+          <label class="form-label" for="reg-name">{{ currentLang === 'id' ? 'Nama Lengkap' : 'Full Name' }} *</label>
+          <input 
+            id="reg-name"
+            v-model="regForm.name" 
+            type="text" 
+            class="form-input" 
+            placeholder="e.g. Rachel Green / Hendra Saputra" 
+            required 
+          />
+        </div>
 
-    <!-- Discreet Demo Credentials Quick-Fill Chips -->
-    <div class="quick-fill-section">
-      <span class="quick-fill-label">{{ t('auth_demo_hint') }}</span>
-      <div class="quick-chips">
+        <div class="form-group">
+          <label class="form-label" for="reg-email">{{ t('auth_email_label') }} *</label>
+          <input 
+            id="reg-email"
+            v-model="regForm.email" 
+            type="email" 
+            class="form-input" 
+            placeholder="rachel@example.com" 
+            required 
+          />
+        </div>
+
+        <div class="form-group">
+          <label class="form-label" for="reg-role">{{ currentLang === 'id' ? 'Tipe Akun' : 'Account Role' }} *</label>
+          <div class="role-selector-grid">
+            <button 
+              type="button" 
+              class="role-opt-btn"
+              :class="{ active: regForm.role === 'tourist' }"
+              @click="regForm.role = 'tourist'"
+            >
+              <span class="role-opt-icon">🛳️</span>
+              <span class="role-opt-title">{{ currentLang === 'id' ? 'Turis / Wisatawan' : 'Tourist / Traveler' }}</span>
+              <span class="role-opt-sub">Singapore ⇄ Batam</span>
+            </button>
+            <button 
+              type="button" 
+              class="role-opt-btn"
+              :class="{ active: regForm.role === 'merchant' }"
+              @click="regForm.role = 'merchant'"
+            >
+              <span class="role-opt-icon">💆‍♀️</span>
+              <span class="role-opt-title">{{ currentLang === 'id' ? 'Mitra Spa / Merchant' : 'Spa Partner / Merchant' }}</span>
+              <span class="role-opt-sub">Batam Wellness Hub</span>
+            </button>
+          </div>
+        </div>
+
+        <!-- Spa Name input if merchant -->
+        <div v-if="regForm.role === 'merchant'" class="form-group">
+          <label class="form-label" for="reg-spa">{{ currentLang === 'id' ? 'Nama Spa / Wellness Center' : 'Spa Facility Name' }} *</label>
+          <input 
+            id="reg-spa"
+            v-model="regForm.spa_name" 
+            type="text" 
+            class="form-input" 
+            placeholder="e.g. Batam Bliss Royal Spa" 
+            required 
+          />
+        </div>
+
+        <div class="form-group">
+          <label class="form-label" for="reg-phone">{{ currentLang === 'id' ? 'Nomor WhatsApp / HP' : 'Phone / WhatsApp' }}</label>
+          <input 
+            id="reg-phone"
+            v-model="regForm.phone" 
+            type="tel" 
+            class="form-input" 
+            placeholder="+65 9123 4567 / +62 812 3456 7890" 
+          />
+        </div>
+
+        <div class="form-group">
+          <label class="form-label" for="reg-password">{{ t('auth_pwd_label') }} (Min. 6 karakter) *</label>
+          <div class="input-wrapper">
+            <input 
+              id="reg-password"
+              v-model="regForm.password" 
+              :type="showPassword ? 'text' : 'password'" 
+              class="form-input" 
+              placeholder="••••••••" 
+              minlength="6"
+              required 
+            />
+            <button 
+              type="button" 
+              class="toggle-pwd-btn" 
+              @click="showPassword = !showPassword"
+            >
+              {{ showPassword ? (currentLang === 'id' ? 'Tutup' : 'Hide') : (currentLang === 'id' ? 'Lihat' : 'Show') }}
+            </button>
+          </div>
+        </div>
+
         <button 
-          type="button" 
-          class="chip-btn" 
-          :class="{ active: email === 'admin@zentura.com' }"
-          @click="fillDemo('admin@zentura.com')"
+          type="submit" 
+          class="btn-submit" 
+          :disabled="isLoading"
         >
-          <span>Admin</span>
+          <span v-if="isLoading">{{ t('loading') }}</span>
+          <span v-else>{{ currentLang === 'id' ? 'Daftar Akun ke Database' : 'Register Account in Database' }}</span>
         </button>
-        <button 
-          type="button" 
-          class="chip-btn" 
-          :class="{ active: email === 'partner@heritage-spa.id' }"
-          @click="fillDemo('partner@heritage-spa.id')"
-        >
-          <span>Merchant</span>
-        </button>
-        <button 
-          type="button" 
-          class="chip-btn" 
-          :class="{ active: email === 'traveler@singapore.sg' }"
-          @click="fillDemo('traveler@singapore.sg')"
-        >
-          <span>Tourist</span>
-        </button>
-      </div>
+      </form>
     </div>
   </div>
 </template>
 
 <script setup>
-import { ref } from 'vue';
+import { ref, reactive } from 'vue';
 import { useAuth } from '../../../composables/useAuth';
 import { useLanguage } from '../../../composables/useLanguage';
 import { useNotification } from '../../../composables/useNotification';
 
-const { login } = useAuth();
+const { login, register, authError } = useAuth();
 const { currentLang, t } = useLanguage();
 const { showToast } = useNotification();
 
-const email = ref('admin@zentura.com');
-const password = ref('password123');
+const authMode = ref('login'); // 'login' | 'register'
+const loginEmail = ref('admin@zentura.com');
+const loginPassword = ref('password123');
 const showPassword = ref(false);
 const rememberMe = ref(true);
 const isLoading = ref(false);
 
-const fillDemo = (demoEmail) => {
-  email.value = demoEmail;
-  password.value = 'password123';
+const regForm = reactive({
+  name: '',
+  email: '',
+  password: '',
+  role: 'tourist',
+  country: 'Singapore',
+  phone: '',
+  spa_name: ''
+});
+
+const switchMode = (mode) => {
+  authMode.value = mode;
+  if (authError) authError.value = null;
 };
 
-const handleSubmit = async () => {
+const fillDemo = (demoEmail) => {
+  loginEmail.value = demoEmail;
+  loginPassword.value = 'password123';
+};
+
+const handleLogin = async () => {
   isLoading.value = true;
-  await login(email.value, password.value);
-  isLoading.value = false;
+  try {
+    await login(loginEmail.value, loginPassword.value);
+  } catch (e) {
+    // Handled in useAuth
+  } finally {
+    isLoading.value = false;
+  }
+};
+
+const handleRegister = async () => {
+  isLoading.value = true;
+  try {
+    await register({
+      name: regForm.name,
+      email: regForm.email,
+      password: regForm.password,
+      role: regForm.role,
+      country: regForm.role === 'merchant' ? 'Indonesia' : (regForm.country || 'Singapore'),
+      phone: regForm.phone,
+      spa_name: regForm.spa_name
+    });
+  } catch (e) {
+    // Handled in useAuth
+  } finally {
+    isLoading.value = false;
+  }
 };
 
 const handleForgot = () => {
-  showToast(currentLang.value === 'id' ? 'Silakan gunakan kredensial demo untuk pengujian.' : 'Please use demo credentials for evaluation.', 'info');
+  showToast(currentLang.value === 'id' ? 'Silakan gunakan kredensial demo untuk pengujian langsung.' : 'Please use demo credentials for evaluation.', 'info');
 };
 </script>
 
 <style scoped>
 .auth-form-card {
-  padding: 2.5rem 2.25rem;
+  padding: 2rem 2.25rem;
   border-radius: var(--radius-lg);
   background: #ffffff;
   border: 1px solid #e2e8f0;
@@ -138,12 +321,53 @@ const handleForgot = () => {
   flex-direction: column;
 }
 
-.form-header {
+.auth-tabs {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 0.5rem;
+  background: #f1f5f9;
+  padding: 0.35rem;
+  border-radius: var(--radius-sm);
   margin-bottom: 1.5rem;
 }
 
+.auth-tab-btn {
+  background: transparent;
+  border: none;
+  padding: 0.55rem 0.75rem;
+  font-size: 0.84rem;
+  font-weight: 700;
+  color: #64748b;
+  border-radius: var(--radius-xs);
+  cursor: pointer;
+  transition: all 0.15s ease;
+}
+
+.auth-tab-btn.active {
+  background: #ffffff;
+  color: #1e3a8a;
+  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.06);
+}
+
+.auth-error-banner {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  background: #fef2f2;
+  border: 1px solid #fecaca;
+  color: #991b1b;
+  padding: 0.65rem 0.85rem;
+  border-radius: var(--radius-xs);
+  font-size: 0.82rem;
+  margin-bottom: 1.25rem;
+}
+
+.form-header {
+  margin-bottom: 1.25rem;
+}
+
 .auth-heading {
-  font-size: 1.6rem;
+  font-size: 1.45rem;
   font-weight: 800;
   color: #0f172a;
   margin: 0 0 0.35rem 0;
@@ -151,16 +375,16 @@ const handleForgot = () => {
 }
 
 .auth-sub {
-  font-size: 0.84rem;
+  font-size: 0.82rem;
   color: #64748b;
   margin: 0;
-  line-height: 1.5;
+  line-height: 1.45;
 }
 
 .auth-form {
   display: flex;
   flex-direction: column;
-  gap: 1.15rem;
+  gap: 1rem;
 }
 
 .form-group {
@@ -176,7 +400,7 @@ const handleForgot = () => {
 }
 
 .form-label {
-  font-size: 0.82rem;
+  font-size: 0.8rem;
   font-weight: 700;
   color: #334155;
 }
@@ -197,10 +421,10 @@ const handleForgot = () => {
 
 .form-input {
   width: 100%;
-  padding: 0.7rem 0.95rem;
+  padding: 0.65rem 0.85rem;
   border-radius: var(--radius-xs);
   border: 1px solid #cbd5e1;
-  font-size: 0.88rem;
+  font-size: 0.86rem;
   color: #0f172a;
   background: #ffffff;
   outline: none;
@@ -223,6 +447,51 @@ const handleForgot = () => {
   font-weight: 600;
 }
 
+.role-selector-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 0.65rem;
+}
+
+.role-opt-btn {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  padding: 0.65rem 0.75rem;
+  background: #f8fafc;
+  border: 1.5px solid #e2e8f0;
+  border-radius: var(--radius-xs);
+  cursor: pointer;
+  transition: all 0.15s ease;
+  text-align: left;
+}
+
+.role-opt-btn:hover {
+  border-color: #93c5fd;
+  background: #f0f9ff;
+}
+
+.role-opt-btn.active {
+  border-color: #2563eb;
+  background: #eff6ff;
+}
+
+.role-opt-icon {
+  font-size: 1.15rem;
+  margin-bottom: 0.2rem;
+}
+
+.role-opt-title {
+  font-size: 0.8rem;
+  font-weight: 700;
+  color: #0f172a;
+}
+
+.role-opt-sub {
+  font-size: 0.68rem;
+  color: #64748b;
+}
+
 .form-options {
   display: flex;
   justify-content: space-between;
@@ -242,27 +511,32 @@ const handleForgot = () => {
   background: linear-gradient(135deg, #1e3a8a 0%, #1d4ed8 100%);
   color: #ffffff;
   border: none;
-  font-size: 0.92rem;
+  font-size: 0.9rem;
   font-weight: 800;
-  padding: 0.8rem;
+  padding: 0.75rem;
   border-radius: var(--radius-xs);
   cursor: pointer;
   box-shadow: 0 4px 12px rgba(29, 78, 216, 0.25);
   transition: all 0.15s ease;
-  margin-top: 0.5rem;
+  margin-top: 0.35rem;
 }
 
-.btn-submit:hover {
+.btn-submit:hover:not(:disabled) {
   background: #0f172a;
   transform: translateY(-1px);
+}
+
+.btn-submit:disabled {
+  opacity: 0.7;
+  cursor: not-allowed;
 }
 
 .quick-fill-section {
   display: flex;
   align-items: center;
   gap: 0.65rem;
-  margin-top: 1.5rem;
-  padding-top: 1.25rem;
+  margin-top: 1.25rem;
+  padding-top: 1.1rem;
   border-top: 1px solid #f1f5f9;
   flex-wrap: wrap;
 }

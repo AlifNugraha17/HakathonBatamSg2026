@@ -17,31 +17,34 @@
         <!-- Tourist Identity Strip -->
         <div class="tourist-strip">
           <div class="strip-left">
-            <span class="tourist-name">{{ booking.touristName }}</span>
-            <span class="tourist-country">{{ booking.touristCountry }}</span>
+            <span class="tourist-name">{{ booking.guest_name || booking.guestName || booking.touristName || 'Maritime Traveler' }}</span>
+            <span class="tourist-country">{{ booking.touristCountry || 'Singapore 🇸🇬' }}</span>
           </div>
           <div class="strip-right">
-            <span class="booking-id-tag">#{{ booking.id }}</span>
-            <span class="time-tag">Time: {{ booking.appointmentTime }}</span>
+            <span class="booking-id-tag">#{{ booking.booking_code || booking.bookingCode || booking.id }}</span>
+            <span class="time-tag">Time: {{ booking.booking_time || booking.appointmentTime || booking.time || '15:00 WIB' }}</span>
           </div>
         </div>
 
         <!-- Allergy Red Warning Banner -->
         <div
-          v-if="booking.aiTranslatedCard?.allergyAlerts && booking.aiTranslatedCard.allergyAlerts.length > 0"
+          v-if="booking.allergy_alert || (booking.aiTranslatedCard?.allergyAlerts && booking.aiTranslatedCard.allergyAlerts.length > 0)"
           class="red-alert-card"
         >
           <div class="alert-content">
             <h4 class="alert-title">ALLERGY & DERMATOLOGICAL SAFETY ALERT:</h4>
+            <div v-if="booking.allergy_alert" class="alert-text">
+              • {{ booking.allergy_alert }}
+            </div>
             <div
-              v-for="(alert, idx) in booking.aiTranslatedCard.allergyAlerts"
+              v-for="(alert, idx) in (booking.aiTranslatedCard?.allergyAlerts || [])"
               :key="idx"
               class="alert-text"
             >
               • {{ alert }}
             </div>
             <div class="alert-instruction">
-              <em>*Please utilize alternative organic carrier oils (VCO / Olive Oil) per safety instructions above.*</em>
+              <em>*Wajib gunakan minyak alternatif (VCO / Olive Oil) sesuai instruksi keselamatan di atas.*</em>
             </div>
           </div>
         </div>
@@ -54,9 +57,9 @@
               <h5>Pressure Preference</h5>
             </div>
             <div class="pressure-badge text-blue">
-              {{ booking.aiTranslatedCard?.pressure || 'Moderate Firm' }}
+              {{ booking.aiTranslatedCard?.pressure || 'Kuat / Sedang (Firm)' }}
             </div>
-            <p class="pressure-note">Verify client pressure comfort in the first 5 minutes.</p>
+            <p class="pressure-note">Konfirmasi kenyamanan tekanan pada 5 menit pertama.</p>
           </div>
 
           <!-- Focus Areas -->
@@ -66,7 +69,7 @@
             </div>
             <div class="focus-tags">
               <span
-                v-for="(area, idx) in (booking.aiTranslatedCard?.focusAreas || ['Full Body Relaxation'])"
+                v-for="(area, idx) in (booking.aiTranslatedCard?.focusAreas || ['Bahu & Leher', 'Punggung Bawah'])"
                 :key="idx"
                 class="focus-pill"
               >
@@ -79,16 +82,16 @@
         <!-- Etiquette & Communication -->
         <div class="etiquette-section">
           <div class="card-title-row">
-            <h5>Treatment Environment & Etiquette</h5>
+            <h5>Ferry Transit Time Guarantee</h5>
           </div>
           <div class="etiquette-list">
-            <div
-              v-for="(eti, idx) in (booking.aiTranslatedCard?.etiquette || ['Standard Relaxation Ambience'])"
-              :key="idx"
-              class="eti-item"
-            >
+            <div class="eti-item">
               <span>•</span>
-              <span>{{ eti }}</span>
+              <span>Jadwal Feri: {{ booking.ferry_time || '17:00 Ferry to HarbourFront SG' }}</span>
+            </div>
+            <div class="eti-item">
+              <span>•</span>
+              <span>Layanan: {{ booking.service_name || booking.serviceName || 'Balinese Massage' }} ({{ booking.duration_minutes || 60 }} mins)</span>
             </div>
           </div>
         </div>
@@ -96,7 +99,7 @@
         <!-- Raw Notes Indonesian Full Text -->
         <div class="raw-notes-card">
           <h5 class="notes-header">Complete Indonesian Practitioner Card:</h5>
-          <pre class="notes-pre">{{ booking.aiTranslatedCard?.therapistNotesId || booking.touristNotes }}</pre>
+          <pre class="notes-pre">{{ booking.medical_notes || booking.aiTranslatedCard?.therapistNotesId || booking.touristNotes || 'Instruksi: Pijat relaksasi standar, tekanan sedang, fokus bahu dan leher.' }}</pre>
         </div>
       </div>
 

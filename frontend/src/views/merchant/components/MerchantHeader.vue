@@ -14,9 +14,9 @@
       </div>
 
       <div class="merchant-profile-pill">
-        <div class="avatar-circle">{{ currentUser.name.charAt(0) }}</div>
+        <div class="avatar-circle">{{ (currentUser?.name || 'M').charAt(0) }}</div>
         <div class="profile-info">
-          <span class="name">{{ currentUser.name }}</span>
+          <span class="name">{{ currentUser?.name || 'Merchant Partner' }}</span>
           <span class="role">Verified Spa Partner</span>
         </div>
       </div>
