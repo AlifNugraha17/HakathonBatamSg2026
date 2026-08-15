@@ -1,63 +1,146 @@
 <template>
-  <header class="sticky top-0 z-50 glass-card border-b border-slate-800/80 backdrop-blur-md bg-slate-950/80">
-    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-20 flex items-center justify-between">
-      
-      <!-- Brand Logo -->
-      <div class="flex items-center space-x-3 cursor-pointer" @click="$emit('nav', 'home')">
-        <div class="w-10 h-10 rounded-xl bg-gradient-to-tr from-sky-500 to-emerald-400 flex items-center justify-center shadow-lg shadow-sky-500/20">
-          <span class="text-slate-950 font-black text-xl tracking-tighter">BP</span>
-        </div>
-        <div>
-          <div class="flex items-center space-x-2">
-            <span class="text-xl font-bold tracking-tight text-white">Batam<span class="text-sky-400">Pulse</span></span>
-            <span class="px-2 py-0.5 text-[10px] font-semibold tracking-wider uppercase rounded-full bg-emerald-500/20 text-emerald-300 border border-emerald-500/30">SG ⇄ Batam</span>
-          </div>
-          <p class="text-xs text-slate-400 font-medium hidden sm:block">Cross-Border Medical & Leisure Tourism Hub</p>
-        </div>
-      </div>
-
-      <!-- Navigation Links -->
-      <nav class="hidden md:flex items-center space-x-8">
-        <a @click.prevent="$emit('nav', 'medical')" href="#" class="text-sm font-medium text-slate-300 hover:text-sky-400 transition-colors flex items-center gap-1.5">
-          <span>🩺 Wisata Medis & Spa</span>
-        </a>
-        <a @click.prevent="$emit('nav', 'resorts')" href="#" class="text-sm font-medium text-slate-300 hover:text-sky-400 transition-colors flex items-center gap-1.5">
-          <span>⛳ Golf & Resorts</span>
-        </a>
-        <a @click.prevent="$emit('open-ferry')" href="#" class="text-sm font-medium text-slate-300 hover:text-emerald-400 transition-colors flex items-center gap-1.5">
-          <span>🚢 Feri & Transit</span>
-        </a>
-        <a @click.prevent="$emit('open-ai')" href="#" class="text-sm font-medium text-slate-300 hover:text-amber-400 transition-colors flex items-center gap-1.5">
-          <span>✨ AI Itinerary</span>
-        </a>
-      </nav>
-
-      <!-- Currency Switcher & CTA -->
-      <div class="flex items-center space-x-3">
-        <!-- Live Currency Pill -->
-        <button 
-          @click="$emit('toggle-currency')"
-          class="flex items-center space-x-2 px-3 py-1.5 rounded-lg bg-slate-900 border border-slate-700/80 text-xs font-semibold hover:border-sky-500/50 transition-all group relative"
-          title="Klik untuk ubah tampilan SGD / IDR"
-        >
-          <span class="relative flex h-2 w-2">
-            <span class="animate-ping absolute inline-flex h-full w-full rounded-full bg-emerald-400 opacity-75"></span>
-            <span class="relative inline-flex rounded-full h-2 w-2 bg-emerald-500"></span>
+  <header class="sticky top-0 z-50 bg-white/95 backdrop-blur-md border-b-2 border-slate-200 shadow-sm">
+    <!-- Top Micro Live Status Bar (Single Line) -->
+    <div class="bg-gradient-to-r from-sky-800 via-teal-800 to-emerald-800 text-white py-1 px-3 sm:px-6 text-xs font-medium">
+      <div class="max-w-7xl mx-auto flex items-center justify-between gap-4 text-[11px] whitespace-nowrap">
+        <div class="flex items-center gap-3 overflow-x-auto no-scrollbar">
+          <span class="inline-flex items-center gap-1.5 bg-emerald-400/20 px-2 py-0.5 rounded-full text-emerald-100 border border-emerald-400/30 font-mono">
+            <span class="w-1.5 h-1.5 rounded-full bg-emerald-400 animate-ping"></span>
+            <span>Batam Centre: <strong>12m</strong></span>
           </span>
-          <span class="text-slate-400">Kurs Live:</span>
-          <span class="text-emerald-400 font-mono font-bold">1 SGD = Rp {{ formatNumber(exchangeRate) }}</span>
-          <span class="px-1.5 py-0.5 rounded bg-sky-500/20 text-sky-300 text-[10px] uppercase font-bold">{{ currency }}</span>
-        </button>
+          <span class="text-sky-300 hidden sm:inline">•</span>
+          <span class="inline-flex items-center gap-1.5 bg-amber-400/20 px-2 py-0.5 rounded-full text-amber-100 border border-amber-400/30 font-mono">
+            <span>HarbourFront: <strong>28m</strong></span>
+          </span>
+          <span class="text-sky-300 hidden md:inline">•</span>
+          <span class="text-sky-100 hidden md:inline">
+            Feri Transit: <strong class="text-emerald-300">45 Menit</strong>
+          </span>
+        </div>
 
-        <!-- CTA Button -->
-        <button 
-          @click="$emit('open-booking')"
-          class="hidden sm:inline-flex items-center justify-center px-4 py-2 rounded-xl text-sm font-semibold text-slate-950 bg-gradient-to-r from-sky-400 to-emerald-400 hover:from-sky-300 hover:to-emerald-300 transition-all shadow-md shadow-sky-500/20 active:scale-95"
-        >
-          Konsultasi & Janji
-        </button>
+        <div class="flex items-center gap-3 shrink-0">
+          <button 
+            @click="$emit('open-price-check', 'CALCULATOR')" 
+            class="text-sky-100 hover:text-white transition-colors cursor-pointer flex items-center gap-1 font-bold"
+          >
+            <span>Kurs Real:</span>
+            <strong class="text-emerald-300 font-mono">1 SGD = Rp {{ formatNumber(exchangeRate) }}</strong>
+          </button>
+          <span class="text-sky-300 hidden sm:inline">•</span>
+          <span class="text-sky-200 hidden sm:inline">Free Visa 30 Hari</span>
+        </div>
       </div>
+    </div>
 
+    <!-- Main Navigation Bar (Full Left-Aligned Flow) -->
+    <div class="max-w-7xl mx-auto px-3 sm:px-4 lg:px-6">
+      <div class="flex items-center justify-between h-16 sm:h-18">
+        
+        <!-- Left Group: Logo Far Left + Nav Links -->
+        <div class="flex items-center gap-5 sm:gap-6 lg:gap-8">
+          
+          <!-- Brand Logo (Pushed to the Left, Crisp) -->
+          <div 
+            class="flex items-center space-x-2.5 cursor-pointer select-none shrink-0 group" 
+            @click="$emit('nav', 'home')"
+          >
+            <div class="w-9 h-9 sm:w-10 sm:h-10 rounded-xl bg-gradient-to-tr from-sky-600 via-teal-600 to-emerald-600 flex items-center justify-center shadow-md text-white font-black text-lg tracking-tighter group-hover:scale-105 transition-transform">
+              BP
+            </div>
+            <div class="flex items-center gap-1.5">
+              <span class="text-xl font-black font-display tracking-tight text-slate-900 group-hover:text-teal-700 transition-colors">
+                Batam<span class="text-teal-700">Pulse</span>
+              </span>
+              <span class="px-2 py-0.5 rounded-full text-[10px] font-black uppercase tracking-wider bg-sky-100 text-sky-900 border border-sky-300 shrink-0">
+                SG ⇄ Batam
+              </span>
+            </div>
+          </div>
+
+          <!-- Navigation Links (Left-Aligned next to Logo) -->
+          <nav class="hidden lg:flex items-center space-x-1 sm:space-x-1.5 whitespace-nowrap">
+            
+            <!-- Medis & Spa -->
+            <a 
+              @click.prevent="$emit('nav', 'medical')" 
+              href="#" 
+              class="px-3 py-1.5 rounded-xl text-xs transition-all flex items-center gap-1.5 cursor-pointer"
+              :class="activeNav === 'medical' 
+                ? 'bg-sky-100 text-sky-950 font-black shadow-sm border-2 border-sky-400' 
+                : 'text-slate-800 hover:text-slate-950 hover:bg-slate-100 font-bold border-2 border-transparent'"
+            >
+              <span>🩺</span>
+              <span>Medis & Spa</span>
+            </a>
+
+            <!-- Golf & Resort -->
+            <a 
+              @click.prevent="$emit('nav', 'resorts')" 
+              href="#" 
+              class="px-3 py-1.5 rounded-xl text-xs transition-all flex items-center gap-1.5 cursor-pointer"
+              :class="activeNav === 'resorts' 
+                ? 'bg-emerald-100 text-emerald-950 font-black shadow-sm border-2 border-emerald-400' 
+                : 'text-slate-800 hover:text-slate-950 hover:bg-slate-100 font-bold border-2 border-transparent'"
+            >
+              <span>⛳</span>
+              <span>Golf & Resort</span>
+            </a>
+
+            <!-- Price Check & OCR -->
+            <a 
+              @click.prevent="$emit('open-price-check', 'CALCULATOR')" 
+              href="#" 
+              class="px-3 py-1.5 rounded-xl text-xs transition-all flex items-center gap-1.5 cursor-pointer"
+              :class="activeNav === 'price-check' 
+                ? 'bg-sky-100 text-sky-950 font-black shadow-sm border-2 border-sky-400' 
+                : 'text-slate-800 hover:text-slate-950 hover:bg-slate-100 font-bold border-2 border-transparent'"
+            >
+              <span>💰</span>
+              <span>Price Check & OCR</span>
+            </a>
+
+            <!-- Jadwal Feri -->
+            <a 
+              @click.prevent="$emit('open-ferry')" 
+              href="#" 
+              class="px-3 py-1.5 rounded-xl text-xs transition-all flex items-center gap-1.5 cursor-pointer"
+              :class="activeNav === 'ferry' 
+                ? 'bg-amber-100 text-amber-950 font-black shadow-sm border-2 border-amber-400' 
+                : 'text-slate-800 hover:text-amber-950 hover:bg-amber-50 font-bold border-2 border-transparent'"
+            >
+              <span>🚢</span>
+              <span>Jadwal Feri</span>
+            </a>
+
+            <!-- AI Itinerary -->
+            <a 
+              @click.prevent="$emit('open-ai')" 
+              href="#" 
+              class="px-3 py-1.5 rounded-xl text-xs transition-all flex items-center gap-1.5 cursor-pointer"
+              :class="activeNav === 'ai' 
+                ? 'bg-purple-100 text-purple-950 font-black shadow-sm border-2 border-purple-400' 
+                : 'text-slate-800 hover:text-purple-950 hover:bg-purple-50 font-bold border-2 border-transparent'"
+            >
+              <span>✨</span>
+              <span>AI Itinerary</span>
+            </a>
+
+          </nav>
+        </div>
+
+        <!-- Right Side: CTA Button Only (Single Line, No Wrap) -->
+        <div class="flex items-center shrink-0 whitespace-nowrap pl-3">
+          <!-- Main CTA Button -->
+          <button 
+            @click="$emit('open-booking')"
+            class="inline-flex items-center justify-center gap-1.5 px-4 py-2 rounded-xl text-xs sm:text-sm font-black text-white bg-gradient-to-r from-teal-700 via-emerald-700 to-teal-800 hover:from-teal-800 hover:to-emerald-800 transition-all shadow-md active:scale-95 border-2 border-emerald-500 cursor-pointer shrink-0"
+          >
+            <span>⚡</span>
+            <span>Janji Layanan</span>
+          </button>
+        </div>
+
+      </div>
     </div>
   </header>
 </template>
@@ -65,10 +148,11 @@
 <script setup>
 defineProps({
   currency: { type: String, default: 'SGD' },
-  exchangeRate: { type: Number, default: 11850 }
+  exchangeRate: { type: Number, default: 11850 },
+  activeNav: { type: String, default: 'home' }
 })
 
-defineEmits(['nav', 'toggle-currency', 'open-ferry', 'open-ai', 'open-booking'])
+defineEmits(['nav', 'toggle-currency', 'open-ferry', 'open-ai', 'open-booking', 'open-price-check'])
 
 const formatNumber = (num) => {
   return new Intl.NumberFormat('id-ID').format(num)

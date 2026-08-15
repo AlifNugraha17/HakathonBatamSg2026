@@ -1,33 +1,38 @@
 <template>
-  <div v-if="show" class="fixed inset-0 z-50 flex items-center justify-center p-4 bg-slate-950/80 backdrop-blur-md">
-    <div class="glass-card w-full max-w-2xl rounded-2xl p-6 border border-slate-700/80 shadow-2xl relative max-h-[90vh] overflow-y-auto">
+  <div v-if="show" class="fixed inset-0 z-50 flex items-center justify-center p-4 bg-slate-950/70 backdrop-blur-md">
+    <div class="bg-white w-full max-w-2xl rounded-3xl p-6 sm:p-7 border-2 border-slate-300 shadow-2xl relative max-h-[90vh] overflow-y-auto">
       
       <!-- Close Button -->
-      <button @click="$emit('close')" class="absolute top-4 right-4 text-slate-400 hover:text-white text-xl">✕</button>
+      <button 
+        @click="$emit('close')" 
+        class="absolute top-4 right-4 w-9 h-9 rounded-full bg-slate-200 text-slate-800 hover:bg-slate-300 flex items-center justify-center text-sm font-black transition-colors border border-slate-400 cursor-pointer shadow-sm"
+      >
+        ✕
+      </button>
 
       <!-- Modal Title -->
       <div class="flex items-center gap-3 mb-6">
-        <div class="w-10 h-10 rounded-xl bg-amber-500/20 text-amber-300 flex items-center justify-center text-xl font-bold border border-amber-500/30">
+        <div class="w-12 h-12 rounded-2xl bg-amber-100 text-amber-800 flex items-center justify-center text-2xl font-black border-2 border-amber-300 shadow-sm">
           ✨
         </div>
         <div>
-          <h3 class="text-xl font-extrabold text-white">AI Itinerary Generator Lintas Batas</h3>
-          <p class="text-xs text-slate-400">Rencanakan trip medis & liburan weekend dari Singapura ke Batam secara otomatis</p>
+          <h3 class="text-xl font-black text-teal-ink">AI Itinerary Generator Lintas Batas</h3>
+          <p class="text-xs text-slate-600 font-medium">Rencanakan trip medis & liburan weekend dari Singapura ke Batam secara otomatis</p>
         </div>
       </div>
 
       <!-- Generator Options -->
       <div class="grid grid-cols-1 sm:grid-cols-2 gap-4 mb-6">
         <div>
-          <label class="block text-xs font-semibold text-slate-300 mb-1.5">Durasi Perjalanan</label>
-          <select v-model="duration" class="w-full bg-slate-900 border border-slate-700 rounded-xl px-3 py-2 text-sm text-white focus:outline-none focus:border-sky-500">
+          <label class="block text-xs font-black text-slate-800 mb-1.5 uppercase tracking-wider">Durasi Perjalanan</label>
+          <select v-model="duration" class="w-full bg-slate-50 border-2 border-slate-300 rounded-xl px-3.5 py-2.5 text-sm text-slate-900 font-bold focus:outline-none focus:border-teal-600 focus:bg-white transition-all shadow-sm">
             <option value="1day">1 Day Getaway (Pagi Datang, Sore Pulang)</option>
             <option value="2d1n">2D1N Weekend Trip (Menginap Resort/Hotel)</option>
           </select>
         </div>
         <div>
-          <label class="block text-xs font-semibold text-slate-300 mb-1.5">Fokus Utama Trip</label>
-          <select v-model="tripType" class="w-full bg-slate-900 border border-slate-700 rounded-xl px-3 py-2 text-sm text-white focus:outline-none focus:border-sky-500">
+          <label class="block text-xs font-black text-slate-800 mb-1.5 uppercase tracking-wider">Fokus Utama Trip</label>
+          <select v-model="tripType" class="w-full bg-slate-50 border-2 border-slate-300 rounded-xl px-3.5 py-2.5 text-sm text-slate-900 font-bold focus:outline-none focus:border-teal-600 focus:bg-white transition-all shadow-sm">
             <option value="medical-seafood">🩺 Medical Checkup + Seafood Feast</option>
             <option value="dental-shopping">🦷 Perawatan Gigi + Shopping Nagoya</option>
             <option value="golf-spa">⛳ Golf 18-Hole + Luxury Spa</option>
@@ -38,43 +43,43 @@
       <button 
         @click="generateItinerary"
         :disabled="loading"
-        class="w-full py-3 rounded-xl bg-gradient-to-r from-amber-400 to-sky-400 text-slate-950 font-extrabold text-sm hover:from-amber-300 hover:to-sky-300 transition-all flex items-center justify-center gap-2 shadow-lg shadow-amber-500/20 mb-6"
+        class="w-full py-3.5 rounded-2xl bg-gradient-to-r from-amber-600 to-teal-ocean hover:from-amber-700 hover:to-teal-700 text-white font-black text-sm transition-all flex items-center justify-center gap-2 shadow-xl shadow-amber-600/30 active:scale-95 mb-6 border border-amber-500 cursor-pointer"
       >
         <span v-if="loading" class="animate-spin">🌀</span>
         <span v-else>🚀 Buat Rencana Trip Otomatis</span>
       </button>
 
       <!-- Generated Timeline Results -->
-      <div v-if="generatedItinerary.length > 0" class="mt-6 pt-6 border-t border-slate-800">
-        <h4 class="text-sm font-bold text-sky-400 uppercase tracking-wider mb-4">Rekomendasi Rute & Jadwal Trip</h4>
+      <div v-if="generatedItinerary.length > 0" class="mt-6 pt-6 border-t-2 border-slate-200">
+        <h4 class="text-xs font-black text-teal-ocean uppercase tracking-wider mb-4">Rekomendasi Rute & Jadwal Trip</h4>
         
-        <div class="space-y-4">
+        <div class="space-y-3.5">
           <div 
             v-for="(step, idx) in generatedItinerary" 
             :key="idx"
-            class="flex items-start gap-4 p-3.5 rounded-xl bg-slate-900/90 border border-slate-800"
+            class="flex items-start gap-4 p-4 rounded-2xl bg-sky-50 border-2 border-sky-200 shadow-sm"
           >
-            <span class="px-2.5 py-1 rounded-lg bg-sky-500/20 text-sky-300 text-xs font-mono font-bold whitespace-nowrap">
+            <span class="px-3 py-1.5 rounded-xl bg-teal-900 text-white text-xs font-mono font-black whitespace-nowrap shadow-sm border border-teal-700">
               {{ step.time }}
             </span>
             <div class="flex-1">
-              <h5 class="text-sm font-bold text-white">{{ step.title }}</h5>
-              <p class="text-xs text-slate-400 mt-0.5">{{ step.description }}</p>
-              <div class="mt-2 flex items-center gap-3 text-[11px] text-slate-500">
+              <h5 class="text-sm font-black text-teal-ink">{{ step.title }}</h5>
+              <p class="text-xs text-slate-700 font-medium mt-0.5">{{ step.description }}</p>
+              <div class="mt-2 flex items-center gap-3 text-xs text-slate-700 font-bold">
                 <span>📍 {{ step.location }}</span>
                 <span>•</span>
-                <span class="text-emerald-400 font-semibold">Est: S$ {{ step.costSgd }}</span>
+                <span class="text-emerald-800 font-black">Est: S$ {{ step.costSgd }}</span>
               </div>
             </div>
           </div>
         </div>
 
-        <div class="mt-6 p-4 rounded-xl bg-emerald-500/10 border border-emerald-500/20 flex items-center justify-between">
+        <div class="mt-6 p-4 rounded-2xl bg-emerald-50 border-2 border-emerald-300 flex items-center justify-between shadow-sm">
           <div>
-            <p class="text-xs text-emerald-300 font-bold">Total Estimasi Hemat Trip Ini</p>
-            <p class="text-lg font-extrabold text-emerald-400">Hemat S$ 850+ vs Layanan SG</p>
+            <p class="text-xs text-emerald-900 font-black">Total Estimasi Hemat Trip Ini</p>
+            <p class="text-lg font-black text-emerald-800">Hemat S$ 850+ vs Layanan SG</p>
           </div>
-          <button @click="$emit('book-all')" class="px-4 py-2 rounded-xl bg-emerald-400 text-slate-950 text-xs font-bold hover:bg-emerald-300 transition-all">
+          <button @click="$emit('book-all')" class="px-5 py-2.5 rounded-xl bg-emerald-600 hover:bg-emerald-700 text-white text-xs font-black transition-all shadow-md active:scale-95 border border-emerald-500 cursor-pointer">
             Pesan Paket Ini
           </button>
         </div>

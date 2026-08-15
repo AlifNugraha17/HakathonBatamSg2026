@@ -9,9 +9,18 @@ return new class extends Migration
 {
     public function up(): void
     {
-        // 1. Enable PostGIS Spatial Extension for PostgreSQL if using pgsql
+        // 1. Enable PostGIS Spatial Extension for PostgreSQL if available on server
+        $hasPostgis = false;
         if (DB::getDriverName() === 'pgsql') {
-            DB::statement('CREATE EXTENSION IF NOT EXISTS postgis;');
+            try {
+                $ext = DB::select("SELECT 1 FROM pg_available_extensions WHERE name = 'postgis'");
+                if (!empty($ext)) {
+                    DB::statement('CREATE EXTENSION IF NOT EXISTS postgis;');
+                    $hasPostgis = true;
+                }
+            } catch (\Throwable $e) {
+                $hasPostgis = false;
+            }
         }
 
         // 2. Categories Table
@@ -51,10 +60,14 @@ return new class extends Migration
             $table->timestamps();
         });
 
-        // Add Spatial Location Column in PostgreSQL PostGIS if using pgsql
-        if (DB::getDriverName() === 'pgsql') {
-            DB::statement("SELECT AddGeometryColumn('places', 'location', 4326, 'POINT', 2);");
-            DB::statement("CREATE INDEX places_location_spatial_idx ON places USING GIST (location);");
+        // Add Spatial Location Column in PostgreSQL PostGIS if available
+        if ($hasPostgis) {
+            try {
+                DB::statement("SELECT AddGeometryColumn('places', 'location', 4326, 'POINT', 2);");
+                DB::statement("CREATE INDEX places_location_spatial_idx ON places USING GIST (location);");
+            } catch (\Throwable $e) {
+                // PostGIS functions not available
+            }
         }
 
         // 5. Bookings Table

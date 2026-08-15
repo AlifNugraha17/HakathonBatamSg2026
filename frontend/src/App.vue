@@ -1,14 +1,16 @@
 <template>
-  <div class="min-h-screen bg-slate-950 text-slate-100 flex flex-col font-sans">
+  <div class="min-h-screen bg-slate-50 text-teal-ink flex flex-col font-sans antialiased">
     
     <!-- Navbar -->
     <Navbar 
       :currency="currency"
       :exchange-rate="exchangeRate"
+      :active-nav="activeNav"
       @nav="handleNav"
       @toggle-currency="toggleCurrency"
-      @open-ferry="showFerryModal = true"
-      @open-ai="showAiModal = true"
+      @open-price-check="openPriceCheck"
+      @open-ferry="openFerryGuide"
+      @open-ai="openAiItinerary"
       @open-booking="openBookingModal(null)"
     />
 
@@ -20,6 +22,14 @@
         v-model:selected-category="selectedCategory"
         v-model:selected-terminal="selectedTerminal"
         @search="scrollToMedical"
+      />
+
+      <!-- Trending & Viral Batam Destinations Carousel (NEW) -->
+      <TrendingCarousel 
+        @open-ferry="showFerryModal = true"
+        @open-ai="showAiModal = true"
+        @open-booking="openBookingModal(null)"
+        @scroll-to-listings="scrollToMedical"
       />
 
       <!-- Medical & Tourism Listings -->
@@ -45,41 +55,41 @@
       </div>
 
       <!-- Features & Why Batam Section -->
-      <section class="py-16 bg-slate-950 relative overflow-hidden">
+      <section class="py-16 bg-gradient-to-b from-slate-50 to-white relative overflow-hidden border-t border-slate-200">
         <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div class="text-center max-w-3xl mx-auto mb-12">
-            <span class="text-xs font-semibold uppercase tracking-wider text-emerald-400">Pengalaman Lintas Batas</span>
-            <h2 class="text-3xl font-extrabold text-white mt-1">Mengapa Wisatawan Singapura Memilih Batam?</h2>
-            <p class="text-sm text-slate-400 mt-2">Kombinasi sempurna antara hemat biaya medis, kemudahan transportasi kapal feri, dan kualitas pelayanan standar internasional.</p>
+            <span class="text-xs font-bold uppercase tracking-wider text-teal-ocean">Pengalaman Lintas Batas (SG ⇄ Batam)</span>
+            <h2 class="text-3xl font-extrabold text-teal-ink mt-1.5">Mengapa Wisatawan Singapura Memilih Batam?</h2>
+            <p class="text-sm text-slate-600 mt-2">Kombinasi sempurna antara hemat biaya medis, kemudahan transportasi kapal feri, dan kualitas pelayanan standar internasional.</p>
           </div>
 
           <div class="grid grid-cols-1 md:grid-cols-3 gap-8">
-            <div class="glass-card p-6 rounded-2xl border border-slate-800">
-              <div class="w-12 h-12 rounded-xl bg-sky-500/20 text-sky-400 flex items-center justify-center text-2xl font-bold mb-4">
+            <div class="bg-white p-7 rounded-3xl border border-sky-100 shadow-md hover:shadow-xl hover:-translate-y-1 transition-all">
+              <div class="w-13 h-13 rounded-2xl bg-sky-100 text-teal-ocean flex items-center justify-center text-3xl font-bold mb-5 shadow-sm">
                 🏥
               </div>
-              <h3 class="text-lg font-bold text-white mb-2">Fasilitas RS Berstandar Internasional</h3>
-              <p class="text-xs text-slate-400 leading-relaxed">
+              <h3 class="text-lg font-bold text-teal-ink mb-2">Fasilitas RS Berstandar Internasional</h3>
+              <p class="text-xs text-slate-600 leading-relaxed">
                 Rumah sakit ternama di Batam seperti RS Awal Bros & RS Budi Kemuliaan didukung dokter spesialis berpengalaman dan peralatan diagnostik mutakhir.
               </p>
             </div>
 
-            <div class="glass-card p-6 rounded-2xl border border-slate-800">
-              <div class="w-12 h-12 rounded-xl bg-emerald-500/20 text-emerald-400 flex items-center justify-center text-2xl font-bold mb-4">
+            <div class="bg-white p-7 rounded-3xl border border-emerald-100 shadow-md hover:shadow-xl hover:-translate-y-1 transition-all">
+              <div class="w-13 h-13 rounded-2xl bg-emerald-100 text-emerald-700 flex items-center justify-center text-3xl font-bold mb-5 shadow-sm">
                 💰
               </div>
-              <h3 class="text-lg font-bold text-white mb-2">Transparansi Biaya SGD / IDR</h3>
-              <p class="text-xs text-slate-400 leading-relaxed">
-                Dapatkan perbandingan harga langsung dengan estimasi biaya di Singapura tanpa biaya tersembunyi.
+              <h3 class="text-lg font-bold text-teal-ink mb-2">Transparansi Biaya SGD / IDR</h3>
+              <p class="text-xs text-slate-600 leading-relaxed">
+                Dapatkan perbandingan harga langsung dengan estimasi biaya di Singapura tanpa biaya tersembunyi berkat konverter kurs real-time.
               </p>
             </div>
 
-            <div class="glass-card p-6 rounded-2xl border border-slate-800">
-              <div class="w-12 h-12 rounded-xl bg-amber-500/20 text-amber-400 flex items-center justify-center text-2xl font-bold mb-4">
+            <div class="bg-white p-7 rounded-3xl border border-amber-100 shadow-md hover:shadow-xl hover:-translate-y-1 transition-all">
+              <div class="w-13 h-13 rounded-2xl bg-amber-100 text-amber-700 flex items-center justify-center text-3xl font-bold mb-5 shadow-sm">
                 🚕
               </div>
-              <h3 class="text-lg font-bold text-white mb-2">Penjemputan VIP di Pelabuhan</h3>
-              <p class="text-xs text-slate-400 leading-relaxed">
+              <h3 class="text-lg font-bold text-teal-ink mb-2">Penjemputan VIP di Pelabuhan</h3>
+              <p class="text-xs text-slate-600 leading-relaxed">
                 Layanan antar-jemput privat dari pelabuhan feri (Harbour Bay, Batam Centre, Sekupang, Nongsa) langsung ke lokasi klinik atau resort.
               </p>
             </div>
@@ -90,28 +100,35 @@
     </main>
 
     <!-- Footer -->
-    <footer class="bg-slate-950 border-t border-slate-900 py-8">
-      <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 flex flex-col sm:flex-row items-center justify-between text-xs text-slate-500">
-        <div class="flex items-center space-x-2 mb-4 sm:mb-0">
-          <span class="font-bold text-white">BatamPulse</span>
+    <footer class="bg-white border-t border-slate-200 py-10">
+      <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 flex flex-col sm:flex-row items-center justify-between text-xs text-slate-500 gap-4">
+        <div class="flex items-center space-x-2">
+          <span class="font-extrabold text-teal-ink text-sm">BatamPulse</span>
           <span>© 2026 — Platform Lomba Turis Development (SG ⇄ Batam)</span>
         </div>
         <div class="flex items-center space-x-4">
-          <span class="text-emerald-400 font-mono">Vue 3 • Laravel 11 • PostgreSQL PostGIS</span>
+          <span class="text-emerald-700 font-mono font-bold bg-emerald-50 px-3 py-1 rounded-full border border-emerald-200">Vue 3 • Laravel 11 • PostgreSQL PostGIS</span>
         </div>
       </div>
     </footer>
 
     <!-- Modals -->
+    <PriceCheckModal 
+      :show="showPriceCheckModal"
+      :exchange-rate="exchangeRate"
+      :default-tab="priceCheckTab"
+      @close="closePriceCheck"
+    />
+
     <AiItineraryModal 
       :show="showAiModal" 
-      @close="showAiModal = false" 
+      @close="closeAiItinerary" 
       @book-all="openBookingModal(null)"
     />
 
     <FerryGuideModal 
       :show="showFerryModal" 
-      @close="showFerryModal = false" 
+      @close="closeFerryGuide" 
     />
 
     <BookingModal 
@@ -128,8 +145,10 @@
 import { ref, onMounted, onUnmounted } from 'vue'
 import Navbar from './components/Navbar.vue'
 import HeroSection from './components/HeroSection.vue'
+import TrendingCarousel from './components/TrendingCarousel.vue'
 import MedicalListings from './components/MedicalListings.vue'
 import MapView from './components/MapView.vue'
+import PriceCheckModal from './components/PriceCheckModal.vue'
 import AiItineraryModal from './components/AiItineraryModal.vue'
 import FerryGuideModal from './components/FerryGuideModal.vue'
 import BookingModal from './components/BookingModal.vue'
@@ -137,15 +156,18 @@ import BookingModal from './components/BookingModal.vue'
 // State
 const currency = ref('SGD')
 const exchangeRate = ref(13920) // Current 2026 baseline rate
+const activeNav = ref('home')
 const selectedCategory = ref('all')
 const selectedTerminal = ref('all')
+const showPriceCheckModal = ref(false)
+const priceCheckTab = ref('CALCULATOR')
 const showAiModal = ref(false)
 const showFerryModal = ref(false)
 const showBookingModal = ref(false)
 const selectedBookingPlace = ref(null)
 const selectedMapPlace = ref(null)
 
-// Realistic Dummy Data for Batam Cross-Border Tourism Places
+// Realistic Data for Batam Cross-Border Tourism Places with Local & High-Res Images
 const places = ref([
   {
     id: 1,
@@ -205,10 +227,25 @@ const places = ref([
     lat: 1.1920,
     lng: 104.1080,
     description: 'Lapangan golf bertaraf internasional dengan pemandangan Selat Singapura, lengkap dengan caddie profesional dan fasilitas clubhouse mewah.',
-    image: 'https://images.unsplash.com/photo-1535131749006-b7f58c99034b?auto=format&fit=crop&w=600&q=80'
+    image: '/images/viral-beach.jpg'
   },
   {
     id: 5,
+    name: 'Aesthetic Seaside Cafe & Sunset Lounge Harbour Bay',
+    category: 'culinary',
+    categoryLabel: '☕ Cafe Viral & Sunset Waterfront',
+    nearestTerminal: 'Harbour Bay Terminal (3 mins)',
+    terminalKey: 'harbour-bay',
+    priceSgd: 12,
+    savingsPercent: 65,
+    rating: 4.9,
+    lat: 1.1540,
+    lng: 104.0050,
+    description: 'Spot cafe tepi laut bergaya santorini viral dengan racikan specialty coffee, mocktail tropis, dan sunset memukau ke arah kapal feri.',
+    image: '/images/viral-cafe.jpg'
+  },
+  {
+    id: 6,
     name: 'Restoran Seafood Kelong Barelang 168',
     category: 'culinary',
     categoryLabel: '🦀 Culinary & Fresh Seafood',
@@ -223,7 +260,7 @@ const places = ref([
     image: 'https://images.unsplash.com/photo-1615141982883-c7ad0e69fd62?auto=format&fit=crop&w=800&q=80'
   },
   {
-    id: 6,
+    id: 7,
     name: 'Aesthetic Skin & Laser Clinic Nagoya',
     category: 'medical',
     categoryLabel: '✨ Klinik Kecantikan & Estetika',
@@ -238,52 +275,7 @@ const places = ref([
     image: 'https://images.unsplash.com/photo-1570172619644-dfd03ed5d881?auto=format&fit=crop&w=800&q=80'
   },
   {
-    id: 7,
-    name: 'Mount Elizabeth Hospital Orchard (Singapore)',
-    category: 'medical',
-    categoryLabel: '🇸🇬 SG Tertiary Hospital',
-    nearestTerminal: 'HarbourFront Terminal SG (15 mins)',
-    terminalKey: 'harbourfront-sg',
-    priceSgd: 880,
-    savingsPercent: 0,
-    rating: 4.9,
-    lat: 1.3048,
-    lng: 103.8354,
-    description: 'Rumah sakit spesialis rujukan tersier utama Singapura untuk pemeriksaan kardiologi, onkologi, dan kedokteran presisi.',
-    image: 'https://images.unsplash.com/photo-1519494026892-80bbd2d6fd0d?auto=format&fit=crop&w=800&q=80'
-  },
-  {
     id: 8,
-    name: 'Marina Bay Sands Medical & Executive Wellness (Singapore)',
-    category: 'spa',
-    categoryLabel: '🇸🇬 SG Luxury Wellness',
-    nearestTerminal: 'HarbourFront Terminal SG (10 mins)',
-    terminalKey: 'harbourfront-sg',
-    priceSgd: 580,
-    savingsPercent: 0,
-    rating: 4.9,
-    lat: 1.2834,
-    lng: 103.8607,
-    description: 'Layanan pemeriksaan kesehatan eksekutif premium dan terapi spa relaksasi kelas dunia berlatar pemandangan Marina Bay Singapura.',
-    image: 'https://images.unsplash.com/photo-1540555700478-4be289fbecef?auto=format&fit=crop&w=800&q=80'
-  },
-  {
-    id: 9,
-    name: 'Tanah Merah International Ferry Hub (Singapore)',
-    category: 'terminal',
-    categoryLabel: '⚓ SG Gateway to Batam & Bintan',
-    nearestTerminal: 'Tanah Merah Ferry Terminal (SG)',
-    terminalKey: 'tanah-merah-sg',
-    priceSgd: 48,
-    savingsPercent: 0,
-    rating: 4.8,
-    lat: 1.3142,
-    lng: 103.9882,
-    description: 'Terminal feri internasional Singapura penghubung langsung ke Nongsa Pura Luxury Golf Resorts dan Batam Centre.',
-    image: 'https://images.unsplash.com/photo-1506929562872-bb421503ef21?auto=format&fit=crop&w=800&q=80'
-  },
-  {
-    id: 10,
     name: 'RS Budi Kemuliaan Batam — International Eye & Vision Centre',
     category: 'medical',
     categoryLabel: '👁️ Spesialis Mata & LASIK',
@@ -298,7 +290,22 @@ const places = ref([
     image: 'https://images.unsplash.com/photo-1579684385127-1ef15d508118?auto=format&fit=crop&w=600&q=80'
   },
   {
-    id: 11,
+    id: 9,
+    name: 'Batam View Oceanfront Beach Spa Nongsa',
+    category: 'spa',
+    categoryLabel: '🌴 Oceanfront Sea Spa & Resort',
+    nearestTerminal: 'Nongsa Pura Terminal (8 mins)',
+    terminalKey: 'nongsa',
+    priceSgd: 55,
+    savingsPercent: 68,
+    rating: 4.9,
+    lat: 1.1880,
+    lng: 104.1150,
+    description: 'Terapi spa relaksasi tepi laut dengan pemandangan Selat Singapura, scrub kelapa murni, mandi rempah, dan privat infinity pool.',
+    image: '/images/viral-beach.jpg'
+  },
+  {
+    id: 10,
     name: 'Southlinks Country Club & Resort Batam',
     category: 'golf',
     categoryLabel: '⛳ 18-Hole Championship Golf',
@@ -313,67 +320,22 @@ const places = ref([
     image: 'https://images.unsplash.com/photo-1592919505780-303950717480?auto=format&fit=crop&w=600&q=80'
   },
   {
-    id: 12,
-    name: 'Batam View Oceanfront Beach Spa Nongsa',
-    category: 'spa',
-    categoryLabel: '🌴 Oceanfront Sea Spa & Resort',
-    nearestTerminal: 'Nongsa Pura Terminal (8 mins)',
-    terminalKey: 'nongsa',
-    priceSgd: 55,
-    savingsPercent: 68,
-    rating: 4.9,
-    lat: 1.1880,
-    lng: 104.1150,
-    description: 'Terapi spa relaksasi tepi laut dengan pemandangan Selat Singapura, scrub kelapa murni, mandi rempah, dan privat infinity pool.',
-    image: 'https://images.unsplash.com/photo-1540555700478-4be289fbecef?auto=format&fit=crop&w=600&q=80'
-  },
-  {
-    id: 13,
-    name: 'Pelabuhan Feri Internasional Sekupang (Batam)',
-    category: 'terminal',
-    categoryLabel: '⚓ Batam West Gate Terminal',
-    nearestTerminal: 'Sekupang Terminal (Batam)',
-    terminalKey: 'sekupang',
-    priceSgd: 38,
-    savingsPercent: 0,
-    rating: 4.7,
-    lat: 1.1150,
-    lng: 103.9350,
-    description: 'Terminal feri internasional kawasan barat Batam penghubung cepat ke HarbourFront Singapura dan pelabuhan antar pulau.',
-    image: 'https://images.unsplash.com/photo-1505705694340-019e1e335916?auto=format&fit=crop&w=600&q=80'
-  },
-  {
-    id: 14,
-    name: 'Novena Healthcare & Specialist Suites (Singapore)',
+    id: 11,
+    name: 'Mount Elizabeth Hospital Orchard (Singapore)',
     category: 'medical',
-    categoryLabel: '🇸🇬 SG Novena Medical Hub',
-    nearestTerminal: 'HarbourFront Terminal SG (20 mins)',
+    categoryLabel: '🇸🇬 SG Tertiary Hospital',
+    nearestTerminal: 'HarbourFront Terminal SG (15 mins)',
     terminalKey: 'harbourfront-sg',
-    priceSgd: 750,
+    priceSgd: 880,
     savingsPercent: 0,
     rating: 4.9,
-    lat: 1.3204,
-    lng: 103.8436,
-    description: 'Pusat medis terpadu terbesar Singapura di kawasan Novena dengan lebih dari 100 konsultan dokter spesialis internasional.',
-    image: 'https://images.unsplash.com/photo-1516549655169-df83a0774514?auto=format&fit=crop&w=600&q=80'
+    lat: 1.3048,
+    lng: 103.8354,
+    description: 'Rumah sakit spesialis rujukan tersier utama Singapura untuk pemeriksaan kardiologi, onkologi, dan kedokteran presisi.',
+    image: 'https://images.unsplash.com/photo-1519494026892-80bbd2d6fd0d?auto=format&fit=crop&w=800&q=80'
   },
   {
-    id: 15,
-    name: 'Sentosa Golf Club & Serapong Championship Course (Singapore)',
-    category: 'golf',
-    categoryLabel: '🇸🇬 SG World Top 100 Golf',
-    nearestTerminal: 'HarbourFront Terminal SG (5 mins)',
-    terminalKey: 'harbourfront-sg',
-    priceSgd: 420,
-    savingsPercent: 0,
-    rating: 5.0,
-    lat: 1.2480,
-    lng: 103.8290,
-    description: 'Salah satu lapangan golf terbaik di dunia tuan rumah SMBC Singapore Open dengan pemandangan megah waterfront & skyline Singapura.',
-    image: 'https://images.unsplash.com/photo-1587174486073-ae5e5cff23aa?auto=format&fit=crop&w=600&q=80'
-  },
-  {
-    id: 16,
+    id: 12,
     name: 'HarbourFront International Cruise & Ferry Hub (Singapore)',
     category: 'terminal',
     categoryLabel: '⚓ Main SG Ferry Terminal Hub',
@@ -385,22 +347,7 @@ const places = ref([
     lat: 1.2644,
     lng: 103.8210,
     description: 'Terminal feri internasional tersibuk dan terbesar Singapura penghubung utama menuju pelabuhan Harbour Bay, Batam Centre, & Sekupang.',
-    image: 'https://images.unsplash.com/photo-1548625361-186a87754d92?auto=format&fit=crop&w=600&q=80'
-  },
-  {
-    id: 17,
-    name: 'Gardens by the Bay & Waterfront Dining (Singapore)',
-    category: 'culinary',
-    categoryLabel: '🇸🇬 SG Iconic Waterfront Experience',
-    nearestTerminal: 'HarbourFront Terminal SG (12 mins)',
-    terminalKey: 'harbourfront-sg',
-    priceSgd: 45,
-    savingsPercent: 0,
-    rating: 4.9,
-    lat: 1.2815,
-    lng: 103.8636,
-    description: 'Taman ekologi ikonik Singapura dengan Supertree Grove, Flower Dome, serta ragam restoran kuliner kelas dunia.',
-    image: 'https://images.unsplash.com/photo-1525625293386-3f8f99389edd?auto=format&fit=crop&w=600&q=80'
+    image: '/images/hero-ferry.jpg'
   }
 ])
 
@@ -409,7 +356,39 @@ const toggleCurrency = () => {
   currency.value = currency.value === 'SGD' ? 'IDR' : 'SGD'
 }
 
+const openPriceCheck = (tab = 'CALCULATOR') => {
+  activeNav.value = 'price-check'
+  priceCheckTab.value = tab
+  showPriceCheckModal.value = true
+}
+
+const closePriceCheck = () => {
+  showPriceCheckModal.value = false
+  if (activeNav.value === 'price-check') activeNav.value = 'home'
+}
+
+const openFerryGuide = () => {
+  activeNav.value = 'ferry'
+  showFerryModal.value = true
+}
+
+const closeFerryGuide = () => {
+  showFerryModal.value = false
+  if (activeNav.value === 'ferry') activeNav.value = 'home'
+}
+
+const openAiItinerary = () => {
+  activeNav.value = 'ai'
+  showAiModal.value = true
+}
+
+const closeAiItinerary = () => {
+  showAiModal.value = false
+  if (activeNav.value === 'ai') activeNav.value = 'home'
+}
+
 const handleNav = (target) => {
+  activeNav.value = target
   if (target === 'medical') {
     selectedCategory.value = 'medical'
     scrollToMedical()
@@ -417,6 +396,7 @@ const handleNav = (target) => {
     selectedCategory.value = 'golf'
     scrollToMedical()
   } else {
+    activeNav.value = 'home'
     window.scrollTo({ top: 0, behavior: 'smooth' })
   }
 }
@@ -503,7 +483,6 @@ const fetchPlacesFromBackend = async () => {
 onMounted(() => {
   fetchPlacesFromBackend()
   fetchLiveExchangeRate()
-  // Refresh exchange rate automatically every 60 seconds
   rateInterval = setInterval(fetchLiveExchangeRate, 60000)
 })
 
