@@ -23,7 +23,7 @@
             @click="$emit('open-price-check', 'CALCULATOR')" 
             class="text-sky-100 hover:text-white transition-colors cursor-pointer flex items-center gap-1 font-bold"
           >
-            <span>Kurs Real:</span>
+            <span>{{ t?.rate_label || 'Kurs Real:' }}</span>
             <strong class="text-emerald-300 font-mono">1 SGD = Rp {{ formatNumber(exchangeRate) }}</strong>
           </button>
           <span class="text-sky-300 hidden sm:inline">•</span>
@@ -70,7 +70,7 @@
                 : 'text-slate-800 hover:text-slate-950 hover:bg-slate-100 font-bold border-2 border-transparent'"
             >
               <span>🩺</span>
-              <span>Medis & Spa</span>
+              <span>{{ t?.nav_medical || 'Medis & Spa' }}</span>
             </a>
 
             <!-- Golf & Resort -->
@@ -83,7 +83,7 @@
                 : 'text-slate-800 hover:text-slate-950 hover:bg-slate-100 font-bold border-2 border-transparent'"
             >
               <span>⛳</span>
-              <span>Golf & Resort</span>
+              <span>{{ t?.nav_resorts || 'Golf & Resort' }}</span>
             </a>
 
             <!-- Price Check & OCR -->
@@ -109,7 +109,7 @@
                 : 'text-slate-800 hover:text-amber-950 hover:bg-amber-50 font-bold border-2 border-transparent'"
             >
               <span>🚢</span>
-              <span>Jadwal Feri</span>
+              <span>{{ t?.nav_ferry || 'Jadwal Feri' }}</span>
             </a>
 
             <!-- AI Itinerary -->
@@ -128,16 +128,44 @@
           </nav>
         </div>
 
-        <!-- Right Side: CTA Button Only (Single Line, No Wrap) -->
-        <div class="flex items-center shrink-0 whitespace-nowrap pl-3">
+        <!-- Right Side: Language Switcher & CTA Button -->
+        <div class="flex items-center space-x-2 sm:space-x-3 shrink-0 whitespace-nowrap pl-3">
+          
+          <!-- Language Toggle Pill (ID / EN) -->
+          <div class="flex items-center bg-slate-100 p-1 rounded-xl border-2 border-slate-200 shadow-xs">
+            <button 
+              @click="$emit('set-lang', 'id')"
+              :class="lang === 'id' 
+                ? 'bg-sky-100 text-sky-950 font-black border-2 border-sky-400 shadow-xs' 
+                : 'text-slate-700 hover:text-slate-950 font-bold border-2 border-transparent'"
+              class="px-2.5 py-1 rounded-lg text-xs transition-all flex items-center gap-1 cursor-pointer"
+              title="Bahasa Indonesia"
+            >
+              <span>🇮🇩</span>
+              <span>ID</span>
+            </button>
+            <button 
+              @click="$emit('set-lang', 'en')"
+              :class="lang === 'en' 
+                ? 'bg-sky-100 text-sky-950 font-black border-2 border-sky-400 shadow-xs' 
+                : 'text-slate-700 hover:text-slate-950 font-bold border-2 border-transparent'"
+              class="px-2.5 py-1 rounded-lg text-xs transition-all flex items-center gap-1 cursor-pointer"
+              title="English"
+            >
+              <span>🇬🇧</span>
+              <span>EN</span>
+            </button>
+          </div>
+
           <!-- Main CTA Button -->
           <button 
             @click="$emit('open-booking')"
-            class="inline-flex items-center justify-center gap-1.5 px-4 py-2 rounded-xl text-xs sm:text-sm font-black text-white bg-gradient-to-r from-teal-700 via-emerald-700 to-teal-800 hover:from-teal-800 hover:to-emerald-800 transition-all shadow-md active:scale-95 border-2 border-emerald-500 cursor-pointer shrink-0"
+            class="inline-flex items-center justify-center gap-1.5 px-3.5 sm:px-4 py-2 rounded-xl text-xs sm:text-sm font-black text-white bg-gradient-to-r from-teal-700 via-emerald-700 to-teal-800 hover:from-teal-800 hover:to-emerald-800 transition-all shadow-md active:scale-95 border-2 border-emerald-500 cursor-pointer shrink-0"
           >
             <span>⚡</span>
-            <span>Janji Layanan</span>
+            <span>{{ t?.nav_cta || 'Janji Layanan' }}</span>
           </button>
+
         </div>
 
       </div>
@@ -154,7 +182,7 @@ defineProps({
   t: { type: Object, default: () => ({}) }
 })
 
-defineEmits(['nav', 'toggle-currency', 'open-ferry', 'open-ai', 'open-booking', 'open-price-check'])
+defineEmits(['nav', 'set-currency', 'set-lang', 'toggle-currency', 'open-ferry', 'open-ai', 'open-booking', 'open-price-check'])
 
 const formatNumber = (num) => {
   return new Intl.NumberFormat('id-ID').format(num)
