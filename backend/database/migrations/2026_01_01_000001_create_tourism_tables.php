@@ -9,8 +9,10 @@ return new class extends Migration
 {
     public function up(): void
     {
-        // 1. Enable PostGIS Spatial Extension for PostgreSQL
-        DB::statement('CREATE EXTENSION IF NOT EXISTS postgis;');
+        // 1. Enable PostGIS Spatial Extension for PostgreSQL if using pgsql
+        if (DB::getDriverName() === 'pgsql') {
+            DB::statement('CREATE EXTENSION IF NOT EXISTS postgis;');
+        }
 
         // 2. Categories Table
         Schema::create('categories', function (Blueprint $table) {
@@ -49,9 +51,11 @@ return new class extends Migration
             $table->timestamps();
         });
 
-        // Add Spatial Location Column in PostgreSQL PostGIS
-        DB::statement("SELECT AddGeometryColumn('places', 'location', 4326, 'POINT', 2);");
-        DB::statement("CREATE INDEX places_location_spatial_idx ON places USING GIST (location);");
+        // Add Spatial Location Column in PostgreSQL PostGIS if using pgsql
+        if (DB::getDriverName() === 'pgsql') {
+            DB::statement("SELECT AddGeometryColumn('places', 'location', 4326, 'POINT', 2);");
+            DB::statement("CREATE INDEX places_location_spatial_idx ON places USING GIST (location);");
+        }
 
         // 5. Bookings Table
         Schema::create('bookings', function (Blueprint $table) {

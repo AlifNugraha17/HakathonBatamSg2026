@@ -102,12 +102,14 @@ class TourismSeeder extends Seeder
 
         foreach ($placesData as $data) {
             $place = Place::create($data);
-            // Insert Spatial Geometry Point for PostGIS
-            DB::statement("UPDATE places SET location = ST_SetSRID(ST_MakePoint(?, ?), 4326) WHERE id = ?", [
-                $data['longitude'],
-                $data['latitude'],
-                $place->id
-            ]);
+            // Insert Spatial Geometry Point for PostGIS if using pgsql
+            if (DB::getDriverName() === 'pgsql') {
+                DB::statement("UPDATE places SET location = ST_SetSRID(ST_MakePoint(?, ?), 4326) WHERE id = ?", [
+                    $data['longitude'],
+                    $data['latitude'],
+                    $place->id
+                ]);
+            }
         }
     }
 }
