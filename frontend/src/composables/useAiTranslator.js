@@ -5,7 +5,7 @@ export function useAiTranslator() {
   const isTranslating = ref(false);
 
   /**
-   * Calls Zentura-MedNLP-v3 backend endpoint or uses enhanced intelligent rule engine
+   * Calls LokaBatam-MedNLP-v3 backend endpoint or uses enhanced intelligent rule engine
    */
   const translateAndFormatRequest = async (params = {}) => {
     isTranslating.value = true;
@@ -38,7 +38,7 @@ export function useAiTranslator() {
           etiquette: backendResult.etiquette ? [backendResult.etiquette] : [],
           therapistNotesId: backendResult.indonesian_brief,
           rawEnglish: textInput,
-          model: backendResult.model || 'Zentura-MedNLP-v3.2 (Production)',
+          model: backendResult.model || 'LokaBatam-MedNLP-v3.2 (Production)',
           latencyMs: backendResult.latency_ms || 185
         };
       }
@@ -125,7 +125,7 @@ export function useAiTranslator() {
       translatedNarrative += `Suasana: ${etiquette.join('. ')}.`;
     }
 
-    let summaryTextId = `====================================\n📌 KARTU INSTRUKSI TERAPIS (ZENTURA AI)\n====================================\n• Layanan : ${serviceName || 'Perawatan Relaksasi Spa'}\n• Tekanan : ${pressure}\n• Titik Fokus : ${focusAreas.join(', ')}`;
+    let summaryTextId = `====================================\n📌 KARTU INSTRUKSI TERAPIS (LOKABATAM AI)\n====================================\n• Layanan : ${serviceName || 'Perawatan Relaksasi Spa'}\n• Tekanan : ${pressure}\n• Titik Fokus : ${focusAreas.join(', ')}`;
     
     if (allergyAlerts.length > 0) {
       summaryTextId += `\n\n🚨 PERHATIAN MEDIS / ALERGI:\n${allergyAlerts.map(a => `  • ${a}`).join('\n')}`;
@@ -149,15 +149,15 @@ export function useAiTranslator() {
       translatedNarrative: translatedNarrative.trim(),
       therapistNotesId: summaryTextId,
       rawEnglish: textInput,
-      model: 'Zentura-MedNLP v3.2 (Local Fallback Engine)',
+      model: 'LokaBatam-MedNLP v3.2 (Local Fallback Engine)',
       latencyMs: 120
     };
   };
 
   const formatWhatsAppPayload = ({ salonName, serviceName, timeSlot, touristName, ferryTime, aiCard, priceFormatted }) => {
     let msg = `*Halo ${salonName}!* 👋\n`;
-    msg += `Saya ingin konfirmasi pemesanan *Zentura Micro-Moment Booking*:\n\n`;
-    msg += `👤 *Nama Tamu:* ${touristName || 'Tamu Zentura'}\n`;
+    msg += `Saya ingin konfirmasi pemesanan *LokaBatam Micro-Moment Booking*:\n\n`;
+    msg += `👤 *Nama Tamu:* ${touristName || 'Tamu LokaBatam'}\n`;
     msg += `💆‍♀️ *Layanan:* ${serviceName}\n`;
     msg += `⏰ *Slot Waktu:* ${timeSlot}\n`;
     msg += `💰 *Tarif Est.:* ${priceFormatted}\n`;
@@ -166,7 +166,7 @@ export function useAiTranslator() {
       msg += `🚢 *Jadwal Ferry Kembali:* ${ferryTime}\n`;
     }
     
-    msg += `\n📋 *KARTU PREFERENSI TERAPIS (Diterjemahkan Otomatis oleh Zentura AI):*\n`;
+    msg += `\n📋 *KARTU PREFERENSI TERAPIS (Diterjemahkan Otomatis oleh LokaBatam AI):*\n`;
     msg += `• Tekanan: ${aiCard?.pressure || 'Sedang Seimbang'}\n`;
     msg += `• Fokus Area: ${aiCard?.focusAreas?.join(', ') || 'Seluruh Tubuh'}\n`;
     

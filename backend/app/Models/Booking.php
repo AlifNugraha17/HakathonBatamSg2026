@@ -9,44 +9,20 @@ class Booking extends Model
 {
     use HasFactory;
 
-    protected $fillable = [
-        'booking_code',
-        'spa_id',
-        'tourist_id',
-        'guest_name',
-        'guest_phone',
-        'service_name',
-        'therapist_name',
-        'booking_time',
-        'duration_minutes',
-        'price_idr',
-        'price_sgd',
-        'status', // 'pending', 'confirmed', 'completed', 'cancelled'
-        'ferry_time',
-        'medical_notes',
-        'allergy_alert',
-        'whatsapp_sent',
-    ];
+    protected $guarded = [];
 
     protected $casts = [
-        'duration_minutes' => 'integer',
-        'price_idr' => 'integer',
-        'price_sgd' => 'float',
         'whatsapp_sent' => 'boolean',
+        'is_flash_deal' => 'boolean',
     ];
 
-    public function spa()
+    public function place()
     {
-        return $this->belongsTo(Spa::class);
+        return $this->belongsTo(Place::class);
     }
 
-    public function tourist()
+    public function pickupTerminal()
     {
-        return $this->belongsTo(User::class, 'tourist_id');
-    }
-
-    public function transaction()
-    {
-        return $this->hasOne(Transaction::class);
+        return $this->belongsTo(FerryTerminal::class, 'pickup_terminal_id');
     }
 }

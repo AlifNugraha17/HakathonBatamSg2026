@@ -132,7 +132,7 @@
 
           <div class="modal-actions">
             <button type="button" class="btn-cancel" @click="showAddModal = false">Cancel</button>
-            <button type="submit" class="btn-save">Broadcast Chair</button>
+            <button type="submit" class="btn-save">Broadcast Slot</button>
           </div>
         </form>
       </div>
@@ -142,10 +142,10 @@
 
 <script setup>
 import { ref } from 'vue';
-import { useZenturaStore } from '../../../composables/useZenturaStore';
+import { useLokaBatamStore } from '../../../composables/useLokaBatamStore';
 import { useNotification } from '../../../composables/useNotification';
 
-const { merchantSalon, toggleFlashSlot, addMerchantFlashSlot } = useZenturaStore();
+const { merchantSalon, toggleFlashSlot, addMerchantFlashSlot } = useLokaBatamStore();
 const { showToast } = useNotification();
 
 const showAddModal = ref(false);

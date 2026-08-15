@@ -3,15 +3,15 @@
     <!-- Header Section in English -->
     <div class="section-header">
       <div>
-        <h3 class="section-title">Curated Micro-SME Spas & Sanctuaries</h3>
-        <p class="section-subtitle">Vetted sanitation standards & accredited master practitioners</p>
+        <h3 class="section-title">Curated Batam & Singapore Destinations</h3>
+        <p class="section-subtitle">Hospitals, clinics, beach resorts, viral cafes & championship golf courses</p>
       </div>
-      <span class="count-tag">{{ filteredSalons.length }} Centers</span>
+      <span class="count-tag">{{ filteredSalons.length }} Destinations</span>
     </div>
 
     <!-- Empty State -->
     <div v-if="filteredSalons.length === 0" class="empty-state">
-      <p>No verified spas found matching your search filters in this corridor.</p>
+      <p>No verified destinations found matching your search filters in this corridor.</p>
     </div>
 
     <!-- Salons Grid -->
@@ -93,7 +93,7 @@
 </template>
 
 <script setup>
-import { useZenturaStore } from '../../composables/useZenturaStore';
+import { useLokaBatamStore } from '../../composables/useLokaBatamStore';
 import { useCurrency } from '../../composables/useCurrency';
 
 const {
@@ -101,7 +101,7 @@ const {
   selectedSalonForDetail,
   toggleSaveSalon,
   isSalonSaved
-} = useZenturaStore();
+} = useLokaBatamStore();
 
 const { formatPrice } = useCurrency();
 

@@ -10,38 +10,39 @@ const routes = [
     path: '/',
     name: 'landing',
     component: LandingPage,
-    meta: { title: 'Zentura — SG ⇄ Batam Cross-Border Wellness' }
+    meta: { title: 'LokaBatam — SG ⇄ Batam Medical, Wellness & Getaways' }
   },
   {
     path: '/login',
     name: 'login',
     component: LoginPage,
-    meta: { title: 'Sign In — Zentura' }
+    meta: { title: 'Sign In — LokaBatam' }
   },
   {
     path: '/admin',
     name: 'admin',
     component: AdminDashboard,
-    meta: { title: 'Super Admin HQ — Zentura', role: 'admin' }
+    meta: { title: 'Cross-Border HQ Console — LokaBatam', role: 'admin' }
   },
   {
-    path: '/merchant',
-    name: 'merchant',
+    path: '/partner',
+    alias: '/merchant',
+    name: 'partner',
     component: MerchantDashboard,
-    meta: { title: 'Merchant Hub — Zentura', role: 'merchant' }
+    meta: { title: 'Healthcare & Destination Partner Hub — LokaBatam', role: 'merchant' }
   },
   {
     path: '/tourist',
     name: 'tourist',
     component: TouristPortal,
-    meta: { title: 'Tourist Concierge — Zentura', role: 'tourist' }
+    meta: { title: 'Tourist Concierge — LokaBatam', role: 'tourist' }
   },
   {
     path: '/dashboard',
     name: 'dashboard',
     redirect: () => {
       try {
-        const raw = localStorage.getItem('zentura_auth_session');
+        const raw = localStorage.getItem('lokabatam_auth_session');
         if (raw) {
           const session = JSON.parse(raw);
           if (session && session.role) {

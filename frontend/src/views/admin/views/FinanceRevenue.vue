@@ -13,7 +13,7 @@
         <span class="fin-sub">12.0% Average Take Rate</span>
       </div>
       <div class="fin-card">
-        <span class="fin-label">Pending Merchant Payouts</span>
+        <span class="fin-label">Pending Partner Payouts</span>
         <span class="fin-value">IDR {{ pendingPayoutsIdr.toLocaleString("id-ID") }}</span>
         <span class="fin-sub">Scheduled for Automated BI-FAST Batch</span>
       </div>
@@ -23,7 +23,7 @@
     <ZenDataTable
       :columns="columns"
       :rows="transactions"
-      search-placeholder="Search by transaction, spa name, or status..."
+      search-placeholder="Search by transaction, hospital/partner name, or status..."
       empty-text="No transactions yet. Transactions will appear here after the first tourist booking is paid."
     >
       <template #toolbar>
@@ -50,8 +50,8 @@
 
       <template #cell-spa="{ row }">
         <div class="cell-stack">
-          <span class="cell-name">{{ row.merchant || row.merchant_name || 'Spa Partner' }}</span>
-          <span class="cell-sub">{{ row.service || row.service_name || 'Spa Service' }}</span>
+          <span class="cell-name">{{ row.merchant || row.merchant_name || 'Hospital / Destination Partner' }}</span>
+          <span class="cell-sub">{{ row.service || row.service_name || 'Medical / Getaway Package' }}</span>
         </div>
       </template>
 

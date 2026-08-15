@@ -2,8 +2,8 @@
   <div class="profile-section glass-panel">
     <div class="section-header">
       <div>
-        <h3 class="section-title">🏢 Profil UMKM & Verifikasi Higienitas</h3>
-        <p class="section-sub">Tingkatkan kepercayaan wisatawan mancanegara dengan standar kebersihan Zentura</p>
+        <h3 class="section-title">🏢 Profil Mitra & Standar Kualitas</h3>
+        <p class="section-sub">Tingkatkan kepercayaan wisatawan mancanegara dengan standar LokaBatam</p>
       </div>
       <span class="badge badge-verified">✓ 99% Verified Hygiene</span>
     </div>
@@ -74,9 +74,9 @@
 </template>
 
 <script setup>
-import { useZenturaStore } from '../../composables/useZenturaStore';
+import { useLokaBatamStore } from '../../composables/useLokaBatamStore';
 
-const { merchantSalon } = useZenturaStore();
+const { merchantSalon } = useLokaBatamStore();
 </script>
 
 <style scoped>

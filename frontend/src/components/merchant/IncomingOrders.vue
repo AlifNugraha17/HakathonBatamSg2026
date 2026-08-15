@@ -115,14 +115,14 @@
 
 <script setup>
 import { computed } from 'vue';
-import { useZenturaStore } from '../../composables/useZenturaStore';
+import { useLokaBatamStore } from '../../composables/useLokaBatamStore';
 
 const {
   merchantBookings,
   confirmBooking,
   declineBooking,
   selectedTherapistCardBooking
-} = useZenturaStore();
+} = useLokaBatamStore();
 
 const pendingOrders = computed(() => {
   return merchantBookings.value.filter(b => b.status === 'pending');

@@ -197,7 +197,7 @@ const simAiResult = ref({
   pressure: 'Kuat (Firm - Tekanan Dalam)',
   focus: 'Leher, Pundak & Belikat',
   allergy: 'DILARANG menggunakan minyak kacang. Wajib gunakan VCO murni.',
-  indonesianText: 'Catatan Terapis Zentura AI:\n• Keluhan: Pegal leher & bahu kronis\n• Tekanan: Kuat\n• Minyak: VCO Murni\n• ⚠️ Peringatan: Pasien alergi minyak kacang'
+  indonesianText: 'Catatan Terapis LokaBatam AI:\n• Keluhan: Pegal leher & bahu kronis\n• Tekanan: Kuat\n• Minyak: VCO Murni\n• ⚠️ Peringatan: Pasien alergi minyak kacang'
 });
 
 const loadSample = (type) => {
@@ -207,7 +207,7 @@ const loadSample = (type) => {
       pressure: 'Kuat (Firm - Tekanan Dalam)',
       focus: 'Leher, Pundak & Belikat',
       allergy: 'DILARANG menggunakan minyak kacang. Wajib gunakan VCO murni.',
-      indonesianText: 'Catatan Terapis Zentura AI:\n• Keluhan: Pegal leher & bahu kronis\n• Tekanan: Kuat\n• Minyak: VCO Murni\n• ⚠️ Peringatan: Pasien alergi minyak kacang'
+      indonesianText: 'Catatan Terapis LokaBatam AI:\n• Keluhan: Pegal leher & bahu kronis\n• Tekanan: Kuat\n• Minyak: VCO Murni\n• ⚠️ Peringatan: Pasien alergi minyak kacang'
     };
   } else if (type === 'pregnancy') {
     simTextEn.value = 'Guest is 16 weeks pregnant, gentle relaxing foot and leg relief only.';
@@ -215,7 +215,7 @@ const loadSample = (type) => {
       pressure: 'Sangat Lembut (Gentle)',
       focus: 'Kaki & Betis (Hindari titik akupresur)',
       allergy: 'Kehamilan 16 Minggu! Hindari titik Sanyinjiao & Kunlun.',
-      indonesianText: 'Catatan Terapis Zentura AI:\n• Kondisi: Tamu Hamil 16 Minggu\n• Tekanan: Sangat Lembut\n• ⚠️ Peringatan: Dilarang menekan titik induksi pergelangan kaki'
+      indonesianText: 'Catatan Terapis LokaBatam AI:\n• Kondisi: Tamu Hamil 16 Minggu\n• Tekanan: Sangat Lembut\n• ⚠️ Peringatan: Dilarang menekan titik induksi pergelangan kaki'
     };
   } else {
     simTextEn.value = 'Quick express 30 min reflexology, need to catch the 16:30 ferry back to Tanah Merah.';
@@ -223,7 +223,7 @@ const loadSample = (type) => {
       pressure: 'Sedang (Moderate)',
       focus: 'Refleksi Telapak Kaki',
       allergy: 'None',
-      indonesianText: 'Catatan Terapis Zentura AI:\n• Layanan: Refleksi Kilat 30 Menit\n• Target Selesai: Maksimal 15:45 WIB\n• Status Ferry: Terhubung'
+      indonesianText: 'Catatan Terapis LokaBatam AI:\n• Layanan: Refleksi Kilat 30 Menit\n• Target Selesai: Maksimal 15:45 WIB\n• Status Ferry: Terhubung'
     };
   }
 };

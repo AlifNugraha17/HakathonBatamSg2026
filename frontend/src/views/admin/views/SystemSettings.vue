@@ -46,9 +46,9 @@
           <div class="form-group">
             <label>Active Medical NLP Model</label>
             <select v-model="form.aiModel" class="input-styled select">
-              <option value="Zentura-MedNLP-v3.2">Zentura-MedNLP v3.2 (Production - Verified)</option>
-              <option value="Zentura-MedNLP-v3.3-Beta">Zentura-MedNLP v3.3-Beta (Multi-Dialect)</option>
-              <option value="Gemini-Flash-Medical">Gemini 1.5 Flash Medical Accelerator</option>
+              <option value="LokaBatam-MedNLP-v3.2">LokaBatam-MedNLP v3.2 (Production - Verified)</option>
+              <option value="LokaBatam-MedNLP-v3.3-Beta">LokaBatam-MedNLP v3.3-Beta (Multi-Dialect)</option>
+              <option value="GPT-4o-Mini">GPT-4o-Mini (Cloud Fallback)</option>
             </select>
           </div>
 

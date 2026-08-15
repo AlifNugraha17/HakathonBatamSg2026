@@ -5,7 +5,7 @@
       <div class="ai-modal-header">
         <div class="header-left">
           <div>
-            <h3 class="modal-title">Zentura AI Medical & Language Bridge</h3>
+            <h3 class="modal-title">LokaBatam AI Medical & Language Bridge</h3>
             <p class="modal-subtitle">Translates tourist requests into structured polite Indonesian therapist cards</p>
           </div>
         </div>
@@ -182,7 +182,7 @@
 
 <script setup>
 import { ref, computed } from 'vue';
-import { useZenturaStore } from '../../composables/useZenturaStore';
+import { useLokaBatamStore } from '../../composables/useLokaBatamStore';
 import { useCurrency } from '../../composables/useCurrency';
 import { useAiTranslator } from '../../composables/useAiTranslator';
 import { AI_PRESET_TAGS } from '../../data/translations';
@@ -191,7 +191,7 @@ const {
   isAiTranslatorOpen,
   selectedSlotForBooking,
   isWhatsAppModalOpen
-} = useZenturaStore();
+} = useLokaBatamStore();
 
 const { formatPrice } = useCurrency();
 const { isTranslating, translateAndFormatRequest } = useAiTranslator();
@@ -204,12 +204,12 @@ const touristName = ref('Marcus Lim');
 const ferryTime = ref('17:30 WIB (Batam Fast)');
 
 const aiResult = ref({
-  category: 'Pijat Tradisional',
+  category: 'Pijat Tradisional & Kesehatan',
   pressure: 'Kuat (Firm - Tekanan Dalam)',
   focusAreas: ['Bahu, Tengkuk & Belikat'],
   allergyAlerts: ['PERINGATAN ALERGI: DILARANG menggunakan minyak serai / lemongrass. Gunakan virgin coconut oil (VCO).'],
   etiquette: ['Sesi Hening (Tamu ingin tidur/istirahat, mohon tidak mengajak mengobrol)'],
-  therapistNotesId: 'Catatan Terapis Zentura AI:\n• Layanan: Relaksasi\n• Tingkat Tekanan: Kuat\n• Fokus: Bahu & Leher\n• ⚠️ Alergi Minyak Serai'
+  therapistNotesId: 'Catatan Praktisi LokaBatam AI:\n• Layanan: Relaksasi / Medis\n• Tingkat: Kuat\n• Fokus: Bahu & Leher\n• ⚠️ Alergi Minyak Serai'
 });
 
 const bookingContext = computed(() => {

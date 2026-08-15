@@ -44,7 +44,7 @@
 
         <!-- Hygiene Checklist Guarantee -->
         <div class="hygiene-audit-box">
-          <h4 class="box-title">Zentura Verified Hygiene Standards</h4>
+          <h4 class="box-title">LokaBatam Verified Quality & Hygiene Standards</h4>
           <div class="hygiene-grid">
             <div
               v-for="(badge, idx) in (selectedSalonForDetail.hygieneBadges || ['UV Sanitized Linens', 'Disposable Headrest Covers', 'Grade A Autoclave Tools'])"
@@ -115,14 +115,16 @@
 
 <script setup>
 import { ref } from 'vue';
-import { useZenturaStore } from '../../composables/useZenturaStore';
+import { useLokaBatamStore } from '../../composables/useLokaBatamStore';
 import { useCurrency } from '../../composables/useCurrency';
 
 const {
   selectedSalonForDetail,
   selectedSlotForBooking,
-  isAiTranslatorOpen
-} = useZenturaStore();
+  isAiTranslatorOpen,
+  toggleSaveSalon,
+  isSalonSaved
+} = useLokaBatamStore();
 
 const { formatPrice } = useCurrency();
 const currentImage = ref('');

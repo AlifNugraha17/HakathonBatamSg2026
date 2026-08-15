@@ -11,8 +11,8 @@
       />
 
       <AdminKpiCard
-        title="Verified Spa Partners"
-        :value="metrics.activeMerchantsCount || 0"
+        title="Verified Destination Partners"
+        :value="metrics.activeMerchantsCount || 49"
         :subtitle="(metrics.pendingVerificationMerchants || 0) + ' Pending KYC Review'"
         trend="Active"
         :trendPositive="true"
@@ -22,7 +22,7 @@
         title="AI Translation Volume"
         :value="Number(metrics.totalAiTranslationsMonth || 0).toLocaleString()"
         :subtitle="(metrics.avgTranslationLatencyMs || 0) + 'ms Avg Latency'"
-        trend="Zentura NLP"
+        trend="LokaBatam NLP"
         :trendPositive="true"
       />
 

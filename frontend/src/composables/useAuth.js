@@ -3,7 +3,7 @@ import { useNotification } from './useNotification';
 import { api } from '../services/api';
 import router from '../router';
 
-const SESSION_KEY = 'zentura_auth_session';
+const SESSION_KEY = 'lokabatam_auth_session';
 const SESSION_TTL_MS = 24 * 60 * 60 * 1000; // 24 Hours Session Expiry
 
 const currentView = ref('landing'); // 'landing' | 'login' | 'dashboard'
@@ -15,7 +15,7 @@ const currentUser = ref(null);
 
 export const PRESET_CREDENTIALS = {
   admin: {
-    email: 'admin@zentura.com',
+    email: 'admin@lokabatam.com',
     password: 'password123',
     name: 'Super Admin HQ'
   },
@@ -222,7 +222,7 @@ export function useAuth() {
     } catch (e) {
       // Match with registered accounts created in session
       try {
-        const rawRegistered = localStorage.getItem('zentura_registered_users');
+        const rawRegistered = localStorage.getItem('lokabatam_registered_users');
         if (rawRegistered) {
           const registeredList = JSON.parse(rawRegistered);
           if (registeredList[email] && (registeredList[email].password === password || password.length >= 4)) {
@@ -323,7 +323,7 @@ export function useAuth() {
     
     // Store credentials locally so user can immediately sign in with them
     try {
-      const existingRaw = localStorage.getItem('zentura_registered_users');
+      const existingRaw = localStorage.getItem('lokabatam_registered_users');
       const registeredList = existingRaw ? JSON.parse(existingRaw) : {};
       registeredList[cleanEmail] = {
         name: name || cleanEmail.split('@')[0],
@@ -334,7 +334,7 @@ export function useAuth() {
         phone: phone || null,
         spa_name: spa_name || null
       };
-      localStorage.setItem('zentura_registered_users', JSON.stringify(registeredList));
+      localStorage.setItem('lokabatam_registered_users', JSON.stringify(registeredList));
     } catch (e) {}
 
     try {

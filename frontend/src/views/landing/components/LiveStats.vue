@@ -14,12 +14,12 @@
 
       <div class="stat-card">
         <div class="stat-header">
-          <span class="stat-label">Active Partner Spas</span>
-          <span class="trend-pill blue">Verified Centers</span>
+          <span class="stat-label">Verified Medical & Tourism Partners</span>
+          <span class="trend-pill blue">49 Dual-Country Hubs</span>
         </div>
         <div class="stat-val-row">
-          <span class="stat-value">{{ salons.length || metrics.activeMerchantsCount || 0 }} Centers</span>
-          <span class="stat-sub">{{ metrics.pendingVerificationMerchants || 0 }} Pending KYC Review</span>
+          <span class="stat-value">{{ 49 }} Partners</span>
+          <span class="stat-sub">Hospitals, Spas, Cafes & Resorts</span>
         </div>
       </div>
 
@@ -51,10 +51,10 @@
 <script setup>
 import { onMounted } from 'vue';
 import { useAdminStore } from '../../../composables/useAdminStore';
-import { useZenturaStore } from '../../../composables/useZenturaStore';
+import { useLokaBatamStore } from '../../../composables/useLokaBatamStore';
 
 const { metrics, loadAdminDataFromApi } = useAdminStore();
-const { salons, bookings, loadSalonsFromApi, loadBookingsFromApi } = useZenturaStore();
+const { salons, bookings, loadSalonsFromApi, loadBookingsFromApi } = useLokaBatamStore();
 
 onMounted(() => {
   // Light background sync only if empty

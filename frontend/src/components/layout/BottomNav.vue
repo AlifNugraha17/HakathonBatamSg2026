@@ -53,9 +53,9 @@
 
 <script setup>
 import { computed } from 'vue';
-import { useZenturaStore } from '../../composables/useZenturaStore';
+import { useLokaBatamStore } from '../../composables/useLokaBatamStore';
 
-const { activeTab, bookings, savedSalonIds } = useZenturaStore();
+const { activeTab, bookings, savedSalonIds } = useLokaBatamStore();
 
 const activeBookingsCount = computed(() => {
   return bookings.value.filter(b => b.status === 'confirmed' || b.status === 'pending').length;

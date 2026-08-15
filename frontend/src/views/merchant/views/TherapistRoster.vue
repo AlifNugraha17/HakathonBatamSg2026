@@ -3,15 +3,15 @@
     <ZenDataTable
       :columns="columns"
       :rows="therapists"
-      search-placeholder="Search therapist by name or specialty..."
-      empty-text="No therapists registered yet. Click Add Master Therapist to get started."
+      search-placeholder="Search doctor or specialist by name or clinical specialty..."
+      empty-text="No specialists registered yet. Click Add Doctor / Specialist to get started."
       :default-per-page="10"
     >
       <template #toolbar>
         <div class="roster-info">
-          <h3 class="roster-title">Therapist Rostering & BNSP Certifications</h3>
+          <h3 class="roster-title">Doctors & Medical Specialists Roster</h3>
         </div>
-        <button class="btn-add-therapist" @click="showAddModal = true">+ Add Therapist</button>
+        <button class="btn-add-therapist" @click="showAddModal = true">+ Add Doctor / Specialist</button>
       </template>
 
       <template #cell-therapist="{ row }">
@@ -19,13 +19,13 @@
           <div class="avatar-circle">{{ (row.name || '?').charAt(0) }}</div>
           <div class="cell-stack">
             <span class="cell-name">{{ row.name }}</span>
-            <span class="cell-sub">{{ row.title }} &bull; {{ row.experienceYears }} Yrs</span>
+            <span class="cell-sub">{{ row.title }} &bull; {{ row.experienceYears }} Yrs Exp</span>
           </div>
         </div>
       </template>
 
       <template #cell-cert="{ row }">
-        <span class="badge-bnsp">BNSP Level 3</span>
+        <span class="badge-bnsp">IDI / Board Certified</span>
       </template>
 
       <template #cell-specialties="{ row }">
@@ -44,23 +44,23 @@
           :class="row.status === 'ready' ? 'ready' : 'busy'"
           @click.stop="toggleTherapistStatus(row.id)"
         >
-          {{ row.status === 'ready' ? 'STANDBY' : 'IN TREATMENT' }}
+          {{ row.status === 'ready' ? 'AVAILABLE' : 'IN CONSULTATION' }}
         </button>
       </template>
     </ZenDataTable>
 
-    <!-- Add Therapist Modal -->
+    <!-- Add Practitioner Modal -->
     <div v-if="showAddModal" class="modal-backdrop" @click.self="showAddModal = false">
       <div class="modal-box">
         <div class="modal-header">
-          <h3 class="modal-title">Register Master Therapist</h3>
+          <h3 class="modal-title">Register Doctor / Medical Specialist</h3>
           <button class="modal-close" @click="showAddModal = false">x</button>
         </div>
-        <p class="modal-sub">Enter practitioner details, experience, and certified bodywork techniques.</p>
+        <p class="modal-sub">Enter doctor qualifications, clinical experience, and consultation hours.</p>
         <form class="modal-form" @submit.prevent="handleCreateTherapist">
           <div class="form-group">
-            <label>Full Legal Name</label>
-            <input v-model="newTherapist.name" type="text" class="input-styled" placeholder="e.g. Maya Anggraini" required />
+            <label>Full Legal Name & Title</label>
+            <input v-model="newTherapist.name" type="text" class="input-styled" placeholder="e.g. dr. Bambang Hermanto, Sp.JP" required />
           </div>
           <div class="form-row">
             <div class="form-group">
@@ -68,17 +68,17 @@
               <input v-model.number="newTherapist.years" type="number" class="input-styled" required />
             </div>
             <div class="form-group">
-              <label>Working Shift</label>
-              <input v-model="newTherapist.shift" type="text" class="input-styled" placeholder="10:00 - 18:00" required />
+              <label>Consultation Shift</label>
+              <input v-model="newTherapist.shift" type="text" class="input-styled" placeholder="09:00 - 15:00 WIB" required />
             </div>
           </div>
           <div class="form-group">
             <label>Specialties (comma-separated)</label>
-            <input v-model="newTherapist.specialtiesText" type="text" class="input-styled" placeholder="Balinese, Acupressure, Head Spa" required />
+            <input v-model="newTherapist.specialtiesText" type="text" class="input-styled" placeholder="Cardiology, MRI, Health Checkup" required />
           </div>
           <div class="modal-actions">
             <button type="button" class="btn-cancel" @click="showAddModal = false">Cancel</button>
-            <button type="submit" class="btn-save">Save Therapist</button>
+            <button type="submit" class="btn-save">Save Specialist</button>
           </div>
         </form>
       </div>
@@ -95,32 +95,39 @@ const { showToast } = useNotification();
 const showAddModal = ref(false);
 
 const columns = [
-  { key: 'therapist', label: 'Therapist Profile', sortable: false },
-  { key: 'cert', label: 'Certification', sortable: false, align: 'center' },
-  { key: 'specialties', label: 'Core Specialties', sortable: false },
-  { key: 'shift', label: 'Active Shift', sortable: true },
+  { key: 'therapist', label: 'Doctor / Specialist Profile', sortable: false },
+  { key: 'cert', label: 'Medical Board Certification', sortable: false, align: 'center' },
+  { key: 'specialties', label: 'Clinical Specialties', sortable: false },
+  { key: 'shift', label: 'Consultation Hours', sortable: true },
   { key: 'status', label: 'Status', sortable: true, align: 'center' },
 ];
 
 const defaultTherapists = [
-  { id: 'th-1', name: 'Dewi Anggraini', title: 'Senior Balinese Master Therapist', experienceYears: 7, specialties: ['Balinese Deep Tissue', 'Aromatherapy', 'Foot Reflexology'], shift: '10:00 - 19:00 WIB', status: 'ready' },
-  { id: 'th-2', name: 'Siti Rahma', title: 'Herbal & Body Scrub Specialist', experienceYears: 10, specialties: ['Javanese Lulur', 'Postnatal Massage', 'Hot Stone'], shift: '11:00 - 20:00 WIB', status: 'busy' },
-  { id: 'th-3', name: 'Bayu Pratama', title: 'Sports & Acupressure Specialist', experienceYears: 5, specialties: ['Upper Back Relief', 'Foot Pressure Points', 'Dry Shiatsu'], shift: '12:00 - 21:00 WIB', status: 'ready' },
+  { id: 'th-1', name: 'dr. Bambang Hermanto, Sp.JP(K), FIHA', title: 'Senior Interventional Cardiologist', experienceYears: 18, specialties: ['Executive Health Screening', 'Cardiology & Cath Lab', 'Internal Medicine'], shift: '09:00 - 15:00 WIB', status: 'ready' },
+  { id: 'th-2', name: 'drg. Cynthia Wijaya, Sp.KG', title: 'Aesthetic Dental Surgeon', experienceYears: 12, specialties: ['Laser Teeth Whitening', 'Titanium Implants', 'Smile Design'], shift: '10:00 - 18:00 WIB', status: 'busy' },
+  { id: 'th-3', name: 'dr. Hendra Gunawan, Sp.OT', title: 'Orthopedic & Spine Surgeon', experienceYears: 15, specialties: ['Spine Decompression', 'Joint Arthroscopy', 'Sports Injury'], shift: '11:00 - 16:00 WIB', status: 'ready' },
+  { id: 'th-4', name: 'dr. Maria Kusuma, Sp.M', title: 'Ophthalmologist & LASIK Surgeon', experienceYears: 14, specialties: ['Cataract Phaco', 'LASIK Refractive', 'Retinal Exam'], shift: '08:30 - 14:00 WIB', status: 'ready' },
 ];
+
+const therapists = ref(defaultTherapists);
 
 const loadSavedTherapists = () => {
   try {
-    const raw = localStorage.getItem('zentura_merchant_therapists');
-    if (raw) return JSON.parse(raw);
+    const raw = localStorage.getItem('lokabatam_merchant_practitioners');
+    if (raw) {
+      const parsed = JSON.parse(raw);
+      if (Array.isArray(parsed) && parsed.length > 0) {
+        therapists.value = parsed;
+      }
+    }
   } catch (e) {}
-  return defaultTherapists;
 };
 
-const therapists = ref(loadSavedTherapists());
+loadSavedTherapists();
 
-const saveTherapistsToStorage = () => {
+const saveTherapists = () => {
   try {
-    localStorage.setItem('zentura_merchant_therapists', JSON.stringify(therapists.value));
+    localStorage.setItem('lokabatam_merchant_practitioners', JSON.stringify(therapists.value));
   } catch (e) {}
 };
 

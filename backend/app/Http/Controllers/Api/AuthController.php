@@ -30,9 +30,9 @@ class AuthController extends Controller
         $role = $validated['role'];
 
         $title = match ($role) {
-            'admin' => 'Platform Master Admin',
-            'merchant' => $request->input('spa_name') ? 'Owner — ' . $request->input('spa_name') : 'Spa Partner Director',
-            default => 'Cross-Border Traveler'
+            'admin' => 'Platform Master Admin (Cross-Border HQ)',
+            'merchant' => $request->input('spa_name') ? 'Lead Director — ' . $request->input('spa_name') : 'Healthcare & Destination Partner Director',
+            default => 'Cross-Border Traveler (Singapore)'
         };
 
         $country = $validated['country'] ?? ($role === 'merchant' ? 'Indonesia' : 'Singapore');

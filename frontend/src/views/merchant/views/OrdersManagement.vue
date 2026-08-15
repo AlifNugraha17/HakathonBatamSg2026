@@ -79,11 +79,11 @@
 
 <script setup>
 import { ref, computed } from 'vue';
-import { useZenturaStore } from '../../../composables/useZenturaStore';
+import { useLokaBatamStore } from '../../../composables/useLokaBatamStore';
 import { useNotification } from '../../../composables/useNotification';
 import ZenDataTable from '../../../components/shared/ZenDataTable.vue';
 
-const { merchantBookings, confirmBooking, declineBooking, selectedTherapistCardBooking } = useZenturaStore();
+const { merchantBookings, confirmBooking, declineBooking, selectedTherapistCardBooking } = useLokaBatamStore();
 const { showToast } = useNotification();
 
 const activeFilter = ref('all');

@@ -41,7 +41,7 @@
         </div>
       </div>
 
-      <!-- 2. The Zentura Solution Card -->
+      <!-- 2. The LokaBatam Solution Card -->
       <div class="card-solution">
         <div class="card-tag blue">{{ t('sol_tag_blue') }}</div>
         <h3 class="card-heading">{{ t('sol_heading_blue') }}</h3>

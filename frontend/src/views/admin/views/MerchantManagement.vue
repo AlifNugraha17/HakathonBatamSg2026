@@ -3,8 +3,8 @@
     <ZenDataTable
       :columns="columns"
       :rows="filteredMerchants"
-      search-placeholder="Search partner name, region..."
-      empty-text="No spa partners found for this filter."
+      search-placeholder="Search hospital, clinic, or destination partner name..."
+      empty-text="No partners found for this filter."
     >
       <template #toolbar>
         <div class="filter-tabs">
@@ -26,8 +26,8 @@
 
       <template #cell-spa="{ row }">
         <div class="cell-stack">
-          <span class="cell-name">{{ row.name || 'Spa Partner' }}</span>
-          <span class="cell-sub">{{ row.ownerName || row.owner_name || 'Owner' }}</span>
+          <span class="cell-name">{{ row.name || 'Healthcare / Destination Partner' }}</span>
+          <span class="cell-sub">{{ row.ownerName || row.owner_name || 'Executive Lead' }}</span>
         </div>
       </template>
 
@@ -76,19 +76,25 @@
     <div v-if="showAddModal" class="modal-backdrop" @click.self="showAddModal = false">
       <div class="modal-box">
         <div class="modal-header">
-          <h3 class="modal-title">Register New Spa Partner</h3>
+          <h3 class="modal-title">Register LokaBatam Destination Partner</h3>
           <button class="modal-close" @click="showAddModal = false">x</button>
         </div>
-        <p class="modal-sub">Add partner details, operating region, and hygiene audit score.</p>
+        <p class="modal-sub">Add hospital, dental clinic, wellness center, seafood kelong, or golf resort partner details.</p>
         <div class="modal-form">
           <div class="form-group">
-            <label>Spa / Center Name</label>
-            <input v-model="newSpa.name" type="text" class="input-styled" placeholder="e.g. Royal Balinese Sanctuary" />
+            <label>Partner / Facility Name</label>
+            <input v-model="newSpa.name" type="text" class="input-styled" placeholder="e.g. RS Awal Bros / Nagoya Dental / Royal Spa" />
           </div>
           <div class="form-row">
             <div class="form-group">
-              <label>Owner Name</label>
-              <input v-model="newSpa.owner" type="text" class="input-styled" placeholder="Full name..." />
+              <label>Partner Category</label>
+              <select v-model="newSpa.category" class="input-styled">
+                <option value="medical">🏥 Hospital & Medical Center</option>
+                <option value="dental">🦷 Dental & Aesthetic Clinic</option>
+                <option value="spa">💆‍♀️ Wellness & Balinese Spa</option>
+                <option value="culinary">🦀 Seafood & Viral Cafe</option>
+                <option value="golf">⛳ Golf & Beach Resort</option>
+              </select>
             </div>
             <div class="form-group">
               <label>Corridor Region</label>
@@ -96,6 +102,7 @@
                 <option value="batam">Batam (Harbour Bay)</option>
                 <option value="batam_centre">Batam Centre Terminal</option>
                 <option value="batam_nongsa">Batam Nongsa Pura</option>
+                <option value="sekupang">Sekupang Terminal</option>
               </select>
             </div>
           </div>

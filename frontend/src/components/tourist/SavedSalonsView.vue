@@ -54,10 +54,10 @@
 </template>
 
 <script setup>
-import { useZenturaStore } from '../../composables/useZenturaStore';
+import { useLokaBatamStore } from '../../composables/useLokaBatamStore';
 import { useCurrency } from '../../composables/useCurrency';
 
-const { savedSalonsList, toggleSaveSalon, selectedSalonForDetail, activeTab } = useZenturaStore();
+const { savedSalonsList, toggleSaveSalon, selectedSalonForDetail, activeTab } = useLokaBatamStore();
 const { formatPrice } = useCurrency();
 
 const openSalonDetail = (salon) => {

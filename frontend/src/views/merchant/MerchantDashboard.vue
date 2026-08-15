@@ -10,6 +10,7 @@
         <MerchantOverview v-if="activeTab === 'overview'" @switch-tab="activeTab = $event" />
         <OrdersManagement v-else-if="activeTab === 'orders'" />
         <SlotManagement v-else-if="activeTab === 'slots'" />
+        <MerchantAiCards v-else-if="activeTab === 'ai-cards'" />
         <TherapistRoster v-else-if="activeTab === 'therapists'" />
         <MerchantProfileView v-else-if="activeTab === 'profile'" />
       </main>
@@ -28,6 +29,7 @@ import MerchantHeader from './components/MerchantHeader.vue';
 import MerchantOverview from './views/MerchantOverview.vue';
 import OrdersManagement from './views/OrdersManagement.vue';
 import SlotManagement from './views/SlotManagement.vue';
+import MerchantAiCards from './views/MerchantAiCards.vue';
 import TherapistRoster from './views/TherapistRoster.vue';
 import MerchantProfileView from './views/MerchantProfileView.vue';
 import TherapistCardModal from '../../components/merchant/TherapistCardModal.vue';
@@ -37,13 +39,13 @@ const router = useRouter();
 const activeTab = ref('overview');
 
 onMounted(() => {
-  if (route.query.tab && ['overview', 'orders', 'slots', 'therapists', 'profile'].includes(route.query.tab)) {
+  if (route.query.tab && ['overview', 'orders', 'slots', 'ai-cards', 'therapists', 'profile'].includes(route.query.tab)) {
     activeTab.value = route.query.tab;
   }
 });
 
 watch(() => route.query.tab, (newTab) => {
-  if (newTab && ['overview', 'orders', 'slots', 'therapists', 'profile'].includes(newTab)) {
+  if (newTab && ['overview', 'orders', 'slots', 'ai-cards', 'therapists', 'profile'].includes(newTab)) {
     activeTab.value = newTab;
   }
 });

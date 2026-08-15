@@ -26,10 +26,10 @@
 </template>
 
 <script setup>
-import { useZenturaStore } from '../../composables/useZenturaStore';
+import { useLokaBatamStore } from '../../composables/useLokaBatamStore';
 import { MOCK_CATEGORIES } from '../../data/mockSalons';
 
-const { selectedCategory, searchQuery } = useZenturaStore();
+const { selectedCategory, searchQuery } = useLokaBatamStore();
 const categories = MOCK_CATEGORIES;
 </script>
 

@@ -1,16 +1,16 @@
 <template>
   <div class="merchant-profile-view animate-fade-in">
     <div class="profile-grid">
-      <!-- Left: Spa Information Form -->
+      <!-- Left: Facility Information Form -->
       <div class="info-card">
         <div class="card-header">
-          <h3 class="card-title">Spa & Wellness Center Profile</h3>
+          <h3 class="card-title">Destination & Facility Profile</h3>
           <span class="card-sub">This public information is displayed directly to cross-border travelers</span>
         </div>
 
         <form class="profile-form" @submit.prevent="handleSaveProfile">
           <div class="form-group">
-            <label>Spa Center Name</label>
+            <label>Partner / Facility Name</label>
             <input v-model="form.name" type="text" class="input-styled" required />
           </div>
 
@@ -25,7 +25,7 @@
               <input v-model="form.phone" type="text" class="input-styled" required />
             </div>
             <div class="form-group">
-              <label>Ferry Terminal Proximity (Mins Walk)</label>
+              <label>Ferry Terminal Proximity (Mins Walk/Drive)</label>
               <input v-model.number="form.distanceMinutes" type="number" class="input-styled" required />
             </div>
           </div>
@@ -38,31 +38,33 @@
           <div class="form-row">
             <div class="form-group">
               <label>Nearest Ferry Landmark</label>
-              <input v-model="form.landmark" type="text" class="input-styled" />
+              <input v-model="form.landmark" type="text" class="input-styled" required />
             </div>
             <div class="form-group">
-              <label>Daily Operating Hours</label>
-              <input v-model="form.openHours" type="text" class="input-styled" />
+              <label>Operating Hours</label>
+              <input v-model="form.openHours" type="text" class="input-styled" required />
             </div>
           </div>
 
           <button type="submit" class="btn-save-profile">
-            Save Spa Profile
+            Save Facility Profile
           </button>
         </form>
       </div>
 
-      <!-- Right: Hygiene Audit Checklist -->
+      <!-- Right: Accreditation & Standards Audit Strip -->
       <div class="audit-card">
         <div class="card-header">
-          <h3 class="card-title">Hygiene & Sanitation Audit</h3>
-          <span class="card-sub">Accreditation status and sanitization compliance</span>
+          <h3 class="card-title">LokaBatam Quality Audit</h3>
+          <span class="card-sub">Verified facility compliance badge</span>
         </div>
 
-        <div class="hygiene-score-banner">
-          <div class="score-number">{{ merchantSalon.hygieneScore }}/100</div>
+        <div class="audit-score-box">
+          <div class="score-ring">
+            <span class="score-val">99%</span>
+          </div>
           <div class="score-meta">
-            <span class="score-status">Zentura Verified (Grade A)</span>
+            <span class="score-status">LokaBatam Verified (Grade A)</span>
             <span class="score-audit-date">Audited on August 10, 2026</span>
           </div>
         </div>
@@ -103,10 +105,10 @@
 
 <script setup>
 import { reactive, watchEffect } from 'vue';
-import { useZenturaStore } from '../../../composables/useZenturaStore';
+import { useLokaBatamStore } from '../../../composables/useLokaBatamStore';
 import { useNotification } from '../../../composables/useNotification';
 
-const { merchantSalon } = useZenturaStore();
+const { merchantSalon } = useLokaBatamStore();
 const { showToast } = useNotification();
 
 const form = reactive({

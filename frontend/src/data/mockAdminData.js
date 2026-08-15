@@ -113,7 +113,7 @@ export const MOCK_ADMIN_USERS = [
     id: 'usr-1',
     db_id: 1,
     name: 'Super Admin HQ',
-    email: 'admin@zentura.com',
+    email: 'admin@lokabatam.com',
     role: 'admin',
     country: 'Singapore',
     phone: '+65 8123 9900',
@@ -183,5 +183,5 @@ export const SYSTEM_CONFIG = {
   },
   platformCommissionPercent: 12.0,
   enableWhatsAppBridge: true,
-  aiModel: 'Zentura-MedNLP-v3.2'
+  aiModel: 'LokaBatam-MedNLP-v3.2'
 };

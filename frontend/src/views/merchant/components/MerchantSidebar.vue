@@ -1,14 +1,14 @@
 <template>
   <aside class="merchant-sidebar">
     <div class="sidebar-brand">
-      <span class="brand-chip">Merchant Hub</span>
-      <h3 class="brand-name">{{ merchantSalon?.name || 'Martha Heritage Spa' }}</h3>
-      <span class="brand-loc">{{ merchantSalon?.landmark || 'Batam Harbour Bay Ferry Terminal' }}</span>
+      <span class="brand-chip">Medical, Wellness & Getaways</span>
+      <h3 class="brand-name">{{ merchantSalon?.name || 'RS Awal Bros Batam' }}</h3>
+      <span class="brand-loc">{{ merchantSalon?.landmark || 'Executive Health & Cross-Border Hub' }}</span>
     </div>
 
     <!-- Navigation Items -->
     <nav class="sidebar-nav">
-      <!-- 1. Spa Dashboard -->
+      <!-- 1. Partner Dashboard -->
       <button 
         class="nav-item" 
         :class="{ active: modelValue === 'overview' }"
@@ -20,10 +20,10 @@
           <rect x="14" y="14" width="7" height="7"></rect>
           <rect x="3" y="14" width="7" height="7"></rect>
         </svg>
-        <span class="nav-text">Spa Dashboard</span>
+        <span class="nav-text">Partner Dashboard</span>
       </button>
 
-      <!-- 2. Incoming Orders -->
+      <!-- 2. Patient & Tour Bookings -->
       <button 
         class="nav-item" 
         :class="{ active: modelValue === 'orders' }"
@@ -34,11 +34,11 @@
           <line x1="3" y1="6" x2="21" y2="6"></line>
           <path d="M16 10a4 4 0 0 1-8 0"></path>
         </svg>
-        <span class="nav-text">Incoming Orders</span>
+        <span class="nav-text">Patient & Tour Bookings</span>
         <span v-if="pendingCount > 0" class="badge-pending">{{ pendingCount }}</span>
       </button>
 
-      <!-- 3. Flash Slot Broadcast -->
+      <!-- 3. Express Slot Broadcast -->
       <button 
         class="nav-item" 
         :class="{ active: modelValue === 'slots' }"
@@ -47,11 +47,22 @@
         <svg class="nav-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
           <polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2"></polygon>
         </svg>
-        <span class="nav-text">Flash Slot Broadcast</span>
+        <span class="nav-text">Express Slot Broadcast</span>
         <span class="badge-tag">Live</span>
       </button>
 
-      <!-- 4. Therapist Roster -->
+      <!-- 4. AI Patient Decoder -->
+      <button 
+        class="nav-item" 
+        :class="{ active: modelValue === 'ai-cards' }"
+        @click="$emit('update:modelValue', 'ai-cards')"
+      >
+        <span class="text-sm">🤖</span>
+        <span class="nav-text">AI Patient Decoder</span>
+        <span class="badge-tag-ai">AI Smart</span>
+      </button>
+
+      <!-- 5. Doctors & Specialists Roster -->
       <button 
         class="nav-item" 
         :class="{ active: modelValue === 'therapists' }"
@@ -63,10 +74,10 @@
           <path d="M23 21v-2a4 4 0 0 0-3-3.87"></path>
           <path d="M16 3.13a4 4 0 0 1 0 7.75"></path>
         </svg>
-        <span class="nav-text">Therapist Roster</span>
+        <span class="nav-text">Doctors & Specialists Roster</span>
       </button>
 
-      <!-- 5. Profile & Hygiene -->
+      <!-- 6. Facility Profile & Accreditation -->
       <button 
         class="nav-item" 
         :class="{ active: modelValue === 'profile' }"
@@ -75,7 +86,7 @@
         <svg class="nav-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
           <path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"></path>
         </svg>
-        <span class="nav-text">Profile & Hygiene</span>
+        <span class="nav-text">Facility & Accreditation</span>
       </button>
     </nav>
 
@@ -100,7 +111,7 @@
 
 <script setup>
 import { computed } from 'vue';
-import { useZenturaStore } from '../../../composables/useZenturaStore';
+import { useLokaBatamStore } from '../../../composables/useLokaBatamStore';
 import { useAuth } from '../../../composables/useAuth';
 
 defineProps({
@@ -112,7 +123,7 @@ defineProps({
 
 defineEmits(['update:modelValue']);
 
-const { merchantSalon, merchantBookings } = useZenturaStore();
+const { merchantSalon, merchantBookings } = useLokaBatamStore();
 const { quickLogin, logout } = useAuth();
 
 const pendingCount = computed(() => {
@@ -237,6 +248,16 @@ const pendingCount = computed(() => {
   background: #eff6ff;
   color: #1d4ed8;
   border: 1px solid #bfdbfe;
+  font-size: 0.68rem;
+  font-weight: 800;
+  padding: 0.1rem 0.45rem;
+  border-radius: 4px;
+}
+
+.badge-tag-ai {
+  background: #ecfdf5;
+  color: #047857;
+  border: 1px solid #a7f3d0;
   font-size: 0.68rem;
   font-weight: 800;
   padding: 0.1rem 0.45rem;

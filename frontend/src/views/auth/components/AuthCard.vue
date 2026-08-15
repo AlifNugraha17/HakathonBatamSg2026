@@ -103,10 +103,10 @@
           <button 
             type="button" 
             class="chip-btn" 
-            :class="{ active: loginEmail === 'admin@zentura.com' }"
-            @click="fillDemo('admin@zentura.com')"
+            :class="{ active: loginEmail === 'admin@lokabatam.com' }"
+            @click="fillDemo('admin@lokabatam.com')"
           >
-            <span>Admin</span>
+            <span>👑 Admin HQ</span>
           </button>
           <button 
             type="button" 
@@ -114,7 +114,7 @@
             :class="{ active: loginEmail === 'partner@heritage-spa.id' }"
             @click="fillDemo('partner@heritage-spa.id')"
           >
-            <span>Merchant</span>
+            <span>🏥 Medical / Partner</span>
           </button>
           <button 
             type="button" 
@@ -122,7 +122,7 @@
             :class="{ active: loginEmail === 'traveler@singapore.sg' }"
             @click="fillDemo('traveler@singapore.sg')"
           >
-            <span>Tourist</span>
+            <span>🇸🇬 SG Tourist</span>
           </button>
         </div>
       </div>
@@ -132,7 +132,7 @@
     <div v-else-if="authMode === 'register'">
       <div class="form-header">
         <h2 class="auth-heading">{{ currentLang === 'id' ? 'Buat Akun Baru' : 'Create New Account' }}</h2>
-        <p class="auth-sub">{{ currentLang === 'id' ? 'Daftar dengan email Anda untuk mendapatkan kode verifikasi OTP' : 'Register with your email to receive an OTP verification code' }}</p>
+        <p class="auth-sub">{{ currentLang === 'id' ? 'Daftar sebagai Wisatawan atau Mitra Medis & Destinasi' : 'Register as a Traveler or Healthcare & Destination Partner' }}</p>
       </div>
 
       <form @submit.prevent="handleRegister" class="auth-form">
@@ -170,7 +170,7 @@
               @click="regForm.role = 'tourist'"
             >
               <span class="role-opt-icon">🛳️</span>
-              <span class="role-opt-title">{{ currentLang === 'id' ? 'Turis / Wisatawan' : 'Tourist / Traveler' }}</span>
+              <span class="role-opt-title">{{ currentLang === 'id' ? 'Wisatawan Medis & Liburan' : 'Medical & Getaways Tourist' }}</span>
               <span class="role-opt-sub">Singapore ⇄ Batam</span>
             </button>
             <button 
@@ -179,22 +179,22 @@
               :class="{ active: regForm.role === 'merchant' }"
               @click="regForm.role = 'merchant'"
             >
-              <span class="role-opt-icon">💆‍♀️</span>
-              <span class="role-opt-title">{{ currentLang === 'id' ? 'Mitra Spa / Merchant' : 'Spa Partner / Merchant' }}</span>
-              <span class="role-opt-sub">Batam Wellness Hub</span>
+              <span class="role-opt-icon">🏥</span>
+              <span class="role-opt-title">{{ currentLang === 'id' ? 'Mitra Medis & Destinasi' : 'Healthcare & Destination Partner' }}</span>
+              <span class="role-opt-sub">Batam Corridor Hub</span>
             </button>
           </div>
         </div>
 
-        <!-- Spa Name input if merchant -->
+        <!-- Facility Name input if merchant -->
         <div v-if="regForm.role === 'merchant'" class="form-group">
-          <label class="form-label" for="reg-spa">{{ currentLang === 'id' ? 'Nama Spa / Wellness Center' : 'Spa Facility Name' }} *</label>
+          <label class="form-label" for="reg-spa">{{ currentLang === 'id' ? 'Nama Rumah Sakit / Klinik / Destinasi' : 'Hospital / Clinic / Facility Name' }} *</label>
           <input 
             id="reg-spa"
             v-model="regForm.spa_name" 
             type="text" 
             class="form-input" 
-            placeholder="e.g. Batam Bliss Royal Spa" 
+            placeholder="e.g. RS Awal Bros Baloi / Nagoya Dental" 
             required 
           />
         </div>
@@ -319,7 +319,7 @@ const { currentLang, t } = useLanguage();
 const { showToast, showSuccess, showError } = useNotification();
 
 const authMode = ref('login'); // 'login' | 'register' | 'verify'
-const loginEmail = ref('admin@zentura.com');
+const loginEmail = ref('admin@lokabatam.com');
 const loginPassword = ref('password123');
 const showPassword = ref(false);
 const rememberMe = ref(false);

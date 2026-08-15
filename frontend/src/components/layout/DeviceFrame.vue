@@ -33,9 +33,9 @@
 
 <script setup>
 import { ref, onMounted, onUnmounted } from 'vue';
-import { useZenturaStore } from '../../composables/useZenturaStore';
+import { useLokaBatamStore } from '../../composables/useLokaBatamStore';
 
-const { previewMode } = useZenturaStore();
+const { previewMode } = useLokaBatamStore();
 const currentTimeFormatted = ref('14:25');
 
 let intervalId = null;

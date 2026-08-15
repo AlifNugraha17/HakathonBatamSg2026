@@ -1,7 +1,7 @@
 <template>
   <aside class="admin-sidebar">
     <div class="sidebar-brand">
-      <span class="brand-chip">Super Admin HQ</span>
+      <span class="brand-chip">Medical, Wellness & Getaways HQ</span>
       <h3 class="brand-name">Master Console</h3>
     </div>
 
@@ -22,7 +22,7 @@
         <span class="nav-text">Executive Overview</span>
       </button>
 
-      <!-- 2. Manage Partners -->
+      <!-- 2. Healthcare & Tourism Partners -->
       <button 
         class="nav-item" 
         :class="{ active: activeAdminTab === 'merchants' }"
@@ -32,7 +32,7 @@
           <path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"></path>
           <polyline points="9 22 9 12 15 12 15 22"></polyline>
         </svg>
-        <span class="nav-text">Manage Partners</span>
+        <span class="nav-text">Hospitals & Partners</span>
         <span v-if="pendingMerchantsCount > 0" class="badge-pending">
           {{ pendingMerchantsCount }}
         </span>
@@ -53,16 +53,15 @@
         <span class="nav-text">User Directory</span>
       </button>
 
-      <!-- 4. AI Safety & Logs -->
+      <!-- 4. AI Intelligence & Safety Logs -->
       <button 
         class="nav-item" 
         :class="{ active: activeAdminTab === 'ai' }"
         @click="activeAdminTab = 'ai'"
       >
-        <svg class="nav-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-          <polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2"></polygon>
-        </svg>
+        <span class="text-sm">🤖</span>
         <span class="nav-text">AI Safety & Logs</span>
+        <span class="badge-ai-live">Active</span>
       </button>
 
       <!-- 5. Finance & Payouts -->
@@ -224,6 +223,16 @@ const { quickLogin, logout } = useAuth();
   font-weight: 800;
   padding: 0.1rem 0.45rem;
   border-radius: 99px;
+}
+
+.badge-ai-live {
+  background: #ecfdf5;
+  color: #047857;
+  border: 1px solid #a7f3d0;
+  font-size: 0.68rem;
+  font-weight: 800;
+  padding: 0.1rem 0.45rem;
+  border-radius: 4px;
 }
 
 .sidebar-footer {

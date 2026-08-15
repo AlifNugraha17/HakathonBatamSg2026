@@ -3,11 +3,11 @@
     <div class="footer-top">
       <div class="footer-brand">
         <div class="brand-line">
-          <span class="brand-badge">Z</span>
-          <span class="brand-title">ZENTURA</span>
+          <span class="brand-badge">L</span>
+          <span class="brand-title">LOKABATAM</span>
         </div>
         <p class="brand-desc">
-          Enterprise cross-border operations & management ecosystem connecting Singapore ferry travelers with vetted Batam wellness centers.
+          Unified cross-border medical tourism, wellness & leisure super-app connecting Singapore maritime ferry travelers with vetted Batam hospitals, clinics, spas, and resorts.
         </p>
       </div>
 
@@ -29,16 +29,16 @@
 
         <div class="link-col">
           <h4 class="col-title">Core Infrastructure</h4>
-          <span class="footer-static-item">Zentura-MedNLP Inference Engine</span>
+          <span class="footer-static-item">LokaBatam-MedNLP Inference Engine</span>
           <span class="footer-static-item">PayNow SG ⇄ BI-FAST IDR Settlement</span>
-          <span class="footer-static-item">BNSP Certified Hygiene Protocol</span>
+          <span class="footer-static-item">Leaflet PostGIS Spatial Map</span>
         </div>
       </div>
     </div>
 
     <div class="footer-bottom">
       <p class="copyright-text">
-        © 2026 Zentura Ecosystem Technologies Inc. Dedicated to the Singapore – Batam Maritime Corridor.
+        © 2026 LokaBatam Super-App Platform. Built for Batam Singapore Hackathon 2026.
       </p>
       <div class="footer-meta-pills">
         <span class="meta-pill">Vue 3.5</span>

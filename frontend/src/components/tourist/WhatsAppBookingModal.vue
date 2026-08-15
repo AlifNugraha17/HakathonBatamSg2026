@@ -28,7 +28,7 @@
         <div class="chat-mockup">
           <div class="chat-bubble">
             <div class="bubble-header">
-              <span class="bubble-tag">ZENTURA CONCIERGE DISPATCH</span>
+              <span class="bubble-tag">LOKABATAM CONCIERGE DISPATCH</span>
             </div>
             <div class="bubble-text" v-html="formattedHtmlMessage"></div>
             <div class="bubble-time">
@@ -60,14 +60,17 @@
 
 <script setup>
 import { ref, computed } from 'vue';
-import { useZenturaStore } from '../../composables/useZenturaStore';
+import { useLokaBatamStore } from '../../composables/useLokaBatamStore';
+import { useAiTranslator } from '../../composables/useAiTranslator';
 import { useNotification } from '../../composables/useNotification';
 
 const {
   isWhatsAppModalOpen,
   selectedSlotForBooking,
-  createBookingFromSlot
-} = useZenturaStore();
+  selectedSalonForDetail,
+  currentBookingPayload,
+  addBooking
+} = useLokaBatamStore();
 
 const { showToast } = useNotification();
 const copied = ref(false);
@@ -75,27 +78,27 @@ const copied = ref(false);
 const payload = computed(() => {
   const slot = selectedSlotForBooking.value || {};
   return {
-    salonName: slot.salonName || 'Martha Tilaar Spa',
+    salonName: slot.salonName || 'LokaBatam Destination Partner',
     salonPhone: '+62 812-7788-9901',
-    serviceName: slot.serviceName || 'Express Reflexology',
+    serviceName: slot.serviceName || 'Destination Experience',
     durationMinutes: slot.durationMinutes || 45,
     priceIdr: slot.priceIdr || 280000,
     time: slot.time || '14:30',
-    therapistName: slot.therapistName || 'Master Practitioner'
+    therapistName: slot.therapistName || 'Lead Specialist'
   };
 });
 
 const rawMessage = computed(() => {
   const p = payload.value;
-  return `*ZENTURA CONCIERGE RESERVATION*\n\n` +
+  return `*LOKABATAM CONCIERGE RESERVATION*\n\n` +
     `Hello *${p.salonName}*,\n` +
-    `I would like to confirm my booking via Zentura Platform:\n\n` +
+    `I would like to confirm my booking via LokaBatam Platform:\n\n` +
     `• Service: *${p.serviceName}* (${p.durationMinutes} mins)\n` +
     `• Time Window: *${p.time}*\n` +
-    `• Preferred Therapist: *${p.therapistName}*\n` +
+    `• Specialist / Staff: *${p.therapistName}*\n` +
     `• Total Rate: *IDR ${Number(p.priceIdr).toLocaleString('id-ID')}*\n` +
     `• Guest Name: Alexandre Tan (Singapore Ferry Traveler)\n\n` +
-    `Please confirm chair availability. Thank you!`;
+    `Please confirm slot availability. Thank you!`;
 });
 
 const formattedHtmlMessage = computed(() => {

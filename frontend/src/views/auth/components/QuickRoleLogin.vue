@@ -12,7 +12,7 @@
         <div class="btn-top-row">
           <div class="role-identity">
             <span class="role-title">{{ currentLang === 'id' ? 'Super Admin HQ' : 'Super Admin HQ' }}</span>
-            <span class="role-email">admin@zentura.com</span>
+            <span class="role-email">admin@lokabatam.com</span>
           </div>
           <span class="role-badge-pill admin">{{ currentLang === 'id' ? 'Tata Kelola Penuh' : 'Full Governance' }}</span>
         </div>

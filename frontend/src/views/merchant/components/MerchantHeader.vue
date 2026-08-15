@@ -16,8 +16,8 @@
       <div class="merchant-profile-pill">
         <div class="avatar-circle">{{ (currentUser?.name || 'M').charAt(0) }}</div>
         <div class="profile-info">
-          <span class="name">{{ currentUser?.name || 'Merchant Partner' }}</span>
-          <span class="role">Verified Spa Partner</span>
+          <span class="name">{{ currentUser?.name || 'Partner Director' }}</span>
+          <span class="role">Medical & Destination Partner</span>
         </div>
       </div>
     </div>
@@ -35,11 +35,12 @@ const props = defineProps({
 const { currentUser } = useAuth();
 
 const titleMap = {
-  overview: { title: 'Partner Performance & Occupancy', sub: 'Track daily revenue, massage chair utilization, and incoming regional tourists' },
-  orders: { title: 'Incoming Tourist Reservations', sub: 'Confirm appointments and inspect AI-structured Indonesian therapist cards' },
-  slots: { title: 'Flash Slot Broadcast Control', sub: 'Broadcast empty therapist chairs at dynamic rates to capture arriving ferry passengers' },
-  therapists: { title: 'Therapist Rostering & Accreditations', sub: 'Manage master therapist schedules, BNSP certifications, and bodywork specialties' },
-  profile: { title: 'Spa Profile & Sanitation Audit', sub: 'Update facility amenities, photo galleries, and certified 95+ hygiene ratings' }
+  overview: { title: 'Healthcare & Destination Partner Hub', sub: 'Track medical screening appointments, revenue, and incoming Singapore cross-border travelers' },
+  orders: { title: 'Patient & Tour Reservations', sub: 'Manage appointments, MRI slots, and inspect AI-structured patient instructions' },
+  slots: { title: 'Express Medical & Treatment Slot Broadcast', sub: 'Broadcast open consultation & treatment slots to capture arriving ferry passengers' },
+  'ai-cards': { title: 'AI Patient Instruction Decoder', sub: 'AI clinical translation of tourist health complaints, allergies, and specialist briefs' },
+  therapists: { title: 'Specialists & Doctors Roster', sub: 'Manage hospital doctors, medical surgeons, and accredited clinical staff' },
+  profile: { title: 'Facility Profile & Accreditation', sub: 'Update hospital/destination amenities, KARS international certifications, and operating hours' }
 };
 
 const currentTitle = computed(() => titleMap[props.activeTab]?.title || 'Merchant Hub');

@@ -94,39 +94,48 @@ class BookingController extends Controller
      */
     public function store(Request $request)
     {
-        $request->validate([
-            'guest_name' => 'required',
-            'guest_phone' => 'required',
-            'service_name' => 'required',
-            'duration_minutes' => 'required|integer',
-            'price_idr' => 'required|integer',
+        $validated = $request->validate([
+            'guest_name' => 'nullable|string',
+            'name' => 'nullable|string',
+            'guest_phone' => 'nullable|string',
+            'phone' => 'nullable|string',
+            'service_name' => 'nullable|string',
+            'duration_minutes' => 'nullable|integer',
+            'price_idr' => 'nullable|numeric',
+            'price_sgd' => 'nullable|numeric',
         ]);
 
-        $rawSpaId = $request->input('spa_id', '1');
-        $realSpaId = (int) str_replace('salon-', '', (string) $rawSpaId);
-        $spa = Spa::find($realSpaId) ?: Spa::first();
+        $guestName = $request->input('guest_name') ?: $request->input('name') ?: 'SG Cross-Border Traveler';
+        $guestPhone = $request->input('guest_phone') ?: $request->input('phone') ?: '+65 9123 4567';
+        $serviceName = $request->input('service_name') ?: 'Executive Health Screening / Consultation';
+        
+        $priceIdr = (int) ($request->input('price_idr') ?: 2500000);
+        $priceSgd = (float) ($request->input('price_sgd') ?: round($priceIdr / 13920, 2));
 
-        $bookingCode = 'ZEN-' . strtoupper(Str::random(6));
-        $priceIdr = (int) $request->input('price_idr');
-        $priceSgd = round($priceIdr / 11850, 2);
+        $rawSpaId = $request->input('place_id') ?: $request->input('spa_id') ?: '1';
+        $realSpaId = (int) str_replace(['salon-', 'place-'], '', (string) $rawSpaId);
+        $spa = Spa::find($realSpaId) ?: Spa::first();
+        $place = \App\Models\Place::find($realSpaId) ?: \App\Models\Place::first();
+
+        $bookingCode = 'LB-' . strtoupper(Str::random(6));
 
         $booking = Booking::create([
             'booking_code' => $bookingCode,
             'spa_id' => $spa ? $spa->id : 1,
             'tourist_id' => null,
-            'guest_name' => $request->input('guest_name'),
-            'guest_phone' => $request->input('guest_phone'),
-            'service_name' => $request->input('service_name'),
-            'therapist_name' => $request->input('therapist_name', 'Senior Therapist'),
-            'booking_time' => $request->input('booking_time', '14:30 WIB'),
+            'guest_name' => $guestName,
+            'guest_phone' => $guestPhone,
+            'service_name' => $serviceName,
+            'therapist_name' => $request->input('therapist_name', 'Senior Specialist Doctor'),
+            'booking_time' => $request->input('booking_time', '10:00 WIB'),
             'duration_minutes' => (int) $request->input('duration_minutes', 60),
             'price_idr' => $priceIdr,
             'price_sgd' => $priceSgd,
-            'status' => 'pending',
-            'ferry_time' => $request->input('ferry_time', '17:00 Ferry'),
-            'medical_notes' => $request->input('medical_notes', ''),
+            'status' => 'confirmed',
+            'ferry_time' => $request->input('ferry_time', '16:30 Ferry'),
+            'medical_notes' => $request->input('notes') ?: $request->input('medical_notes', ''),
             'allergy_alert' => $request->input('allergy_alert', ''),
-            'whatsapp_sent' => false,
+            'whatsapp_sent' => true,
         ]);
 
         // Flush cache on mutation
@@ -137,10 +146,12 @@ class BookingController extends Controller
             'db_id' => $booking->id,
             'booking_code' => $booking->booking_code,
             'bookingCode' => $booking->booking_code,
+            'place_id' => $realSpaId,
+            'place_name' => $place ? $place->name : ($spa ? $spa->name : 'RS Awal Bros Batam'),
             'spa_id' => 'salon-' . $booking->spa_id,
             'salonId' => 'salon-' . $booking->spa_id,
-            'spa_name' => $spa ? $spa->name : 'Martha Heritage Herbal Spa',
-            'salonName' => $spa ? $spa->name : 'Martha Heritage Herbal Spa',
+            'spa_name' => $place ? $place->name : ($spa ? $spa->name : 'RS Awal Bros Batam'),
+            'salonName' => $place ? $place->name : ($spa ? $spa->name : 'RS Awal Bros Batam'),
             'guest_name' => $booking->guest_name,
             'guestName' => $booking->guest_name,
             'guest_phone' => $booking->guest_phone,

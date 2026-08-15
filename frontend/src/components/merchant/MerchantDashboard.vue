@@ -4,7 +4,7 @@
     <div class="owner-hero glass-panel">
       <div class="hero-top">
         <div class="owner-meta">
-          <span class="badge badge-gold">🏪 PORTAL PEMILIK SALON (UMKM)</span>
+          <span class="badge badge-gold">🏪 PORTAL MITRA LOKABATAM</span>
           <h2 class="salon-title">{{ merchantSalon.name }}</h2>
           <p class="salon-sub">📍 {{ merchantSalon.address }} ({{ merchantSalon.distanceMinutes }}m dari Ferry Harbour Bay)</p>
         </div>
@@ -14,7 +14,7 @@
             class="btn btn-emerald btn-sm"
             @click="activeMerchantTab = 'slots'"
           >
-            ⚡ Siarkan Kursi Kosong
+            ⚡ Siarkan Slot Kilat
           </button>
         </div>
       </div>
@@ -42,7 +42,7 @@
         <div class="metric-card glass-card">
           <span class="metric-label">Skor Higienitas</span>
           <div class="metric-val text-gold">99%</div>
-          <span class="metric-trend text-emerald">🛡️ Zentura Verified</span>
+          <span class="metric-trend text-emerald">🛡️ LokaBatam Verified</span>
         </div>
       </div>
     </div>
@@ -74,7 +74,7 @@
         @click="activeMerchantTab = 'profile'"
       >
         <span class="tab-icon">🏢</span>
-        <span>Profil & Higienitas</span>
+        <span>Profil & Standar Kualitas</span>
       </button>
     </div>
 
@@ -92,13 +92,13 @@
 
 <script setup>
 import { ref, computed } from 'vue';
-import { useZenturaStore } from '../../composables/useZenturaStore';
+import { useLokaBatamStore } from '../../composables/useLokaBatamStore';
 import LiveSlotManager from './LiveSlotManager.vue';
 import IncomingOrders from './IncomingOrders.vue';
 import MerchantProfile from './MerchantProfile.vue';
 import TherapistCardModal from './TherapistCardModal.vue';
 
-const { merchantSalon, merchantBookings } = useZenturaStore();
+const { merchantSalon, merchantBookings } = useLokaBatamStore();
 const activeMerchantTab = ref('orders');
 
 const pendingCount = computed(() => {

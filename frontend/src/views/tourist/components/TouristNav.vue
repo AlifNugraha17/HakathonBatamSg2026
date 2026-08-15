@@ -1,6 +1,6 @@
 <template>
   <nav class="tourist-nav-bar">
-    <!-- 1. Discover Spas -->
+    <!-- 1. Discover Destinations -->
     <button 
       class="nav-tab-btn" 
       :class="{ active: modelValue === 'discover' }"
@@ -10,7 +10,7 @@
         <circle cx="11" cy="11" r="8"></circle>
         <line x1="21" y1="21" x2="16.65" y2="16.65"></line>
       </svg>
-      <span class="tab-label">Discover Spas</span>
+      <span class="tab-label">Discover Destinations (49)</span>
     </button>
 
     <!-- 2. Time Gap Matcher -->
@@ -23,27 +23,30 @@
         <circle cx="12" cy="12" r="10"></circle>
         <polyline points="12 6 12 12 16 14"></polyline>
       </svg>
-      <span class="tab-label">Time Gap Matcher</span>
+      <span class="tab-label">Express Slot Matcher</span>
     </button>
 
-    <!-- 3. AI Translation Studio -->
+    <!-- 3. AI Smart Concierge & Itinerary -->
+    <button 
+      class="nav-tab-btn" 
+      :class="{ active: modelValue === 'concierge' }"
+      @click="$emit('update:modelValue', 'concierge')"
+    >
+      <span class="tab-emoji-icon">✨</span>
+      <span class="tab-label">AI Itinerary & Concierge</span>
+    </button>
+
+    <!-- 4. AI Clinical Doctor Translator -->
     <button 
       class="nav-tab-btn" 
       :class="{ active: modelValue === 'translator' }"
       @click="$emit('update:modelValue', 'translator')"
     >
-      <svg class="tab-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-        <path d="M5 8l6 6"></path>
-        <path d="M4 14h6"></path>
-        <path d="M2 5h12"></path>
-        <path d="M7 2h1"></path>
-        <path d="M22 22l-5-10-5 10"></path>
-        <path d="M14 18h6"></path>
-      </svg>
-      <span class="tab-label">AI Translation Studio</span>
+      <span class="tab-emoji-icon">🩺</span>
+      <span class="tab-label">AI Doctor Translator</span>
     </button>
 
-    <!-- 4. My Itinerary -->
+    <!-- 5. My Itinerary & Appointments -->
     <button 
       class="nav-tab-btn" 
       :class="{ active: modelValue === 'bookings' }"
@@ -55,11 +58,11 @@
         <line x1="8" y1="2" x2="8" y2="6"></line>
         <line x1="3" y1="10" x2="21" y2="10"></line>
       </svg>
-      <span class="tab-label">My Itinerary</span>
+      <span class="tab-label">My Appointments</span>
       <span v-if="bookings.length > 0" class="badge-count">{{ bookings.length }}</span>
     </button>
 
-    <!-- 5. Saved Favorites -->
+    <!-- 6. Saved Favorites -->
     <button 
       class="nav-tab-btn" 
       :class="{ active: modelValue === 'saved' }"
@@ -85,7 +88,7 @@
 </template>
 
 <script setup>
-import { useZenturaStore } from '../../../composables/useZenturaStore';
+import { useLokaBatamStore } from '../../../composables/useLokaBatamStore';
 import { useAuth } from '../../../composables/useAuth';
 
 defineProps({
@@ -94,7 +97,7 @@ defineProps({
 
 defineEmits(['update:modelValue']);
 
-const { bookings, savedSalonIds } = useZenturaStore();
+const { bookings, savedSalonIds } = useLokaBatamStore();
 const { logout } = useAuth();
 </script>
 

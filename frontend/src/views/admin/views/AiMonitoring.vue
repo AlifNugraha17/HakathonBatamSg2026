@@ -5,7 +5,7 @@
       <div class="stat-box">
         <span class="stat-num">{{ aiLogs.length || 0 }}</span>
         <span class="stat-name">Total AI NLP Queries</span>
-        <span class="stat-sub">Model: Zentura-MedNLP v3.2</span>
+        <span class="stat-sub">Model: LokaBatam-MedNLP v3.2</span>
       </div>
       <div class="stat-box">
         <span class="stat-num">165 ms</span>

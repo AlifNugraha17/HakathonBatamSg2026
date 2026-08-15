@@ -95,10 +95,10 @@
 
 <script setup>
 import { computed } from 'vue';
-import { useZenturaStore } from '../../composables/useZenturaStore';
+import { useLokaBatamStore } from '../../composables/useLokaBatamStore';
 import { useCurrency } from '../../composables/useCurrency';
 
-const { bookings, activeTab, selectedTherapistCardBooking } = useZenturaStore();
+const { bookings, activeTab, selectedTherapistCardBooking } = useLokaBatamStore();
 const { formatPrice } = useCurrency();
 
 const activeBookings = computed(() => {
@@ -111,11 +111,11 @@ const openTherapistCard = (booking) => {
 
 const getWhatsAppLink = (booking) => {
   const phone = '6281277889901';
-  const salon = booking.spa_name || booking.salonName || 'Zentura Partner Spa';
+  const salon = booking.spa_name || booking.salonName || 'LokaBatam Destination Partner';
   const id = booking.booking_code || booking.bookingCode || booking.id;
   const srv = booking.service_name || booking.serviceName || 'Massage';
   const time = booking.booking_time || booking.appointmentTime || booking.time || '15:00';
-  const text = encodeURIComponent(`Hello ${salon}, I am inquiring regarding my Zentura booking #${id} (${srv}) scheduled for ${time}.`);
+  const text = encodeURIComponent(`Hello ${salon}, I am inquiring regarding my LokaBatam booking #${id} (${srv}) scheduled for ${time}.`);
   return `https://wa.me/${phone}?text=${text}`;
 };
 </script>

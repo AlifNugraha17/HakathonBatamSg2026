@@ -5,7 +5,7 @@
       <div class="therapist-header">
         <div class="header-left">
           <div>
-            <h3 class="modal-title">AI Therapist Instruction Card (Zentura AI)</h3>
+            <h3 class="modal-title">AI Therapist Instruction Card (LokaBatam AI)</h3>
             <p class="modal-sub">Automatically translated & formatted for local practitioner clarity</p>
           </div>
         </div>
@@ -118,10 +118,10 @@
 
 <script setup>
 import { computed } from 'vue';
-import { useZenturaStore } from '../../composables/useZenturaStore';
+import { useLokaBatamStore } from '../../composables/useLokaBatamStore';
 import { useNotification } from '../../composables/useNotification';
 
-const { selectedTherapistCardBooking } = useZenturaStore();
+const { selectedTherapistCardBooking } = useLokaBatamStore();
 const { showToast } = useNotification();
 
 const booking = computed(() => selectedTherapistCardBooking.value || {});

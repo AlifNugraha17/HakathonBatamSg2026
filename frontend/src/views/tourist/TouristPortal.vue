@@ -10,6 +10,7 @@
     <main class="tourist-tab-content">
       <DiscoverSalons v-if="activeTouristTab === 'discover'" />
       <SmartMatcher v-else-if="activeTouristTab === 'matcher'" />
+      <AiSmartConcierge v-else-if="activeTouristTab === 'concierge'" />
       <AiTranslationBridge v-else-if="activeTouristTab === 'translator'" />
       <MyBookings v-else-if="activeTouristTab === 'bookings'" />
       <SavedSalons v-else-if="activeTouristTab === 'saved'" />
@@ -29,6 +30,7 @@ import TouristHeader from './components/TouristHeader.vue';
 import TouristNav from './components/TouristNav.vue';
 import DiscoverSalons from './views/DiscoverSalons.vue';
 import SmartMatcher from './views/SmartMatcher.vue';
+import AiSmartConcierge from './views/AiSmartConcierge.vue';
 import AiTranslationBridge from './views/AiTranslationBridge.vue';
 import MyBookings from './views/MyBookings.vue';
 import SavedSalons from './views/SavedSalons.vue';
@@ -41,13 +43,13 @@ const router = useRouter();
 const activeTouristTab = ref('discover');
 
 onMounted(() => {
-  if (route.query.tab && ['discover', 'matcher', 'translator', 'bookings', 'saved'].includes(route.query.tab)) {
+  if (route.query.tab && ['discover', 'matcher', 'concierge', 'translator', 'bookings', 'saved'].includes(route.query.tab)) {
     activeTouristTab.value = route.query.tab;
   }
 });
 
 watch(() => route.query.tab, (newTab) => {
-  if (newTab && ['discover', 'matcher', 'translator', 'bookings', 'saved'].includes(newTab)) {
+  if (newTab && ['discover', 'matcher', 'concierge', 'translator', 'bookings', 'saved'].includes(newTab)) {
     activeTouristTab.value = newTab;
   }
 });

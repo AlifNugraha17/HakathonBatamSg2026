@@ -3,13 +3,13 @@
     <div class="header-top-row">
       <div class="brand-meta">
         <div class="badge-pill">
-          <span>Singapore ⇄ Batam Maritime Concierge</span>
+          <span>LokaBatam • Medical, Wellness & Getaways Concierge (Singapore ⇄ Batam)</span>
         </div>
         <h2 class="welcome-heading">
-          {{ activeRegionObj?.name || 'Batam Harbour Bay Zone' }}
+          {{ activeRegionObj?.name || 'Batam Harbour Bay & Baloi Zone' }}
         </h2>
         <p class="welcome-desc">
-          Fill your pre-ferry transit window with dynamic wellness bookings, verified 95+ hygiene centers, and AI-structured medical therapist cards.
+          Compare premier hospitals, specialist clinics, beaches, viral cafes, and championship golf courses in both countries with clear SGD/IDR rates.
         </p>
       </div>
 
@@ -64,10 +64,11 @@
 </template>
 
 <script setup>
-import { useZenturaStore } from '../../../composables/useZenturaStore';
+import { useLokaBatamStore } from '../../../composables/useLokaBatamStore';
 import { useCurrency } from '../../../composables/useCurrency';
+import { MOCK_REGIONS } from '../../../data/mockSalons';
 
-const { currentRegion, activeRegionObj } = useZenturaStore();
+const { currentRegion, activeRegionObj } = useLokaBatamStore();
 const { currentCurrency, setCurrency, availableCurrencies } = useCurrency();
 </script>
 

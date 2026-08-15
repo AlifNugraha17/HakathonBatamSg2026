@@ -1,4 +1,4 @@
-// Vercel Serverless Backend Handler for Zentura (Singapore - Batam Maritime Gateway)
+// Vercel Serverless Backend Handler for LokaBatam (Singapore - Batam Maritime Gateway)
 const SUPABASE_URL = process.env.VITE_SUPABASE_URL || 'https://rcbxfhyodnudmeishbdj.supabase.co';
 const SUPABASE_KEY = process.env.VITE_SUPABASE_ANON_KEY || 'sb_publishable_vvgnnzxPfov0YR0pqLhO4g_e9Rpda-s';
 
@@ -56,9 +56,9 @@ let SPAS = [
 
 let liveBookings = [
   {
-    id: 'ZEN-SG-8812',
-    booking_code: 'ZEN-SG-8812',
-    bookingCode: 'ZEN-SG-8812',
+    id: 'LOKA-SG-8812',
+    booking_code: 'LOKA-SG-8812',
+    bookingCode: 'LOKA-SG-8812',
     spa_id: 'salon-1',
     salonId: 'salon-1',
     salonName: 'Martha Heritage Herbal Spa Grand Batam',
@@ -86,9 +86,9 @@ let liveBookings = [
     createdAt: 'Today, 14:10'
   },
   {
-    id: 'ZEN-SG-8813',
-    booking_code: 'ZEN-SG-8813',
-    bookingCode: 'ZEN-SG-8813',
+    id: 'LOKA-SG-8813',
+    booking_code: 'LOKA-SG-8813',
+    bookingCode: 'LOKA-SG-8813',
     spa_id: 'salon-1',
     salonId: 'salon-1',
     salonName: 'Martha Heritage Herbal Spa Grand Batam',
@@ -157,7 +157,7 @@ export default async function handler(req, res) {
   if (cleanPath === '/auth/quick-login') {
     const role = (req.body && req.body.role) || 'tourist';
     const users = {
-      admin: { id: 1, name: 'Super Admin HQ', email: 'admin@zentura.com', role: 'admin', country: 'Singapore' },
+      admin: { id: 1, name: 'Super Admin HQ', email: 'admin@lokabatam.com', role: 'admin', country: 'Singapore' },
       merchant: { id: 2, name: 'Ratna Dewi', email: 'partner@heritage-spa.id', role: 'merchant', country: 'Indonesia' },
       tourist: { id: 3, name: 'Alexandre Tan', email: 'traveler@singapore.sg', role: 'tourist', country: 'Singapore' }
     };
@@ -208,7 +208,7 @@ export default async function handler(req, res) {
   }
 
   if (cleanPath === '/auth/me') {
-    return send(200, { user: { id: 1, name: 'Super Admin HQ', email: 'admin@zentura.com', role: 'admin' } });
+    return send(200, { user: { id: 1, name: 'Super Admin HQ', email: 'admin@lokabatam.com', role: 'admin' } });
   }
 
   // 3. MERCHANT ORDER ACCEPT / DECLINE / STATUS UPDATE ROUTE (CRITICAL FIX)
@@ -330,6 +330,28 @@ export default async function handler(req, res) {
     return send(200, { id: mId, status: 'suspended', success: true }, 'Merchant suspended');
   }
 
+  // 4.5 CROSS-BORDER 49 PLACES & EXCHANGE RATE (MERGED API)
+  if (cleanPath === '/places') {
+    return send(200, [
+      { id: 1, name: 'RS Awal Bros Batam — Executive Health Centre', category: 'medical', nearestTerminal: 'Batam Centre Terminal (7 mins)', priceSgd: 280, savingsPercent: 68, rating: 4.9, lat: 1.1278, lng: 104.0412 },
+      { id: 2, name: 'RS BP Batam — Cardiovascular & Hyperbaric', category: 'medical', nearestTerminal: 'Sekupang Terminal (4 mins)', priceSgd: 220, savingsPercent: 72, rating: 4.8, lat: 1.1215, lng: 103.9310 },
+      { id: 11, name: 'Nagoya Dental Wellness Centre', category: 'dental', nearestTerminal: 'Harbour Bay Terminal (5 mins)', priceSgd: 180, savingsPercent: 72, rating: 4.8, lat: 1.1445, lng: 104.0112 },
+      { id: 14, name: 'Mount Elizabeth Hospital Orchard (Singapore)', category: 'medical', nearestTerminal: 'HarbourFront Terminal SG (15 mins)', priceSgd: 880, savingsPercent: 0, rating: 4.9, lat: 1.3048, lng: 103.8354 },
+      { id: 45, name: 'Royal Heritage Spa & Wellness Resort', category: 'spa', nearestTerminal: 'Harbour Bay Terminal (8 mins)', priceSgd: 45, savingsPercent: 70, rating: 4.9, lat: 1.1512, lng: 104.0090 },
+      { id: 47, name: 'Palm Springs Golf & Beach Resort Nongsa', category: 'golf', nearestTerminal: 'Nongsa Pura Terminal (10 mins)', priceSgd: 130, savingsPercent: 60, rating: 4.9, lat: 1.1920, lng: 104.1080 }
+    ]);
+  }
+
+  if (cleanPath === '/exchange-rate') {
+    return send(200, {
+      base: 'SGD',
+      target: 'IDR',
+      rate: 13920,
+      timestamp: new Date().toISOString(),
+      source: 'Bank Indonesia & MAS Market Interbank'
+    });
+  }
+
   // 5. SPAS & CATALOG
   if (cleanPath === '/spas') {
     if (req.method === 'POST') {
@@ -414,11 +436,11 @@ export default async function handler(req, res) {
     else if (isLemongrassAllergy) allergyAlert = 'DILARANG MINYAK SERAI (Gunakan Minyak Lavender / Netral)';
 
     return send(200, {
-      indonesian_brief: `📋 KARTU INSTRUKSI TERAPIS (Zentura AI):\n• Permintaan Tamu: "${text}"\n• Rekomendasi: Pijat relaksasi berfokus pada area bahu dan tengkuk dengan ritme lembut.\n• Keamanan: ${allergyAlert || 'Aman tanpa alergi tercatat.'}`,
+      indonesian_brief: `📋 KARTU INSTRUKSI TERAPIS (LokaBatam AI):\n• Permintaan Tamu: "${text}"\n• Rekomendasi: Pijat relaksasi berfokus pada area bahu dan tengkuk dengan ritme lembut.\n• Keamanan: ${allergyAlert || 'Aman tanpa alergi tercatat.'}`,
       pressure: text.toLowerCase().includes('hard') || text.toLowerCase().includes('strong') ? 'Kuat (Firm)' : 'Sedang (Medium)',
       focus: text.toLowerCase().includes('foot') || text.toLowerCase().includes('leg') ? 'Telapak Kaki & Betis' : 'Bahu, Tengkuk, Pinggang',
       allergy: allergyAlert,
-      model: 'Zentura-MedNLP-v3 (Vercel Edge Gateway)',
+      model: 'LokaBatam-MedNLP-v3 (Vercel Edge Gateway)',
       latency_ms: 142
     });
   }
@@ -428,9 +450,9 @@ export default async function handler(req, res) {
     if (req.method === 'POST') {
       const b = req.body || {};
       const newB = {
-        id: `ZEN-SG-${Math.floor(1000 + Math.random() * 9000)}`,
-        booking_code: `ZEN-SG-${Math.floor(1000 + Math.random() * 9000)}`,
-        bookingCode: `ZEN-SG-${Math.floor(1000 + Math.random() * 9000)}`,
+        id: `LOKA-SG-${Math.floor(1000 + Math.random() * 9000)}`,
+        booking_code: `LOKA-SG-${Math.floor(1000 + Math.random() * 9000)}`,
+        bookingCode: `LOKA-SG-${Math.floor(1000 + Math.random() * 9000)}`,
         spa_id: b.spa_id || 'salon-1',
         salonId: b.spa_id || 'salon-1',
         salonName: b.salonName || b.salon_name || 'Martha Heritage Herbal Spa',

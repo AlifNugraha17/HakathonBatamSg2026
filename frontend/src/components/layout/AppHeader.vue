@@ -24,9 +24,9 @@
         </div>
         <div class="brand-text">
           <div class="brand-name">
-            ZENTURA <span class="badge-ai">AI Bridge</span>
+            LOKABATAM <span class="badge-ai">AI Super-App</span>
           </div>
-          <div class="brand-sub">Cross-Border Micro-Moments</div>
+          <div class="brand-sub">SG ⇄ Batam Cross-Border Hub</div>
         </div>
       </div>
 
@@ -82,7 +82,7 @@
         >
           <span class="role-emoji">✈️</span>
           <span class="role-title">Tourist Concierge</span>
-          <span class="role-desc">Micro-Moment & AI Translation</span>
+          <span class="role-desc">Medical, Spas & AI Guide</span>
         </button>
 
         <button
@@ -91,8 +91,8 @@
           @click="currentRole = 'merchant'"
         >
           <span class="role-emoji">🏪</span>
-          <span class="role-title">Local Salon Portal</span>
-          <span class="role-desc">Live Empty Chairs & Indonesian Cards</span>
+          <span class="role-title">Partner Portal</span>
+          <span class="role-desc">Hospitals, Spas, Cafes & Resorts</span>
           <span v-if="pendingOrdersCount > 0" class="badge-notice">{{ pendingOrdersCount }}</span>
         </button>
       </div>
@@ -102,7 +102,7 @@
 
 <script setup>
 import { computed } from 'vue';
-import { useZenturaStore } from '../../composables/useZenturaStore';
+import { useLokaBatamStore } from '../../composables/useLokaBatamStore';
 import { useCurrency } from '../../composables/useCurrency';
 import { MOCK_REGIONS } from '../../data/mockSalons';
 
@@ -114,7 +114,7 @@ const {
   activeTab,
   activeRegionObj,
   merchantBookings
-} = useZenturaStore();
+} = useLokaBatamStore();
 
 const { currentCurrency, setCurrency, availableCurrencies } = useCurrency();
 

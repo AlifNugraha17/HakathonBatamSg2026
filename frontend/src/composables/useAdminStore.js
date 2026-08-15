@@ -24,7 +24,7 @@ const systemSettings = ref({
   sgd_to_idr_exchange_rate: 11850,
   platform_commission_percent: 12.0,
   bi_fast_mode: 'active_simulation',
-  nlp_model: 'Zentura-MedNLP-v3'
+  nlp_model: 'LokaBatam-MedNLP-v3'
 });
 const revenueChartDays = ref([]);
 const isLoading = ref(false);

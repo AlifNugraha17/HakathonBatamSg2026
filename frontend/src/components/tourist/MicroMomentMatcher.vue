@@ -3,8 +3,8 @@
     <!-- Header Banner -->
     <div class="matcher-header">
       <div>
-        <h3 class="matcher-title">Smart Micro-Moment Time Matcher</h3>
-        <p class="matcher-subtitle">Find empty therapist chairs matching your exact free window before ferry departure</p>
+        <h3 class="matcher-title">Smart Medical & Getaways Time Matcher</h3>
+        <p class="matcher-subtitle">Find express health checkup, dental whitening, or relaxation slots matching your exact free window before ferry departure</p>
       </div>
 
       <!-- Scan Ferry Ticket Button -->
@@ -22,7 +22,7 @@
         <span class="ticket-time">Departure: <strong>{{ scannedTicket.departureTime }}</strong> (Gate Closes: {{ scannedTicket.gateCloseTime }})</span>
       </div>
       <div class="ticket-meta-right">
-        <span class="safe-window-label">Safe Spa Window:</span>
+        <span class="safe-window-label">Safe Activity Window:</span>
         <span class="safe-window-val">⚡ {{ scannedTicket.safeWindowMinutes }} Mins</span>
       </div>
     </div>
@@ -174,7 +174,7 @@
 
 <script setup>
 import { ref, onBeforeUnmount } from 'vue';
-import { useZenturaStore } from '../../composables/useZenturaStore';
+import { useLokaBatamStore } from '../../composables/useLokaBatamStore';
 import { useCurrency } from '../../composables/useCurrency';
 import { useNotification } from '../../composables/useNotification';
 
@@ -183,7 +183,7 @@ const {
   matchedFlashSlots,
   selectedSlotForBooking,
   isWhatsAppModalOpen
-} = useZenturaStore();
+} = useLokaBatamStore();
 
 const { formatPrice } = useCurrency();
 const { showToast } = useNotification();

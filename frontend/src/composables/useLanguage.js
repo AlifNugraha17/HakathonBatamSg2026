@@ -1,7 +1,7 @@
 import { ref, computed } from 'vue';
 
 // Active language: 'en' | 'id'
-const currentLang = ref(localStorage.getItem('zentura_lang') || 'en');
+const currentLang = ref(localStorage.getItem('lokabatam_lang') || 'en');
 
 export const translations = {
   en: {
@@ -17,44 +17,44 @@ export const translations = {
     switch_lang_label: 'Language',
 
     // Hero Section
-    hero_badge: 'Singapore – Batam Maritime Corridor Wellness Network',
-    hero_title_1: 'AI-Powered Cross-Border Wellness & Dynamic Yield Platform for',
-    hero_title_2: 'Maritime Tourism Corridors',
-    hero_desc: 'Connecting Singapore maritime ferry travelers with vetted Batam wellness centers. Features real-time AI medical translation, dynamic vacant chair matching, and automated PayNow-to-BI-FAST currency settlements.',
+    hero_badge: 'Singapore ⇄ Batam Cross-Border Super-App',
+    hero_title_1: 'Cross-Border Medical, Cafe & Resort Travel Guide for',
+    hero_title_2: 'Batam & Singapore',
+    hero_desc: 'Compare premier hospitals, specialist clinics, beaches, viral cafes, and championship golf courses in both countries with clear SGD/IDR rates. Featuring real-time ferry schedules, PostGIS spatial map, and AI medical translation.',
     btn_launch_admin: 'Explore Platform →',
-    btn_launch_merchant: 'Partner With Us',
-    btn_launch_tourist: 'Discover Spas',
-    trust_corridors: 'Ferry Corridors',
-    trust_settlement: 'Cross-Border Settlement',
-    trust_ai: 'Medical Safety NLP',
-    trust_sanitation: 'Sanitation Benchmark',
+    btn_launch_merchant: 'Partner Hub',
+    btn_launch_tourist: 'Discover Batam',
+    trust_corridors: '49 Destinations',
+    trust_settlement: 'SGD ⇄ IDR Converter',
+    trust_ai: 'AI Medical & Audio NLP',
+    trust_sanitation: 'Ferry Schedule & Map',
 
     // Problem Solution
     prob_badge: 'Batam – Singapore Case Study',
     prob_title: 'The Cross-Border Micro-Transit Friction',
-    prob_desc: 'Every weekend, over 65,000 travelers cross between Singapore and Batam via high-speed ferries. Zentura solves the 3 core frictions separating tourists from local wellness MSMEs.',
+    prob_desc: 'Every weekend, over 65,000 travelers cross between Singapore and Batam via high-speed ferries. LokaBatam solves the 3 core frictions separating tourists from local destinations & healthcare.',
     prob_tag_red: 'THE UNADDRESSED FRICTION',
     prob_heading_red: 'Traditional Cross-Border Barriers',
     prob_p1_title: 'The 45–90 Min Ferry Window Waste:',
-    prob_p1_desc: 'Tourists arrive early at ferry terminals (Harbour Bay / Batam Centre) with dead time, while neighboring local spas sit with empty massage chairs.',
+    prob_p1_desc: 'Tourists arrive early at ferry terminals (Harbour Bay / Batam Centre) with dead time, while neighboring local hospitals, clinics, and cafes sit unutilized.',
     prob_p2_title: 'Medical & Language Miscommunication:',
-    prob_p2_desc: 'Singaporean tourists cannot communicate pressure points or allergies (peanut oil, eczema) to local therapists who only speak Bahasa Indonesia.',
-    prob_p3_title: 'Cross-Border Payment & Trust Gaps:',
-    prob_p3_desc: 'Currency exchange friction (SGD/IDR cash shortages) combined with hygiene uncertainty prevents spontaneous walk-in bookings.',
+    prob_p2_desc: 'Singaporean tourists cannot communicate medical symptoms or allergies to local practitioners who only speak Bahasa Indonesia.',
+    prob_p3_title: 'Cross-Border Payment & Price Uncertainty:',
+    prob_p3_desc: 'Currency exchange friction (SGD/IDR cash shortages) combined with hidden price markups prevents spontaneous visits.',
     
-    sol_tag_blue: 'ZENTURA CROSS-BORDER INNOVATION',
-    sol_heading_blue: 'The AI-Powered Cross-Border Solution',
-    sol_p1_title: 'Dynamic Flash Gap Matcher:',
-    sol_p1_desc: 'Pairs real-time ferry departures with vacant chairs at dynamic promotional rates, increasing local MSME chair occupancy by up to 84%.',
-    sol_p2_title: 'AI Medical Translation Bridge:',
-    sol_p2_desc: 'NLP engine transforms tourist inputs (English, Mandarin, Korean) into structured, polite Indonesian therapist cards with allergy alerts.',
+    sol_tag_blue: 'LOKABATAM CROSS-BORDER INNOVATION',
+    sol_heading_blue: 'The Unified AI-Powered Super-App Solution',
+    sol_p1_title: '49 Dual-Country Catalog & Savings Badge:',
+    sol_p1_desc: 'Compare premier hospitals, dental clinics, cafes, and golf courses with up to 72% cost savings against Singapore rates.',
+    sol_p2_title: 'AI Medical Translation & Audio Voice Engine:',
+    sol_p2_desc: 'NLP engine transforms tourist inputs (English, Mandarin, Korean) into structured, polite Indonesian doctor/therapist cards with allergy alerts and audio pronunciation.',
     sol_p3_title: 'Direct PayNow SG to BI-FAST IDR Settlement:',
-    sol_p3_desc: 'Tourists pay in SGD, while local spa partners receive automated bank settlements in Rupiah with certified 95+ hygiene ratings.',
+    sol_p3_desc: 'Tourists pay seamlessly in SGD, while local Batam partners receive automated bank settlements in Rupiah.',
 
     // Simulator
     sim_badge: 'Live Interactive Simulator',
     sim_title: 'Test the Innovation Engines in Real-Time',
-    sim_desc: 'Experience how Zentura transforms regional transit friction into instant economic value.',
+    sim_desc: 'Experience how LokaBatam transforms regional transit friction into instant economic value.',
     sim_tab_ai: '1. AI Medical Translation',
     sim_tab_matcher: '2. Dynamic Gap Matcher',
     sim_tab_fx: '3. PayNow to BI-FAST FX',
@@ -76,7 +76,7 @@ export const translations = {
     // Regional Impact
     impact_badge: 'Cross-Border Economic Velocity',
     impact_title: 'Empowering Regional MSMEs & Elevating Tourist Experience',
-    impact_desc: 'Zentura creates tangible economic value across the Singapore–Batam maritime corridor by connecting high-spending cross-border travelers with vetted, high-quality Indonesian wellness centers.',
+    impact_desc: 'LokaBatam creates tangible economic value across the Singapore–Batam maritime corridor by connecting high-spending cross-border travelers with vetted, high-quality Indonesian wellness centers.',
 
     // Auth & Login (Standardized Clean Form)
     auth_title: 'Sign In to Your Account',
@@ -109,44 +109,44 @@ export const translations = {
     switch_lang_label: 'Bahasa',
 
     // Hero Section
-    hero_badge: 'Jaringan Kebugaran Koridor Maritim Singapura – Batam',
-    hero_title_1: 'Platform Kebugaran Lintas Batas & Dynamic Yield Berbasis AI untuk',
-    hero_title_2: 'Koridor Pariwisata Maritim',
-    hero_desc: 'Menghubungkan wisatawan kapal feri Singapura dengan pusat spa terverifikasi di Batam. Dilengkapi penerjemah medis AI real-time, pencocokan kursi kosong dinamis, dan penyelesaian pembayaran otomatis PayNow ke BI-FAST Rupiah.',
+    hero_badge: 'Aplikasi Super Lintas Batas Singapura ⇄ Batam',
+    hero_title_1: 'Panduan Wisata Medis, Kafe & Resort Lintas Batas',
+    hero_title_2: 'Batam & Singapura',
+    hero_desc: 'Bandingkan rumah sakit terkemuka, klinik spesialis, pantai, kafe viral, dan lapangan golf kejuaraan di kedua negara dengan kurs SGD/IDR yang transparan. Dilengkapi jadwal feri real-time, peta interaktif PostGIS, dan penerjemah medis AI.',
     btn_launch_admin: 'Jelajahi Platform →',
-    btn_launch_merchant: 'Gabung Mitra Spa',
-    btn_launch_tourist: 'Temukan Spa',
-    trust_corridors: 'Koridor Feri',
-    trust_settlement: 'Pembayaran Lintas Batas',
-    trust_ai: 'NLP Keselamatan Medis',
-    trust_sanitation: 'Standar Sanitasi',
+    btn_launch_merchant: 'Portal Mitra',
+    btn_launch_tourist: 'Jelajahi Batam',
+    trust_corridors: '49 Destinasi',
+    trust_settlement: 'Konversi SGD ⇄ IDR',
+    trust_ai: 'NLP Medis & Audio Suara',
+    trust_sanitation: 'Jadwal Feri & Peta',
 
     // Problem Solution
     prob_badge: 'Studi Kasus Inovasi Batam – Singapura',
     prob_title: 'Friksi Transit Waktu Singkat Lintas Batas',
-    prob_desc: 'Setiap akhir pekan, lebih dari 65.000 wisatawan melintasi Singapura dan Batam menggunakan feri cepat. Zentura menyelesaikan 3 hambatan utama antara turis dan UMKM kebugaran lokal.',
+    prob_desc: 'Setiap akhir pekan, lebih dari 65.000 wisatawan melintasi Singapura dan Batam menggunakan feri cepat. LokaBatam menyelesaikan 3 hambatan utama antara turis dan fasilitas lokal.',
     prob_tag_red: 'HAMBATAN UTAMA',
     prob_heading_red: 'Tantangan Tradisional Lintas Batas',
     prob_p1_title: 'Waktu Mati Transit 45–90 Menit:',
-    prob_p1_desc: 'Wisatawan tiba lebih awal di terminal feri (Harbour Bay / Batam Centre) dengan waktu luang terbuang, sementara kursi pijat spa lokal di sekitarnya kosong.',
+    prob_p1_desc: 'Wisatawan tiba lebih awal di terminal feri (Harbour Bay / Batam Centre) dengan waktu luang terbuang, sementara fasilitas rumah sakit, klinik, dan kafe di sekitarnya tidak termanfaatkan.',
     prob_p2_title: 'Miskomunikasi Bahasa & Riwayat Medis:',
-    prob_p2_desc: 'Turis asal Singapura sulit menyampaikan titik pegal atau alergi (minyak kacang, eksim) kepada terapis lokal yang hanya berbahasa Indonesia.',
-    prob_p3_title: 'Kendala Pembayaran & Kepastian Higienis:',
-    prob_p3_desc: 'Kerumitan penukaran valas (kekurangan uang tunai SGD/IDR) serta keraguan standar higienis menghalangi pemesanan langsung.',
+    prob_p2_desc: 'Turis asal Singapura sulit menyampaikan gejala keluhan atau alergi kepada praktisi lokal yang hanya berbahasa Indonesia.',
+    prob_p3_title: 'Kendala Pembayaran & Ketidakpastian Harga:',
+    prob_p3_desc: 'Kerumitan penukaran valas (kekurangan uang tunai SGD/IDR) serta kekhawatiran kenaikan harga turis menghalangi kunjungan spontan.',
     
-    sol_tag_blue: 'INOVASI LINTAS BATAS ZENTURA',
-    sol_heading_blue: 'Solusi Cerdas Berbasis AI',
-    sol_p1_title: 'Pencocok Celah Waktu Dinamis (Flash Gap Matcher):',
-    sol_p1_desc: 'Memasangkan jadwal keberangkatan kapal secara real-time dengan kursi spa kosong pada tarif promo dinamis, meningkatkan okupansi kursi hingga 84%.',
-    sol_p2_title: 'Jembatan Penerjemah Medis AI:',
-    sol_p2_desc: 'Mesin NLP mengubah instruksi turis (Inggris, Mandarin, Korea) menjadi kartu instruksi terapis bahasa Indonesia yang sopan disertai peringatan alergi.',
+    sol_tag_blue: 'INOVASI LINTAS BATAS LOKABATAM',
+    sol_heading_blue: 'Solusi Cerdas Berbasis AI & Super-App',
+    sol_p1_title: 'Katalog 49 Destinasi 2 Negara & Badge Hemat:',
+    sol_p1_desc: 'Membandingkan rumah sakit, klinik gigi, kafe, dan lapangan golf dengan penghematan biaya hingga 72% dibanding tarif di Singapura.',
+    sol_p2_title: 'Jembatan Penerjemah Medis AI & Audio Suara:',
+    sol_p2_desc: 'Mesin NLP mengubah instruksi turis (Inggris, Mandarin, Korea) menjadi kartu instruksi dokter/terapis bahasa Indonesia yang sopan disertai peringatan alergi dan suara audio.',
     sol_p3_title: 'Settlement Langsung PayNow SG ke BI-FAST IDR:',
-    sol_p3_desc: 'Turis membayar dengan SGD, sementara mitra spa menerima transfer otomatis Rupiah ke rekening bank lokal dengan sertifikasi higienis 95+.',
+    sol_p3_desc: 'Turis membayar dengan SGD, sementara mitra lokal menerima transfer otomatis Rupiah ke rekening bank lokal.',
 
     // Simulator
     sim_badge: 'Simulator Interaktif Langsung',
     sim_title: 'Uji Coba Mesin Inovasi Secara Real-Time',
-    sim_desc: 'Rasakan langsung bagaimana Zentura mengubah waktu tunggu transit menjadi nilai ekonomi nyata.',
+    sim_desc: 'Rasakan langsung bagaimana LokaBatam mengubah waktu tunggu transit menjadi nilai ekonomi nyata.',
     sim_tab_ai: '1. Penerjemah Medis AI',
     sim_tab_matcher: '2. Dynamic Gap Matcher',
     sim_tab_fx: '3. Valas PayNow ke BI-FAST',
@@ -168,7 +168,7 @@ export const translations = {
     // Regional Impact
     impact_badge: 'Akselerasi Ekonomi Lintas Batas',
     impact_title: 'Memberdayakan UMKM Regional & Meningkatkan Pengalaman Wisatawan',
-    impact_desc: 'Zentura menciptakan nilai ekonomi nyata di koridor maritim Singapura–Batam dengan menghubungkan wisatawan berdaya beli tinggi ke pusat kebugaran Indonesia yang terverifikasi berkualitas tinggi.',
+    impact_desc: 'LokaBatam menciptakan nilai ekonomi nyata di koridor maritim Singapura–Batam dengan menghubungkan wisatawan berdaya beli tinggi ke pusat kebugaran Indonesia yang terverifikasi berkualitas tinggi.',
 
     // Auth & Login (Standardized Clean Form)
     auth_title: 'Masuk ke Akun Anda',
@@ -194,7 +194,7 @@ export function useLanguage() {
   const setLanguage = (lang) => {
     if (lang === 'en' || lang === 'id') {
       currentLang.value = lang;
-      localStorage.setItem('zentura_lang', lang);
+      localStorage.setItem('lokabatam_lang', lang);
     }
   };
 

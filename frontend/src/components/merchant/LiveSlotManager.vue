@@ -123,13 +123,13 @@
 
 <script setup>
 import { ref, computed } from 'vue';
-import { useZenturaStore } from '../../composables/useZenturaStore';
+import { useLokaBatamStore } from '../../composables/useLokaBatamStore';
 
 const {
   merchantSalon,
   toggleFlashSlot,
   addMerchantFlashSlot
-} = useZenturaStore();
+} = useLokaBatamStore();
 
 const showAddModal = ref(false);
 

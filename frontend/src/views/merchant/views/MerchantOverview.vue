@@ -23,7 +23,7 @@
       <div class="kpi-card">
         <span class="kpi-label">Hygiene Audit Score</span>
         <span class="kpi-val">{{ merchantSalon.hygieneScore || merchantSalon.hygiene_score || 99 }}/100</span>
-        <span class="kpi-sub">Zentura Verified Grade A</span>
+        <span class="kpi-sub">LokaBatam Verified Grade A</span>
       </div>
     </div>
 
@@ -100,7 +100,7 @@
 
 <script setup>
 import { computed } from 'vue';
-import { useZenturaStore } from '../../../composables/useZenturaStore';
+import { useLokaBatamStore } from '../../../composables/useLokaBatamStore';
 
 defineEmits(['switch-tab']);
 
@@ -110,7 +110,7 @@ const {
   toggleFlashSlot, 
   confirmBooking, 
   selectedTherapistCardBooking 
-} = useZenturaStore();
+} = useLokaBatamStore();
 
 const pendingBookings = computed(() => {
   return merchantBookings.value.filter(b => b.status === 'pending');

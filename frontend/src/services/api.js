@@ -1,4 +1,4 @@
-// Centralized High-Performance API Client for Zentura (Singapore - Batam Maritime Gateway)
+// Centralized High-Performance API Client for LokaBatam (Singapore - Batam Cross-Border Super-App)
 const isBrowser = typeof window !== 'undefined';
 const isCloudDeploy = isBrowser && window.location.hostname !== 'localhost' && window.location.hostname !== '127.0.0.1';
 const API_BASE_URL = import.meta.env?.VITE_API_BASE_URL || (isCloudDeploy ? '/api/v1' : 'http://127.0.0.1:8000/api/v1');
@@ -65,7 +65,7 @@ async function request(endpoint, options = {}) {
 
     return result;
   } catch (error) {
-    console.warn(`[Zentura API] Network request to ${endpoint} failed:`, error.message);
+    console.warn(`[LokaBatam API] Network request to ${endpoint} failed:`, error.message);
     throw error;
   }
 }
@@ -100,6 +100,14 @@ export const api = {
     body: JSON.stringify(payload)
   }),
   getAiPresets: () => request('/ai/presets'),
+  generateAiItinerary: (payload) => request('/ai/generate-itinerary', {
+    method: 'POST',
+    body: JSON.stringify(payload)
+  }),
+  touristAiChat: (payload) => request('/ai/tourist-chat', {
+    method: 'POST',
+    body: JSON.stringify(payload)
+  }),
 
   // Bookings & WhatsApp
   getBookings: (params = {}) => {

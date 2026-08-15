@@ -1,12 +1,12 @@
 <template>
   <header class="top-role-header">
     <div class="top-nav-container">
-      <!-- Left: Luxury Brand Emblem & Title -->
+      <!-- Left: Brand Emblem & Title -->
       <div class="brand-section" @click="handleNavClick('home')">
-        <div class="brand-logo-mark">Z</div>
+        <div class="brand-logo-mark">L</div>
         <div class="brand-titles">
-          <span class="brand-name">ZENTURA</span>
-          <span class="brand-sub">CROSS-BORDER WELLNESS</span>
+          <span class="brand-name">LOKABATAM</span>
+          <span class="brand-sub">SG ⇄ BATAM SUPER-APP</span>
         </div>
       </div>
 
@@ -19,6 +19,7 @@
         >
           <span>{{ t('nav_home') }}</span>
         </button>
+        <button class="nav-tab" @click="handleNavClick('crossborder')"><span>{{ currentLang === 'id' ? '🇸🇬 ⇄ 🇮🇩 Wisata & Medis' : '🇸🇬 ⇄ 🇮🇩 Cross-Border Hub' }}</span></button>
         <button class="nav-tab" @click="handleNavClick('about')"><span>{{ t('nav_about') }}</span></button>
         <button class="nav-tab" @click="handleNavClick('solutions')"><span>{{ t('nav_solutions') }}</span></button>
         <button class="nav-tab" @click="handleNavClick('simulator')"><span>{{ t('nav_simulator') }}</span></button>
@@ -99,6 +100,8 @@ const handleNavClick = (section) => {
   setTimeout(() => {
     if (section === 'home') {
       window.scrollTo({ top: 0, behavior: 'smooth' });
+    } else if (section === 'crossborder') {
+      document.getElementById('cross-border-hub')?.scrollIntoView({ behavior: 'smooth' });
     } else if (section === 'about') {
       document.getElementById('innovation-bridge')?.scrollIntoView({ behavior: 'smooth' });
     } else if (section === 'solutions') {
