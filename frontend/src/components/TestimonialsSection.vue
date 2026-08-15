@@ -10,13 +10,13 @@
       <div class="flex flex-col md:flex-row md:items-end justify-between mb-12 gap-6">
         <div>
           <div class="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-emerald-500/10 border border-emerald-500/20 text-emerald-400 text-xs font-semibold uppercase tracking-wider mb-3">
-            <span>🇸🇬 Verified SG Travelers & Patients</span>
+            <span>{{ t.testi_badge || '🇸🇬 Verified SG Travelers & Patients' }}</span>
           </div>
           <h2 class="text-3xl sm:text-4xl font-extrabold text-white tracking-tight">
-            Pengalaman Nyata <span class="text-transparent bg-clip-text bg-gradient-to-r from-sky-400 to-emerald-400">Wisatawan Singapura</span>
+            {{ t.testi_title_1 || 'Pengalaman Nyata' }} <span class="text-transparent bg-clip-text bg-gradient-to-r from-sky-400 to-emerald-400">{{ t.testi_title_2 || 'Wisatawan Singapura' }}</span>
           </h2>
           <p class="text-sm sm:text-base text-slate-400 mt-2 max-w-2xl">
-            Ulasan terverifikasi dari pasien dan wisatawan asal Singapura yang menikmati perawatan medis, implan gigi, relaksasi spa, dan golf kelas dunia di Batam.
+            {{ t.testi_desc || 'Ulasan terverifikasi dari pasien dan wisatawan asal Singapura yang menikmati perawatan medis, implan gigi, relaksasi spa, dan golf kelas dunia di Batam.' }}
           </p>
         </div>
 
@@ -28,7 +28,7 @@
           <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4"></path>
           </svg>
-          Tulis Pengalaman Anda
+          {{ t.testi_btn_write || 'Tulis Pengalaman Anda' }}
         </button>
       </div>
 
@@ -38,28 +38,28 @@
           <div class="text-2xl sm:text-3xl font-extrabold text-transparent bg-clip-text bg-gradient-to-r from-amber-300 to-amber-500">
             {{ stats.average_rating }} <span class="text-amber-400 text-lg">★</span>
           </div>
-          <div class="text-xs text-slate-400 font-medium mt-1">Rata-Rata Kepuasan</div>
+          <div class="text-xs text-slate-400 font-medium mt-1">{{ t.testi_stat_rating || 'Rata-Rata Kepuasan' }}</div>
         </div>
 
         <div class="glass-card p-4 rounded-2xl border border-slate-800/80 bg-slate-900/60 text-center">
           <div class="text-2xl sm:text-3xl font-extrabold text-emerald-400 font-mono">
             {{ formatPrice(stats.total_sgd_saved) }}
           </div>
-          <div class="text-xs text-slate-400 font-medium mt-1">Total Biaya Dihemat (SGD)</div>
+          <div class="text-xs text-slate-400 font-medium mt-1">{{ t.testi_stat_saved || 'Total Biaya Dihemat (SGD)' }}</div>
         </div>
 
         <div class="glass-card p-4 rounded-2xl border border-slate-800/80 bg-slate-900/60 text-center">
           <div class="text-2xl sm:text-3xl font-extrabold text-sky-400 font-mono">
             1,450+
           </div>
-          <div class="text-xs text-slate-400 font-medium mt-1">Pasien SG Terverifikasi</div>
+          <div class="text-xs text-slate-400 font-medium mt-1">{{ t.testi_stat_patients || 'Pasien SG Terverifikasi' }}</div>
         </div>
 
         <div class="glass-card p-4 rounded-2xl border border-slate-800/80 bg-slate-900/60 text-center">
           <div class="text-2xl sm:text-3xl font-extrabold text-emerald-300">
             45-60m
           </div>
-          <div class="text-xs text-slate-400 font-medium mt-1">Feri SG ⇄ Batam</div>
+          <div class="text-xs text-slate-400 font-medium mt-1">{{ t.testi_stat_ferry || 'Feri SG ⇄ Batam' }}</div>
         </div>
       </div>
 
@@ -68,7 +68,7 @@
         <!-- Category Filter Tabs -->
         <div class="flex flex-wrap items-center gap-2">
           <button 
-            v-for="cat in categories" 
+            v-for="cat in localizedCategories" 
             :key="cat.slug"
             @click="activeCategory = cat.slug"
             :class="[
@@ -84,15 +84,15 @@
 
         <!-- Sort Select -->
         <div class="flex items-center gap-2 text-xs text-slate-400">
-          <span>Urutkan:</span>
+          <span>{{ t.testi_sort_label || 'Urutkan:' }}</span>
           <select 
             v-model="activeSort" 
             class="bg-slate-900 border border-slate-800 text-slate-200 rounded-lg px-2.5 py-1.5 focus:outline-none focus:border-sky-500 text-xs font-medium"
           >
-            <option value="latest">Terbaru</option>
-            <option value="highest_savings">Penghematan Terbesar ($)</option>
-            <option value="highest_rating">Rating Tertinggi (★ 5.0)</option>
-            <option value="most_helpful">Paling Membantu</option>
+            <option value="latest">{{ t.testi_sort_latest || 'Terbaru' }}</option>
+            <option value="highest_savings">{{ t.testi_sort_savings || 'Penghematan Terbesar ($)' }}</option>
+            <option value="highest_rating">{{ t.testi_sort_rating || 'Rating Tertinggi (★ 5.0)' }}</option>
+            <option value="most_helpful">{{ t.testi_sort_helpful || 'Paling Membantu' }}</option>
           </select>
         </div>
       </div>
@@ -156,7 +156,7 @@
               <div class="flex items-center gap-2">
                 <span class="text-base">💰</span>
                 <div>
-                  <div class="text-[10px] uppercase font-bold text-emerald-400">Penghematan vs SG</div>
+                  <div class="text-[10px] uppercase font-bold text-emerald-400">{{ t.testi_savings_tag || 'Penghematan vs SG' }}</div>
                   <div class="text-xs font-extrabold text-emerald-300 font-mono">
                     {{ formatPrice(review.cost_saved_sgd) }}
                     <span v-if="currency === 'IDR'" class="text-[10px] font-normal text-emerald-400/80">
@@ -166,7 +166,7 @@
                 </div>
               </div>
               <div class="text-right text-[10px] text-slate-400">
-                <span>Biaya di Batam:</span>
+                <span>{{ t.testi_batam_cost || 'Biaya di Batam:' }}</span>
                 <div class="font-semibold text-white font-mono">{{ formatPrice(review.spent_sgd) }}</div>
               </div>
             </div>
@@ -209,13 +209,13 @@
       <!-- Empty State -->
       <div v-else class="text-center py-16 glass-card rounded-2xl border border-slate-800">
         <span class="text-4xl mb-3 block">💬</span>
-        <h3 class="text-lg font-bold text-white">Belum ada ulasan untuk kategori ini</h3>
-        <p class="text-xs text-slate-400 mt-1 mb-4">Jadilah yang pertama membagikan pengalaman perawatan medis Anda di Batam!</p>
+        <h3 class="text-lg font-bold text-white">{{ t.testi_empty_title || 'Belum ada ulasan untuk kategori ini' }}</h3>
+        <p class="text-xs text-slate-400 mt-1 mb-4">{{ t.testi_empty_desc || 'Jadilah yang pertama membagikan pengalaman perawatan medis Anda di Batam!' }}</p>
         <button 
           @click="openReviewModal"
           class="px-4 py-2 rounded-xl text-xs font-semibold bg-sky-500 hover:bg-sky-400 text-slate-950 transition-all"
         >
-          Tulis Ulasan Sekarang
+          {{ t.testi_empty_btn || 'Tulis Ulasan Sekarang' }}
         </button>
       </div>
 
@@ -234,9 +234,9 @@
         </button>
 
         <div class="mb-6">
-          <span class="text-xs font-semibold uppercase tracking-wider text-emerald-400">Feedback Wisatawan SG</span>
-          <h3 class="text-2xl font-extrabold text-white mt-1">Bagikan Pengalaman Anda</h3>
-          <p class="text-xs text-slate-400 mt-1">Ulasan Anda membantu wisatawan Singapura lainnya menemukan fasilitas medis & wellness terbaik di Batam.</p>
+          <span class="text-xs font-semibold uppercase tracking-wider text-emerald-400">{{ t.testi_modal_tag || 'Feedback Wisatawan SG' }}</span>
+          <h3 class="text-2xl font-extrabold text-white mt-1">{{ t.testi_modal_title || 'Bagikan Pengalaman Anda' }}</h3>
+          <p class="text-xs text-slate-400 mt-1">{{ t.testi_modal_desc || 'Ulasan Anda membantu wisatawan Singapura lainnya menemukan fasilitas medis & wellness terbaik di Batam.' }}</p>
         </div>
 
         <form @submit.prevent="submitReview" class="space-y-4">
@@ -244,7 +244,7 @@
           <!-- Name & SG Location -->
           <div class="grid grid-cols-1 sm:grid-cols-2 gap-3">
             <div>
-              <label class="block text-xs font-semibold text-slate-300 mb-1">Nama Lengkap *</label>
+              <label class="block text-xs font-semibold text-slate-300 mb-1">{{ t.testi_form_name || 'Nama Lengkap *' }}</label>
               <input 
                 v-model="form.user_name" 
                 type="text" 
@@ -254,7 +254,7 @@
               />
             </div>
             <div>
-              <label class="block text-xs font-semibold text-slate-300 mb-1">Kawasan di Singapura</label>
+              <label class="block text-xs font-semibold text-slate-300 mb-1">{{ t.testi_form_loc || 'Kawasan di Singapura' }}</label>
               <input 
                 v-model="form.user_location" 
                 type="text" 
@@ -267,7 +267,7 @@
           <!-- Category & Place Selection -->
           <div class="grid grid-cols-1 sm:grid-cols-2 gap-3">
             <div>
-              <label class="block text-xs font-semibold text-slate-300 mb-1">Kategori Layanan *</label>
+              <label class="block text-xs font-semibold text-slate-300 mb-1">{{ t.testi_form_cat || 'Kategori Layanan *' }}</label>
               <select 
                 v-model="form.category_slug" 
                 required 
@@ -281,12 +281,12 @@
               </select>
             </div>
             <div>
-              <label class="block text-xs font-semibold text-slate-300 mb-1">Lokasi Fasilitas</label>
+              <label class="block text-xs font-semibold text-slate-300 mb-1">{{ t.testi_form_place || 'Lokasi Fasilitas' }}</label>
               <select 
                 v-model="form.place_id" 
                 class="w-full bg-slate-950 border border-slate-700 rounded-xl px-3 py-2 text-xs text-white focus:outline-none focus:border-sky-500"
               >
-                <option :value="null">-- Pilih Tempat (Opsional) --</option>
+                <option :value="null">{{ t.testi_form_place_opt || '-- Pilih Tempat (Opsional) --' }}</option>
                 <option v-for="p in places" :key="p.id" :value="p.id">{{ p.name }}</option>
               </select>
             </div>
@@ -294,7 +294,7 @@
 
           <!-- Treatment Name -->
           <div>
-            <label class="block text-xs font-semibold text-slate-300 mb-1">Jenis Perawatan / Kegiatan *</label>
+            <label class="block text-xs font-semibold text-slate-300 mb-1">{{ t.testi_form_treat || 'Jenis Perawatan / Kegiatan *' }}</label>
             <input 
               v-model="form.treatment_name" 
               type="text" 
@@ -306,7 +306,7 @@
 
           <!-- Rating Stars -->
           <div>
-            <label class="block text-xs font-semibold text-slate-300 mb-1">Rating Kepuasan *</label>
+            <label class="block text-xs font-semibold text-slate-300 mb-1">{{ t.testi_form_rating || 'Rating Kepuasan *' }}</label>
             <div class="flex items-center gap-2">
               <button 
                 v-for="star in 5" 
@@ -324,7 +324,7 @@
           <!-- Pricing & Savings in SGD -->
           <div class="grid grid-cols-1 sm:grid-cols-2 gap-3">
             <div>
-              <label class="block text-xs font-semibold text-slate-300 mb-1">Biaya yang Dikeluarkan (SGD) *</label>
+              <label class="block text-xs font-semibold text-slate-300 mb-1">{{ t.testi_form_spent || 'Biaya yang Dikeluarkan (SGD) *' }}</label>
               <input 
                 v-model.number="form.spent_sgd" 
                 type="number" 
@@ -335,7 +335,7 @@
               />
             </div>
             <div>
-              <label class="block text-xs font-semibold text-slate-300 mb-1">Estimasi Penghematan vs SG (SGD)</label>
+              <label class="block text-xs font-semibold text-slate-300 mb-1">{{ t.testi_form_saved || 'Estimasi Penghematan vs SG (SGD)' }}</label>
               <input 
                 v-model.number="form.cost_saved_sgd" 
                 type="number" 
@@ -348,7 +348,7 @@
 
           <!-- Ferry Route -->
           <div>
-            <label class="block text-xs font-semibold text-slate-300 mb-1">Rute Feri yang Digunakan</label>
+            <label class="block text-xs font-semibold text-slate-300 mb-1">{{ t.testi_form_route || 'Rute Feri yang Digunakan' }}</label>
             <input 
               v-model="form.ferry_route" 
               type="text" 
@@ -359,7 +359,7 @@
 
           <!-- Comment / Review Text -->
           <div>
-            <label class="block text-xs font-semibold text-slate-300 mb-1">Ulasan & Pengalaman Lengkap *</label>
+            <label class="block text-xs font-semibold text-slate-300 mb-1">{{ t.testi_form_comment || 'Ulasan & Pengalaman Lengkap *' }}</label>
             <textarea 
               v-model="form.comment" 
               rows="3" 
@@ -376,14 +376,14 @@
               @click="showModal = false"
               class="px-4 py-2 rounded-xl text-xs font-medium text-slate-400 hover:text-white hover:bg-slate-800 transition-all"
             >
-              Batal
+              {{ t.testi_form_cancel || 'Batal' }}
             </button>
             <button 
               type="submit" 
               :disabled="submitting"
               class="px-6 py-2.5 rounded-xl text-xs font-bold text-slate-950 bg-gradient-to-r from-emerald-400 to-sky-400 hover:from-emerald-300 hover:to-sky-300 transition-all shadow-md shadow-emerald-500/20 active:scale-95 disabled:opacity-50"
             >
-              {{ submitting ? 'Mengirim...' : 'Kirim Ulasan Terverifikasi' }}
+              {{ submitting ? (t.testi_form_submitting || 'Mengirim...') : (t.testi_form_submit || 'Kirim Ulasan Terverifikasi') }}
             </button>
           </div>
 
@@ -400,7 +400,8 @@ import { ref, computed, onMounted } from 'vue'
 const props = defineProps({
   currency: { type: String, default: 'SGD' },
   exchangeRate: { type: Number, default: 13920 },
-  places: { type: Array, default: () => [] }
+  places: { type: Array, default: () => [] },
+  t: { type: Object, default: () => ({}) }
 })
 
 const reviews = ref([])
@@ -415,14 +416,14 @@ const stats = ref({
   total_sgd_saved: 2635
 })
 
-const categories = [
-  { slug: 'all', label: '🌟 Semua Ulasan' },
-  { slug: 'medical', label: '🩺 Medical Checkup' },
-  { slug: 'dental', label: '🦷 Dental Care' },
-  { slug: 'spa', label: '💆‍♀️ Wellness & Spa' },
-  { slug: 'golf', label: '⛳ Golf & Resorts' },
-  { slug: 'culinary', label: '🦀 Seafood' }
-]
+const localizedCategories = computed(() => [
+  { slug: 'all', label: props.t.testi_cat_all || '🌟 Semua Ulasan' },
+  { slug: 'medical', label: props.t.testi_cat_medical || '🩺 Medical Checkup' },
+  { slug: 'dental', label: props.t.testi_cat_dental || '🦷 Dental Care' },
+  { slug: 'spa', label: props.t.testi_cat_spa || '💆‍♀️ Wellness & Spa' },
+  { slug: 'golf', label: props.t.testi_cat_golf || '⛳ Golf & Resorts' },
+  { slug: 'culinary', label: props.t.testi_cat_culinary || '🦀 Seafood' }
+])
 
 const form = ref({
   user_name: '',
@@ -611,3 +612,4 @@ onMounted(() => {
   fetchReviews()
 })
 </script>
+

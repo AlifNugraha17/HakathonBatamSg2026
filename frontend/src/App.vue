@@ -58,6 +58,7 @@
         :currency="currency"
         :exchange-rate="exchangeRate"
         :places="places"
+        :t="t"
       />
 
       <!-- Features & Why Batam Section -->
