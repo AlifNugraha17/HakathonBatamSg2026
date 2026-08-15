@@ -1,3 +1,3 @@
 push by 
-Nama: fadiyahnura
+Name: fadiyahnura <br>
 Email: fadiyahna260104@gmail.com
