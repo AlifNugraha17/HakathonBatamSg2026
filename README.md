@@ -86,8 +86,5 @@ npm run build
 ```
 
 ---
-
-## 👥 Contributors & Credits
-- **Developer:** fadiyahnura ([fadiyahna260104@gmail.com](mailto:fadiyahna260104@gmail.com))
 - **Team Repository:** [AlifNugraha17/HakathonBatamSg2026](https://github.com/AlifNugraha17/HakathonBatamSg2026)
 - **Event:** Hakathon Batam SG 2026
