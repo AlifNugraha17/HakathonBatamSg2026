@@ -4,6 +4,7 @@ use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\Api\PlaceController;
 use App\Http\Controllers\Api\BookingController;
 use App\Http\Controllers\Api\ReviewController;
+use App\Http\Controllers\Api\EnhancedTourismController;
 
 /*
 |--------------------------------------------------------------------------
@@ -14,6 +15,12 @@ use App\Http\Controllers\Api\ReviewController;
 Route::get('/places', [PlaceController::class, 'index']);
 Route::get('/places/{id}', [PlaceController::class, 'show']);
 Route::post('/bookings', [BookingController::class, 'store']);
+
+// Enhanced Tourism API Endpoints
+Route::get('/ferry-schedules', [EnhancedTourismController::class, 'ferrySchedules']);
+Route::get('/fair-prices', [EnhancedTourismController::class, 'fairPrices']);
+Route::get('/doctors', [EnhancedTourismController::class, 'doctors']);
+Route::get('/itinerary-packages', [EnhancedTourismController::class, 'itineraryPackages']);
 
 // Verified Reviews & Ratings Endpoints
 Route::get('/reviews', [ReviewController::class, 'index']);
