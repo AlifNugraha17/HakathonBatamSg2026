@@ -35,18 +35,27 @@ class Place extends Model
     }
 
     /**
-     * Scope query to find places near a given latitude/longitude using PostgreSQL PostGIS
+     * Scope query to find places near a given latitude/longitude using PostgreSQL PostGIS (with SQLite fallback)
      */
     public function scopeNearLocation($query, $lat, $lng, $distanceInMeters = 10000)
     {
+        if (DB::getDriverName() === 'pgsql') {
+            return $query->select('*')
+                ->selectRaw(
+                    "ST_DistanceSphere(location, ST_MakePoint(?, ?)) as distance_meters",
+                    [$lng, $lat]
+                )
+                ->whereRaw(
+                    "ST_DWithin(location::geography, ST_SetSRID(ST_MakePoint(?, ?), 4326)::geography, ?)",
+                    [$lng, $lat, $distanceInMeters]
+                )
+                ->orderBy('distance_meters', 'asc');
+        }
+
         return $query->select('*')
             ->selectRaw(
-                "ST_DistanceSphere(location, ST_MakePoint(?, ?)) as distance_meters",
-                [$lng, $lat]
-            )
-            ->whereRaw(
-                "ST_DWithin(location::geography, ST_SetSRID(ST_MakePoint(?, ?), 4326)::geography, ?)",
-                [$lng, $lat, $distanceInMeters]
+                "((latitude - ?) * (latitude - ?) + (longitude - ?) * (longitude - ?)) * 111320 as distance_meters",
+                [$lat, $lat, $lng, $lng]
             )
             ->orderBy('distance_meters', 'asc');
     }
