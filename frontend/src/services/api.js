@@ -1,5 +1,7 @@
 // Centralized High-Performance API Client for Zentura (Singapore - Batam Maritime Gateway)
-const API_BASE_URL = import.meta.env?.VITE_API_BASE_URL || 'http://127.0.0.1:8000/api/v1';
+const isBrowser = typeof window !== 'undefined';
+const isCloudDeploy = isBrowser && window.location.hostname !== 'localhost' && window.location.hostname !== '127.0.0.1';
+const API_BASE_URL = import.meta.env?.VITE_API_BASE_URL || (isCloudDeploy ? '/api/v1' : 'http://127.0.0.1:8000/api/v1');
 
 // In-Memory Fast SWR Cache
 const apiCache = new Map();

@@ -1,0 +1,7 @@
+{
+  "version": 2,
+  "rewrites": [
+    { "source": "/api/v1/:path*", "destination": "/api/handler.js" },
+    { "source": "/(.*)", "destination": "/index.html" }
+  ]
+}
