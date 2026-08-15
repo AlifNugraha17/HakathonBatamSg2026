@@ -222,8 +222,8 @@ export function useZenturaStore() {
       await loadBookingsFromApi();
       const code = created?.booking_code || created?.bookingCode || created?.id || 'ZEN-SG';
       showSuccess({
-        id: `Reservasi #${code} berhasil disimpan ke database Supabase!`,
-        en: `Reservation #${code} confirmed & stored in Supabase database!`
+        id: `Reservasi #${code} berhasil dikonfirmasi dan tersimpan!`,
+        en: `Reservation #${code} confirmed & stored successfully!`
       }, {
         id: 'Pemesanan Berhasil',
         en: 'Booking Confirmed'

@@ -183,4 +183,42 @@ class BookingController extends Controller
 
         return $this->successResponse($booking);
     }
+
+    /**
+     * Generate WhatsApp Direct Bridge Payload.
+     */
+    public function generateWhatsAppPayload(Request $request)
+    {
+        $spaName = $request->input('spa_name', 'Martha Heritage Herbal Spa');
+        $guestName = $request->input('guest_name', 'Guest');
+        $serviceName = $request->input('service_name', 'Wellness Massage');
+        $bookingTime = $request->input('booking_time', '14:30 WIB');
+        $priceSgd = $request->input('price_sgd', 28.27);
+        $notes = $request->input('medical_notes', '');
+
+        $msg = "✨ *ZENTURA CROSS-BORDER SPA RESERVATION*\n";
+        $msg .= "━━━━━━━━━━━━━━━━━━━━\n";
+        $msg .= "🏛 *Spa:* {$spaName}\n";
+        $msg .= "👤 *Guest:* {$guestName}\n";
+        $msg .= "💆 *Treatment:* {$serviceName}\n";
+        $msg .= "⏰ *Time Slot:* {$bookingTime}\n";
+        $msg .= "💳 *Guaranteed Price:* SGD {$priceSgd}\n";
+        if (!empty($notes)) {
+            $msg .= "📝 *AI Medical Brief:* {$notes}\n";
+        }
+        $msg .= "━━━━━━━━━━━━━━━━━━━━\n";
+        $msg .= "🚢 *Channel:* Singapore - Batam Maritime Gateway (Zentura Verified)";
+
+        $encoded = urlencode($msg);
+        $targetPhone = preg_replace('/[^0-9]/', '', $request->input('phone', '6281270088990'));
+        $waUrl = "https://wa.me/{$targetPhone}?text={$encoded}";
+
+        return $this->successResponse([
+            'spa_name' => $spaName,
+            'guest_name' => $guestName,
+            'whatsapp_url' => $waUrl,
+            'encoded_text' => $msg,
+        ], 'WhatsApp payload generated successfully.');
+    }
 }
+

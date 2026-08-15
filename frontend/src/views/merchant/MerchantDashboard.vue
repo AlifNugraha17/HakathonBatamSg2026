@@ -21,7 +21,8 @@
 </template>
 
 <script setup>
-import { ref } from 'vue';
+import { ref, onMounted, watch } from 'vue';
+import { useRoute, useRouter } from 'vue-router';
 import MerchantSidebar from './components/MerchantSidebar.vue';
 import MerchantHeader from './components/MerchantHeader.vue';
 import MerchantOverview from './views/MerchantOverview.vue';
@@ -31,7 +32,27 @@ import TherapistRoster from './views/TherapistRoster.vue';
 import MerchantProfileView from './views/MerchantProfileView.vue';
 import TherapistCardModal from '../../components/merchant/TherapistCardModal.vue';
 
+const route = useRoute();
+const router = useRouter();
 const activeTab = ref('overview');
+
+onMounted(() => {
+  if (route.query.tab && ['overview', 'orders', 'slots', 'therapists', 'profile'].includes(route.query.tab)) {
+    activeTab.value = route.query.tab;
+  }
+});
+
+watch(() => route.query.tab, (newTab) => {
+  if (newTab && ['overview', 'orders', 'slots', 'therapists', 'profile'].includes(newTab)) {
+    activeTab.value = newTab;
+  }
+});
+
+watch(activeTab, (newTab) => {
+  if (route.query.tab !== newTab) {
+    router.replace({ query: { ...route.query, tab: newTab } });
+  }
+});
 </script>
 
 <style scoped>

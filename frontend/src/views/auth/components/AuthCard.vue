@@ -30,7 +30,7 @@
     <div v-if="authMode === 'login'">
       <div class="form-header">
         <h2 class="auth-heading">{{ t('auth_title') }}</h2>
-        <p class="auth-sub">{{ currentLang === 'id' ? 'Autentikasi langsung dengan database PostgreSQL Supabase' : 'Direct authentication with PostgreSQL Supabase database' }}</p>
+        <p class="auth-sub">{{ currentLang === 'id' ? 'Autentikasi aman dan terenkripsi ke sistem database' : 'Secure and encrypted authentication to the system database' }}</p>
       </div>
 
       <form @submit.prevent="handleLogin" class="auth-form">
@@ -125,7 +125,7 @@
     <div v-else>
       <div class="form-header">
         <h2 class="auth-heading">{{ currentLang === 'id' ? 'Buat Akun Baru' : 'Create New Account' }}</h2>
-        <p class="auth-sub">{{ currentLang === 'id' ? 'Data akan tersimpan langsung di tabel users database Supabase' : 'Data will be saved directly into Supabase users table' }}</p>
+        <p class="auth-sub">{{ currentLang === 'id' ? 'Data akan tersimpan langsung di sistem database terpadu' : 'Data will be saved directly into the unified system database' }}</p>
       </div>
 
       <form @submit.prevent="handleRegister" class="auth-form">

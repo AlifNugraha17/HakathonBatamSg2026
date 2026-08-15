@@ -15,7 +15,7 @@
       <div class="stat-card">
         <div class="stat-header">
           <span class="stat-label">Active Partner Spas</span>
-          <span class="trend-pill blue">Supabase Vetted</span>
+          <span class="trend-pill blue">Verified Centers</span>
         </div>
         <div class="stat-val-row">
           <span class="stat-value">{{ salons.length || metrics.activeMerchantsCount || 0 }} Centers</span>

@@ -71,11 +71,22 @@
       <span class="tab-label">Saved Favorites</span>
       <span v-if="savedSalonIds.length > 0" class="badge-count">{{ savedSalonIds.length }}</span>
     </button>
+
+    <!-- Sign Out Button -->
+    <button class="nav-tab-btn btn-nav-logout" @click="logout" title="Sign Out">
+      <svg class="tab-icon text-red" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+        <path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"></path>
+        <polyline points="16 17 21 12 16 7"></polyline>
+        <line x1="21" y1="12" x2="9" y2="12"></line>
+      </svg>
+      <span class="tab-label text-red">Sign Out</span>
+    </button>
   </nav>
 </template>
 
 <script setup>
 import { useZenturaStore } from '../../../composables/useZenturaStore';
+import { useAuth } from '../../../composables/useAuth';
 
 defineProps({
   modelValue: { type: String, default: 'discover' }
@@ -84,6 +95,7 @@ defineProps({
 defineEmits(['update:modelValue']);
 
 const { bookings, savedSalonIds } = useZenturaStore();
+const { logout } = useAuth();
 </script>
 
 <style scoped>
@@ -143,11 +155,20 @@ const { bookings, savedSalonIds } = useZenturaStore();
 }
 
 .badge-count {
-  font-size: 0.65rem;
-  background: #1e3a8a;
+  padding: 0.15rem 0.45rem;
+  background: #1d4ed8;
   color: #ffffff;
+  font-size: 0.68rem;
   font-weight: 700;
-  padding: 0.1rem 0.45rem;
   border-radius: 99px;
+}
+
+.text-red {
+  color: #dc2626 !important;
+}
+
+.btn-nav-logout:hover {
+  background: #fee2e2;
+  color: #dc2626;
 }
 </style>

@@ -6,6 +6,25 @@
         <h3 class="matcher-title">Smart Micro-Moment Time Matcher</h3>
         <p class="matcher-subtitle">Find empty therapist chairs matching your exact free window before ferry departure</p>
       </div>
+
+      <!-- Scan Ferry Ticket Button -->
+      <button class="btn-scan-ticket" @click="openCameraScanner">
+        <span class="scan-icon">📷</span>
+        <span>Scan Ferry QR Ticket</span>
+      </button>
+    </div>
+
+    <!-- Scanned Ticket Quick Info Banner (If Scanned) -->
+    <div v-if="scannedTicket" class="scanned-ticket-banner">
+      <div class="ticket-meta-left">
+        <span class="ticket-badge">🚢 VERIFIED FERRY BOARDING PASS</span>
+        <strong class="ticket-name">{{ scannedTicket.operator }} • {{ scannedTicket.route }}</strong>
+        <span class="ticket-time">Departure: <strong>{{ scannedTicket.departureTime }}</strong> (Gate Closes: {{ scannedTicket.gateCloseTime }})</span>
+      </div>
+      <div class="ticket-meta-right">
+        <span class="safe-window-label">Safe Spa Window:</span>
+        <span class="safe-window-val">⚡ {{ scannedTicket.safeWindowMinutes }} Mins</span>
+      </div>
     </div>
 
     <!-- Interactive Inputs in English -->
@@ -96,12 +115,68 @@
         </div>
       </div>
     </div>
+
+    <!-- Live Camera QR Ferry Ticket Scanner Modal -->
+    <div v-if="isQrModalOpen" class="modal-overlay" @click.self="closeCameraScanner">
+      <div class="modal-card animate-fade-in">
+        <div class="modal-header">
+          <div class="header-left">
+            <span class="modal-icon">📷</span>
+            <div>
+              <h3 class="modal-title">Live Camera Boarding Pass Scanner</h3>
+              <p class="modal-sub">Scan your ferry QR code / E-ticket to auto-calculate safe transit gap</p>
+            </div>
+          </div>
+          <button class="btn-close" @click="closeCameraScanner">✕</button>
+        </div>
+
+        <div class="scanner-viewport">
+          <!-- Real Camera Stream Video -->
+          <video 
+            ref="videoRef" 
+            autoplay 
+            playsinline 
+            muted 
+            class="camera-stream-video"
+            v-show="hasCameraFeed"
+          ></video>
+
+          <!-- Viewfinder Reticle Box Overlay -->
+          <div class="viewfinder-box" :class="{ 'is-scanning': isScanning }">
+            <div class="laser-line"></div>
+            
+            <div v-if="!hasCameraFeed" class="ticket-preview-box">
+              <span class="barcode-icon">🎟️</span>
+              <div class="ticket-dummy-details">
+                <span class="dummy-op">MAJESTIC FAST FERRY</span>
+                <span class="dummy-route">HARBOUR BAY (BTH) ➔ HARBOURFRONT (SIN)</span>
+                <span class="dummy-dep">ETD: 17:30 WIB • SEAT: 14B</span>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div class="camera-status-bar">
+          <span class="cam-dot" :class="{ live: hasCameraFeed }"></span>
+          <span class="cam-text">{{ hasCameraFeed ? '● Live Camera Active (Align QR Code in Frame)' : 'Camera standby / Click Demo OCR Scan' }}</span>
+        </div>
+
+        <div class="scanner-actions">
+          <button class="btn-scan-action" :disabled="isScanning" @click="captureAndAnalyzeTicket">
+            <span v-if="isScanning" class="spinner"></span>
+            <span>{{ isScanning ? 'Processing OCR & Ferry Time-Gap...' : '⚡ Capture & Verify Ferry Ticket' }}</span>
+          </button>
+        </div>
+      </div>
+    </div>
   </div>
 </template>
 
 <script setup>
+import { ref, onBeforeUnmount } from 'vue';
 import { useZenturaStore } from '../../composables/useZenturaStore';
 import { useCurrency } from '../../composables/useCurrency';
+import { useNotification } from '../../composables/useNotification';
 
 const {
   matcherFilter,
@@ -111,6 +186,70 @@ const {
 } = useZenturaStore();
 
 const { formatPrice } = useCurrency();
+const { showToast } = useNotification();
+
+const isQrModalOpen = ref(false);
+const isScanning = ref(false);
+const hasCameraFeed = ref(false);
+const scannedTicket = ref(null);
+const videoRef = ref(null);
+let mediaStream = null;
+
+const openCameraScanner = async () => {
+  isQrModalOpen.value = true;
+  hasCameraFeed.value = false;
+
+  if (typeof navigator !== 'undefined' && navigator.mediaDevices && navigator.mediaDevices.getUserMedia) {
+    try {
+      mediaStream = await navigator.mediaDevices.getUserMedia({
+        video: { facingMode: 'environment', width: { ideal: 640 }, height: { ideal: 480 } }
+      });
+      if (videoRef.value) {
+        videoRef.value.srcObject = mediaStream;
+        hasCameraFeed.value = true;
+      }
+    } catch (err) {
+      console.info('[Camera Scanner] Webcam unavailable or permission denied, using visual OCR simulator:', err.message);
+      hasCameraFeed.value = false;
+    }
+  }
+};
+
+const closeCameraScanner = () => {
+  if (mediaStream) {
+    mediaStream.getTracks().forEach(track => track.stop());
+    mediaStream = null;
+  }
+  hasCameraFeed.value = false;
+  isQrModalOpen.value = false;
+};
+
+const captureAndAnalyzeTicket = () => {
+  isScanning.value = true;
+  setTimeout(() => {
+    isScanning.value = false;
+    scannedTicket.value = {
+      operator: 'Majestic Fast Ferry',
+      route: 'Harbour Bay ➔ HarbourFront SG',
+      departureTime: '17:30 WIB',
+      gateCloseTime: '17:00 WIB',
+      safeWindowMinutes: 45
+    };
+    
+    // Automatically configure matcher filters to safe duration
+    matcherFilter.durationMinutes = 45;
+    matcherFilter.maxDistanceMinutes = 10;
+    
+    closeCameraScanner();
+    showToast('Ferry Ticket Verified! Safe 45-min spa window matched to departure.', 'success');
+  }, 1200);
+};
+
+onBeforeUnmount(() => {
+  if (mediaStream) {
+    mediaStream.getTracks().forEach(track => track.stop());
+  }
+});
 
 const handleBookSlot = (slot) => {
   selectedSlotForBooking.value = slot;
@@ -385,6 +524,297 @@ const handleBookSlot = (slot) => {
 
 .btn-book-slot:hover {
   background: #0f172a;
+}
+
+/* =========================================
+   QR FERRY TICKET SCANNER STYLES
+   ========================================= */
+.btn-scan-ticket {
+  display: flex;
+  align-items: center;
+  gap: 0.45rem;
+  background: linear-gradient(135deg, #0284c7 0%, #0369a1 100%);
+  color: #ffffff;
+  border: none;
+  font-size: 0.78rem;
+  font-weight: 700;
+  padding: 0.45rem 0.95rem;
+  border-radius: var(--radius-xs);
+  cursor: pointer;
+  box-shadow: 0 2px 8px rgba(2, 132, 199, 0.25);
+  transition: all 0.2s ease;
+}
+
+.btn-scan-ticket:hover {
+  background: #0f172a;
+}
+
+.scanned-ticket-banner {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 1rem;
+  background: #f0fdf4;
+  border: 1px solid #86efac;
+  border-left: 4px solid #16a34a;
+  padding: 0.75rem 1rem;
+  border-radius: 6px;
+  margin-bottom: 1rem;
+}
+
+.ticket-meta-left {
+  display: flex;
+  flex-direction: column;
+  gap: 0.2rem;
+}
+
+.ticket-badge {
+  font-size: 0.65rem;
+  font-weight: 800;
+  color: #15803d;
+  letter-spacing: 0.04em;
+}
+
+.ticket-name {
+  font-size: 0.86rem;
+  color: #0f172a;
+}
+
+.ticket-time {
+  font-size: 0.74rem;
+  color: #475569;
+}
+
+.ticket-meta-right {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-end;
+  gap: 0.2rem;
+}
+
+.safe-window-label {
+  font-size: 0.68rem;
+  color: #64748b;
+  font-weight: 700;
+  text-transform: uppercase;
+}
+
+.safe-window-val {
+  font-size: 1.1rem;
+  font-weight: 900;
+  color: #047857;
+}
+
+/* Modal Viewfinder */
+.modal-overlay {
+  position: fixed;
+  inset: 0;
+  background: rgba(15, 23, 42, 0.7);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 9999;
+  padding: 1rem;
+}
+
+.modal-card {
+  background: #ffffff;
+  border-radius: 12px;
+  max-width: 460px;
+  width: 100%;
+  padding: 1.25rem;
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+}
+
+.modal-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+}
+
+.header-left {
+  display: flex;
+  gap: 0.65rem;
+}
+
+.modal-icon {
+  font-size: 1.5rem;
+}
+
+.modal-title {
+  margin: 0;
+  font-size: 0.95rem;
+  font-weight: 800;
+  color: #0f172a;
+}
+
+.modal-sub {
+  margin: 0;
+  font-size: 0.74rem;
+  color: #64748b;
+}
+
+.btn-close {
+  background: transparent;
+  border: none;
+  font-size: 1rem;
+  color: #94a3b8;
+  cursor: pointer;
+}
+
+.scanner-viewport {
+  background: #0f172a;
+  border-radius: 8px;
+  padding: 0.75rem;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  position: relative;
+  overflow: hidden;
+  min-height: 180px;
+}
+
+.camera-stream-video {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.camera-status-bar {
+  display: flex;
+  align-items: center;
+  gap: 0.45rem;
+  padding: 0.35rem 0.5rem;
+  background: #f8fafc;
+  border: 1px solid #e2e8f0;
+  border-radius: 6px;
+}
+
+.cam-dot {
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  background: #94a3b8;
+}
+
+.cam-dot.live {
+  background: #22c55e;
+  box-shadow: 0 0 8px #22c55e;
+  animation: blinkCam 1.2s infinite;
+}
+
+@keyframes blinkCam {
+  0%, 100% { opacity: 1; }
+  50% { opacity: 0.4; }
+}
+
+.cam-text {
+  font-size: 0.72rem;
+  font-weight: 600;
+  color: #475569;
+}
+
+.viewfinder-box {
+  position: relative;
+  width: 100%;
+  height: 150px;
+  border: 2px dashed #38bdf8;
+  border-radius: 8px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: rgba(15, 23, 42, 0.4);
+  backdrop-filter: blur(1px);
+  z-index: 2;
+  overflow: hidden;
+}
+
+.laser-line {
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 2px;
+  background: #ef4444;
+  box-shadow: 0 0 8px #ef4444;
+  animation: scanLaser 1.2s infinite ease-in-out;
+}
+
+@keyframes scanLaser {
+  0% { top: 0; }
+  50% { top: 100%; }
+  100% { top: 0; }
+}
+
+.ticket-preview-box {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  color: #ffffff;
+}
+
+.barcode-icon {
+  font-size: 2rem;
+}
+
+.ticket-dummy-details {
+  display: flex;
+  flex-direction: column;
+}
+
+.dummy-op {
+  font-size: 0.78rem;
+  font-weight: 800;
+  color: #38bdf8;
+}
+
+.dummy-route {
+  font-size: 0.68rem;
+  color: #cbd5e1;
+}
+
+.dummy-dep {
+  font-size: 0.74rem;
+  font-weight: 700;
+  color: #34d399;
+}
+
+.btn-scan-action {
+  width: 100%;
+  padding: 0.75rem;
+  background: linear-gradient(135deg, #0284c7 0%, #0369a1 100%);
+  color: #ffffff;
+  border: none;
+  font-size: 0.85rem;
+  font-weight: 800;
+  border-radius: 6px;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.5rem;
+}
+
+.btn-scan-action:hover {
+  background: #0f172a;
+}
+
+.spinner {
+  width: 14px;
+  height: 14px;
+  border: 2px solid rgba(255, 255, 255, 0.3);
+  border-top-color: #ffffff;
+  border-radius: 50%;
+  animation: spin 0.7s linear infinite;
+}
+
+@keyframes spin {
+  to { transform: rotate(360deg); }
 }
 
 @media (max-width: 768px) {

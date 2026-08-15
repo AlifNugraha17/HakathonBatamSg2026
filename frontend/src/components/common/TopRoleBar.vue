@@ -14,7 +14,7 @@
       <nav class="nav-links-center">
         <button 
           class="nav-tab" 
-          :class="{ active: currentView === 'landing' && activeSection === 'home' }"
+          :class="{ active: route.path === '/' && activeSection === 'home' }"
           @click="handleNavClick('home')"
         >
           <span>{{ t('nav_home') }}</span>
@@ -52,8 +52,8 @@
         <template v-if="isAuthenticated">
           <button 
             class="btn-dashboard-link"
-            :class="{ active: currentView === 'dashboard' }"
-            @click="navigateTo('dashboard')"
+            :class="{ active: ['/admin', '/merchant', '/tourist', '/dashboard'].includes(route.path) }"
+            @click="navigateTo(currentRole || 'dashboard')"
           >
             <span class="role-badge-dot"></span>
             <span>{{ t('nav_dashboard') }} ({{ currentRole.toUpperCase() }})</span>
@@ -67,7 +67,7 @@
         <template v-else>
           <button 
             class="btn-signin-nav" 
-            :class="{ active: currentView === 'login' }"
+            :class="{ active: route.path === '/login' }"
             @click="navigateTo('login')"
           >
             {{ t('nav_signin') }}
@@ -80,17 +80,19 @@
 
 <script setup>
 import { ref } from 'vue';
+import { useRoute } from 'vue-router';
 import { useAuth } from '../../composables/useAuth';
 import { useLanguage } from '../../composables/useLanguage';
 
-const { currentView, currentRole, isAuthenticated, logout, navigateTo } = useAuth();
+const route = useRoute();
+const { currentRole, isAuthenticated, logout, navigateTo } = useAuth();
 const { currentLang, setLanguage, t } = useLanguage();
 const activeSection = ref('home');
 
 const handleNavClick = (section) => {
   activeSection.value = section;
-  if (currentView.value !== 'landing') {
-    navigateTo('landing');
+  if (route.path !== '/') {
+    navigateTo('/');
   }
 
   // Smooth scroll to target section if available

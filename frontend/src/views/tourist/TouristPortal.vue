@@ -23,7 +23,8 @@
 </template>
 
 <script setup>
-import { ref } from 'vue';
+import { ref, onMounted, watch } from 'vue';
+import { useRoute, useRouter } from 'vue-router';
 import TouristHeader from './components/TouristHeader.vue';
 import TouristNav from './components/TouristNav.vue';
 import DiscoverSalons from './views/DiscoverSalons.vue';
@@ -35,7 +36,27 @@ import SalonDetailModal from '../../components/tourist/SalonDetailModal.vue';
 import AiTranslatorModal from '../../components/tourist/AiTranslatorModal.vue';
 import WhatsAppBookingModal from '../../components/tourist/WhatsAppBookingModal.vue';
 
+const route = useRoute();
+const router = useRouter();
 const activeTouristTab = ref('discover');
+
+onMounted(() => {
+  if (route.query.tab && ['discover', 'matcher', 'translator', 'bookings', 'saved'].includes(route.query.tab)) {
+    activeTouristTab.value = route.query.tab;
+  }
+});
+
+watch(() => route.query.tab, (newTab) => {
+  if (newTab && ['discover', 'matcher', 'translator', 'bookings', 'saved'].includes(newTab)) {
+    activeTouristTab.value = newTab;
+  }
+});
+
+watch(activeTouristTab, (newTab) => {
+  if (route.query.tab !== newTab) {
+    router.replace({ query: { ...route.query, tab: newTab } });
+  }
+});
 </script>
 
 <style scoped>

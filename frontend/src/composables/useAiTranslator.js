@@ -99,6 +99,32 @@ export function useAiTranslator() {
       etiquette.push('Sesi Hening (Tamu ingin istirahat total, mohon tidak mengajak mengobrol)');
     }
 
+    // Build natural Indonesian sentence translation for therapist reading
+    let translatedNarrative = '';
+    if (lower.includes('肩颈') || (lower.includes('shoulder') && (lower.includes('neck') || lower.includes('tengkuk')))) {
+      translatedNarrative += 'Tamu mengeluhkan area leher, bahu, dan tengkuk yang sangat pegal dan kaku karena kelelahan kerja. ';
+    } else if (lower.includes('back') || lower.includes('lumbar') || lower.includes('腰') || lower.includes('背')) {
+      translatedNarrative += 'Tamu mengalami rasa kaku dan pegal pada area pinggang dan punggung bawah. ';
+    } else if (lower.includes('feet') || lower.includes('foot') || lower.includes('calf') || lower.includes('脚') || lower.includes('腿')) {
+      translatedNarrative += 'Tamu merasakan ketegangan dan pegal pada betis serta telapak kaki setelah banyak berjalan. ';
+    } else {
+      translatedNarrative += 'Tamu menginginkan pemulihan dan relaksasi otot tubuh secara menyeluruh. ';
+    }
+
+    translatedNarrative += `Minta tekanan pijat ${pressure.toLowerCase().split(' (')[0]}. `;
+    
+    if (focusAreas.length > 0) {
+      translatedNarrative += `Fokuskan pijatan pada: ${focusAreas.join(', ')}. `;
+    }
+
+    if (allergyAlerts.length > 0) {
+      translatedNarrative += `PERINGATAN KESELAMATAN: ${allergyAlerts.join(' ')} `;
+    }
+
+    if (etiquette.length > 0) {
+      translatedNarrative += `Suasana: ${etiquette.join('. ')}.`;
+    }
+
     let summaryTextId = `====================================\n📌 KARTU INSTRUKSI TERAPIS (ZENTURA AI)\n====================================\n• Layanan : ${serviceName || 'Perawatan Relaksasi Spa'}\n• Tekanan : ${pressure}\n• Titik Fokus : ${focusAreas.join(', ')}`;
     
     if (allergyAlerts.length > 0) {
@@ -107,8 +133,9 @@ export function useAiTranslator() {
     if (etiquette.length > 0) {
       summaryTextId += `\n\n🌿 SUASANA: ${etiquette.join(', ')}`;
     }
+    summaryTextId += `\n\n🇮🇩 Terjemahan Instruksi Terapis: "${translatedNarrative.trim()}"`;
     if (textInput.trim().length > 0) {
-      summaryTextId += `\n\n💬 Catatan Asli Tamu: "${textInput.trim()}"`;
+      summaryTextId += `\n💬 Catatan Asli Tamu: "${textInput.trim()}"`;
     }
 
     isTranslating.value = false;
@@ -119,6 +146,7 @@ export function useAiTranslator() {
       focusAreas,
       allergyAlerts,
       etiquette,
+      translatedNarrative: translatedNarrative.trim(),
       therapistNotesId: summaryTextId,
       rawEnglish: textInput,
       model: 'Zentura-MedNLP v3.2 (Local Fallback Engine)',

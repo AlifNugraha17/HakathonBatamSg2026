@@ -1,6 +1,7 @@
 import { ref, computed } from 'vue';
 import { useNotification } from './useNotification';
 import { api } from '../services/api';
+import router from '../router';
 
 const SESSION_KEY = 'zentura_auth_session';
 const SESSION_TTL_MS = 24 * 60 * 60 * 1000; // 24 Hours Session Expiry
@@ -143,6 +144,7 @@ export function useAuth() {
           id: 'Login Berhasil',
           en: 'Sign In Successful'
         });
+        router.push(`/${targetRole}`);
         return true;
       }
     } catch (e) {
@@ -167,6 +169,7 @@ export function useAuth() {
         id: 'Login Berhasil',
         en: 'Sign In Successful'
       });
+      router.push(`/${targetRole}`);
       return true;
     }
   };
@@ -211,6 +214,7 @@ export function useAuth() {
           id: 'Login Berhasil',
           en: 'Sign In Successful'
         });
+        router.push(`/${currentRole.value}`);
         return true;
       } else {
         throw new Error('Respon server tidak valid.');
@@ -244,6 +248,7 @@ export function useAuth() {
           id: 'Login Berhasil',
           en: 'Sign In Successful'
         });
+        router.push(`/${matchedRole}`);
         return true;
       }
 
@@ -264,10 +269,8 @@ export function useAuth() {
         showSuccess({
           id: `Selamat datang, ${currentUser.value.name}!`,
           en: `Welcome, ${currentUser.value.name}!`
-        }, {
-          id: 'Login Berhasil',
-          en: 'Sign In Successful'
         });
+        router.push(`/${inferredRole}`);
         return true;
       }
 
@@ -310,6 +313,7 @@ export function useAuth() {
           id: 'Registrasi Berhasil',
           en: 'Registration Successful'
         });
+        router.push(`/${safeRole}`);
         return true;
       } else {
         throw new Error('Gagal memproses pendaftaran.');
@@ -337,20 +341,22 @@ export function useAuth() {
         id: 'Registrasi Berhasil',
         en: 'Registration Successful'
       });
+      router.push(`/${safeRole}`);
       return true;
     }
   };
 
-  const logout = async () => {
-    try {
-      await api.logout();
-    } catch (e) {
-      // ignore
-    }
+  const logout = () => {
     clearSession();
     currentUser.value = null;
     isAuthenticated.value = false;
     currentView.value = 'landing';
+    
+    // Background async notify backend without blocking UI
+    try {
+      api.logout().catch(() => {});
+    } catch (e) {}
+
     showInfo({
       id: 'Anda telah berhasil keluar dari akun.',
       en: 'You have signed out of your account.'
@@ -358,6 +364,8 @@ export function useAuth() {
       id: 'Sesi Berakhir',
       en: 'Session Ended'
     });
+
+    router.push('/');
   };
 
   const navigateTo = (view, role = null) => {
@@ -367,6 +375,20 @@ export function useAuth() {
     }
     if (isAuthenticated.value && currentUser.value) {
       saveSession(currentUser.value, currentRole.value, currentView.value);
+    }
+
+    if (view === 'landing' || view === 'home' || view === '/') {
+      router.push('/');
+    } else if (view === 'login') {
+      router.push('/login');
+    } else if (view === 'dashboard') {
+      router.push(`/${role || currentRole.value || 'tourist'}`);
+    } else if (view === 'admin' || view === 'merchant' || view === 'tourist') {
+      router.push(`/${view}`);
+    } else if (typeof view === 'string' && view.startsWith('/')) {
+      router.push(view);
+    } else {
+      router.push(`/${view}`);
     }
   };
 

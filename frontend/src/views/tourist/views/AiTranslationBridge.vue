@@ -42,15 +42,41 @@
           <span class="lang-indicator">Multi-Language Input (EN/ZH/KO/MS)</span>
         </div>
 
+        <!-- Voice Input Microphone Control Bar -->
+        <div class="mic-control-bar">
+          <div class="mic-lang-select">
+            <span class="mic-label">🎤 Bahasa Suara:</span>
+            <select v-model="spokenLang" class="select-mic-lang">
+              <option value="zh-CN">🇨🇳 Mandarin (中文)</option>
+              <option value="en-US">🇬🇧 English (Singapore/Global)</option>
+              <option value="id-ID">🇮🇩 Bahasa Indonesia</option>
+            </select>
+          </div>
+
+          <button 
+            type="button" 
+            class="btn-mic-record" 
+            :class="{ 'is-recording': isRecording }"
+            @click="toggleVoiceRecording"
+          >
+            <span class="mic-icon">{{ isRecording ? '🔴' : '🎙️' }}</span>
+            <span>{{ isRecording ? 'Mendengarkan... (Klik untuk Selesai)' : 'Bicara Lewat Mic' }}</span>
+          </button>
+        </div>
+
         <!-- Free Text Area -->
-        <div class="textarea-wrap">
+        <div class="textarea-wrap" :class="{ 'recording-active': isRecording }">
           <textarea
             v-model="inputText"
             class="input-textarea"
             rows="4"
-            placeholder="Describe your muscle knots, pain points, or medical conditions in plain English, Mandarin (e.g. 肩颈酸痛), or Korean..."
+            placeholder="Describe your muscle knots, pain points, or medical conditions in plain English, Mandarin (e.g. 肩颈酸痛), or click 'Bicara Lewat Mic' to speak..."
             @input="handleInput"
           ></textarea>
+          <div v-if="isRecording" class="recording-indicator-badge">
+            <span class="rec-dot"></span>
+            <span>AI Mic Mendengarkan Suara Anda...</span>
+          </div>
         </div>
 
         <!-- Quick Sensitivity & Body Tags -->
@@ -154,15 +180,96 @@
             </div>
           </div>
 
-          <!-- Raw Therapist Notes Formatted Box -->
-          <div class="therapist-brief-box">
-            <div class="brief-header">
-              <span class="brief-title">Salinan Kartu Instruksi Terapis:</span>
-              <button class="btn-copy-brief" @click="copyBrief">
-                {{ copied ? '✓ Tersalin!' : '📋 Salin Teks' }}
+          <!-- Structured Luxury Clinical Card for Indonesian Therapist -->
+          <div class="luxury-therapist-card">
+            <!-- Card Header -->
+            <div class="card-clinical-header">
+              <div class="header-emblem-wrap">
+                <span class="emblem-icon">📋</span>
+                <div>
+                  <h4 class="clinical-card-title">KARTU INSTRUKSI TERAPIS</h4>
+                  <span class="clinical-card-sub">Protokol Medis & Relaksasi Zentura AI</span>
+                </div>
+              </div>
+              <button class="btn-copy-clinical" @click="copyBrief">
+                {{ copied ? '✓ Tersalin!' : '📋 Salin Format WhatsApp' }}
               </button>
             </div>
-            <pre class="brief-pre">{{ aiResult.therapistNotesId }}</pre>
+
+            <!-- Card Body Grid -->
+            <div class="clinical-card-body">
+              <!-- Row 1: Original Request / Permintaan Tamu -->
+              <div class="clinical-row">
+                <div class="row-label">
+                  <span class="row-icon">💬</span>
+                  <span>Catatan Asli Wisatawan (Bahasa Asal / Input):</span>
+                </div>
+                <div class="guest-quote-box">
+                  <p class="guest-quote-text">"{{ inputText || 'Standard wellness relaxation request.' }}"</p>
+                </div>
+              </div>
+
+              <!-- Row 1.5: Explicit Indonesian Translation Box -->
+              <div class="clinical-row">
+                <div class="row-label text-indo-label">
+                  <span class="row-icon">🇮🇩</span>
+                  <span>Hasil Terjemahan Instruksi AI (Bahasa Indonesia):</span>
+                </div>
+                <div class="indo-translation-box">
+                  <p class="indo-translation-text">
+                    {{ aiResult.translatedNarrative || 'Tamu meminta sesi perawatan pijat relaksasi tubuh secara menyeluruh dengan tekanan sedang seimbang.' }}
+                  </p>
+                </div>
+              </div>
+
+              <!-- Row 2: Pressure & Focus Specs -->
+              <div class="clinical-specs-row">
+                <div class="spec-cell">
+                  <div class="spec-cell-label">⚡ Tingkat Tekanan Pijat:</div>
+                  <div class="spec-cell-badge badge-pressure">
+                    {{ aiResult.pressure || 'Sedang (Moderate)' }}
+                  </div>
+                </div>
+
+                <div class="spec-cell">
+                  <div class="spec-cell-label">🎯 Titik Fokus Pijatan:</div>
+                  <div class="focus-pill-container">
+                    <span v-for="(area, idx) in (aiResult.focusAreas || ['Seluruh Tubuh'])" :key="idx" class="focus-area-tag">
+                      📍 {{ area }}
+                    </span>
+                  </div>
+                </div>
+              </div>
+
+              <!-- Row 3: Oil / Minyak & Suasana -->
+              <div class="clinical-specs-row">
+                <div class="spec-cell">
+                  <div class="spec-cell-label">🌿 Rekomendasi Minyak:</div>
+                  <div class="spec-cell-badge badge-oil">
+                    {{ (aiResult.allergyAlerts && aiResult.allergyAlerts.length > 0) ? 'Virgin Coconut Oil (VCO Murni Bebas Alergi)' : 'Minyak Herbal Alami Batam' }}
+                  </div>
+                </div>
+
+                <div class="spec-cell">
+                  <div class="spec-cell-label">🤫 Suasana Perawatan:</div>
+                  <div class="spec-cell-badge badge-etiquette">
+                    {{ aiResult.etiquette?.[0] || 'Sesi Hening (Relaksasi Penuh)' }}
+                  </div>
+                </div>
+              </div>
+
+              <!-- Row 4: Medical Safety Guardrails (If Any) -->
+              <div v-if="aiResult.allergyAlerts && aiResult.allergyAlerts.length > 0" class="clinical-danger-row">
+                <div class="danger-title">
+                  <span>🚨 PERINGATAN KESELAMATAN & ALERGI MEDIS:</span>
+                </div>
+                <div class="danger-alerts-list">
+                  <div v-for="(alert, idx) in aiResult.allergyAlerts" :key="idx" class="danger-item">
+                    ⚠️ {{ alert }}
+                  </div>
+                </div>
+              </div>
+            </div>
           </div>
 
           <!-- Actions: Direct WhatsApp Booking Trigger -->
@@ -265,6 +372,68 @@ const copyBrief = () => {
     copied.value = true;
     showToast('Therapist instruction card copied to clipboard!', 'success');
     setTimeout(() => { copied.value = false; }, 2500);
+  }
+};
+
+const isRecording = ref(false);
+const spokenLang = ref('zh-CN');
+let recognitionInstance = null;
+
+const toggleVoiceRecording = () => {
+  if (typeof window === 'undefined') return;
+  const SpeechRecognition = window.SpeechRecognition || window.webkitSpeechRecognition;
+  
+  if (!SpeechRecognition) {
+    showToast('Browser Anda belum mendukung input suara SpeechRecognition. Gunakan Google Chrome / Edge.', 'warning');
+    return;
+  }
+
+  if (isRecording.value) {
+    if (recognitionInstance) recognitionInstance.stop();
+    isRecording.value = false;
+    return;
+  }
+
+  try {
+    recognitionInstance = new SpeechRecognition();
+    recognitionInstance.lang = spokenLang.value;
+    recognitionInstance.continuous = false;
+    recognitionInstance.interimResults = true;
+
+    recognitionInstance.onstart = () => {
+      isRecording.value = true;
+      const langName = spokenLang.value === 'zh-CN' ? 'Bahasa Mandarin' : (spokenLang.value === 'en-US' ? 'Bahasa Inggris' : 'Bahasa Indonesia');
+      showToast(`Mikrofon aktif! Silakan berbicara dalam ${langName}...`, 'info');
+    };
+
+    recognitionInstance.onresult = (event) => {
+      let transcript = '';
+      for (let i = event.resultIndex; i < event.results.length; ++i) {
+        transcript += event.results[i][0].transcript;
+      }
+      if (transcript) {
+        inputText.value = transcript;
+      }
+    };
+
+    recognitionInstance.onend = () => {
+      isRecording.value = false;
+      if (inputText.value.trim().length > 0) {
+        executeTranslation();
+        showToast('Suara berhasil ditangkap & diterjemahkan otomatis!', 'success');
+      }
+    };
+
+    recognitionInstance.onerror = (e) => {
+      console.warn('[SpeechRec Error]:', e);
+      isRecording.value = false;
+    };
+
+    recognitionInstance.start();
+  } catch (err) {
+    console.warn('[SpeechRec Init Error]:', err);
+    isRecording.value = false;
+    showToast('Gagal mengaktifkan mikrofon.', 'warning');
   }
 };
 
@@ -515,10 +684,115 @@ onMounted(() => {
   border-color: #bfdbfe;
 }
 
-/* Input Card Content */
+/* Voice Input Control Bar */
+.mic-control-bar {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 0.5rem;
+  padding: 0.5rem 0.75rem;
+  background: #f1f5f9;
+  border-radius: var(--radius-xs);
+  border: 1px solid #e2e8f0;
+  margin-bottom: 0.5rem;
+  flex-wrap: wrap;
+}
+
+.mic-lang-select {
+  display: flex;
+  align-items: center;
+  gap: 0.4rem;
+}
+
+.mic-label {
+  font-size: 0.72rem;
+  font-weight: 700;
+  color: #334155;
+}
+
+.select-mic-lang {
+  font-size: 0.72rem;
+  font-weight: 600;
+  padding: 0.25rem 0.5rem;
+  border-radius: 4px;
+  border: 1px solid #cbd5e1;
+  background: #ffffff;
+  color: #0f172a;
+  outline: none;
+  cursor: pointer;
+}
+
+.btn-mic-record {
+  display: flex;
+  align-items: center;
+  gap: 0.35rem;
+  padding: 0.35rem 0.75rem;
+  background: #1e293b;
+  color: #ffffff;
+  font-size: 0.74rem;
+  font-weight: 700;
+  border-radius: 4px;
+  border: none;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.btn-mic-record:hover {
+  background: #0f172a;
+}
+
+.btn-mic-record.is-recording {
+  background: #dc2626;
+  animation: pulse-red 1.2s infinite ease-in-out;
+  box-shadow: 0 0 12px rgba(220, 38, 38, 0.4);
+}
+
+@keyframes pulse-red {
+  0% { box-shadow: 0 0 0 0 rgba(220, 38, 38, 0.7); }
+  70% { box-shadow: 0 0 0 8px rgba(220, 38, 38, 0); }
+  100% { box-shadow: 0 0 0 0 rgba(220, 38, 38, 0); }
+}
+
 .textarea-wrap {
   display: flex;
   flex-direction: column;
+  position: relative;
+}
+
+.textarea-wrap.recording-active textarea {
+  border-color: #ef4444;
+  background: #fff5f5;
+  box-shadow: 0 0 0 3px rgba(239, 68, 68, 0.15);
+}
+
+.recording-indicator-badge {
+  position: absolute;
+  bottom: 8px;
+  right: 8px;
+  display: flex;
+  align-items: center;
+  gap: 0.35rem;
+  padding: 0.2rem 0.5rem;
+  background: rgba(220, 38, 38, 0.9);
+  color: #ffffff;
+  font-size: 0.68rem;
+  font-weight: 700;
+  border-radius: 4px;
+  pointer-events: none;
+  animation: fadeIn 0.2s ease;
+}
+
+.rec-dot {
+  width: 6px;
+  height: 6px;
+  border-radius: 50%;
+  background: #ffffff;
+  animation: blink 0.8s infinite;
+}
+
+@keyframes blink {
+  0%, 100% { opacity: 1; }
+  50% { opacity: 0.2; }
 }
 
 .input-textarea {
@@ -713,54 +987,222 @@ onMounted(() => {
   color: #1d4ed8;
 }
 
-.therapist-brief-box {
-  border: 1px solid #e2e8f0;
-  border-radius: 8px;
-  background: #0f172a;
+/* =========================================
+   LUXURY CLINICAL THERAPIST CARD STYLES
+   ========================================= */
+.luxury-therapist-card {
+  border-radius: var(--radius-sm);
+  background: #ffffff;
+  border: 1px solid #cbd5e1;
+  box-shadow: 0 4px 15px rgba(15, 23, 42, 0.05);
   overflow: hidden;
 }
 
-.brief-header {
+.card-clinical-header {
   display: flex;
   align-items: center;
   justify-content: space-between;
-  padding: 0.5rem 0.85rem;
-  background: rgba(255, 255, 255, 0.05);
-  border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+  padding: 0.75rem 1rem;
+  background: linear-gradient(135deg, #0f172a 0%, #1e293b 100%);
+  color: #ffffff;
+  border-bottom: 2px solid #0284c7;
 }
 
-.brief-title {
-  font-size: 0.72rem;
-  font-weight: 700;
-  color: #93c5fd;
+.header-emblem-wrap {
+  display: flex;
+  align-items: center;
+  gap: 0.65rem;
 }
 
-.btn-copy-brief {
-  background: rgba(255, 255, 255, 0.1);
-  border: 1px solid rgba(255, 255, 255, 0.2);
+.emblem-icon {
+  font-size: 1.2rem;
+}
+
+.clinical-card-title {
+  margin: 0;
+  font-size: 0.84rem;
+  font-weight: 800;
+  letter-spacing: 0.03em;
+  color: #ffffff;
+}
+
+.clinical-card-sub {
+  font-size: 0.65rem;
+  color: #94a3b8;
+  display: block;
+}
+
+.btn-copy-clinical {
+  background: rgba(255, 255, 255, 0.12);
+  border: 1px solid rgba(255, 255, 255, 0.25);
   color: #ffffff;
   font-size: 0.72rem;
   font-weight: 700;
-  padding: 0.2rem 0.55rem;
+  padding: 0.3rem 0.75rem;
   border-radius: 4px;
   cursor: pointer;
   transition: all 0.15s ease;
 }
 
-.btn-copy-brief:hover {
-  background: #1d4ed8;
+.btn-copy-clinical:hover {
+  background: #0284c7;
+  border-color: #38bdf8;
 }
 
-.brief-pre {
+.clinical-card-body {
+  padding: 0.85rem 1rem;
+  display: flex;
+  flex-direction: column;
+  gap: 0.75rem;
+  background: #f8fafc;
+}
+
+.clinical-row {
+  display: flex;
+  flex-direction: column;
+  gap: 0.35rem;
+}
+
+.row-label {
+  display: flex;
+  align-items: center;
+  gap: 0.35rem;
+  font-size: 0.72rem;
+  font-weight: 700;
+  color: #475569;
+  text-transform: uppercase;
+  letter-spacing: 0.03em;
+}
+
+.guest-quote-box {
+  background: #ffffff;
+  border-left: 3px solid #64748b;
+  padding: 0.5rem 0.75rem;
+  border-radius: 0 6px 6px 0;
+  border: 1px solid #e2e8f0;
+  border-left-width: 3px;
+}
+
+.guest-quote-text {
   margin: 0;
-  padding: 0.85rem;
-  font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace;
-  font-size: 0.78rem;
+  font-size: 0.8rem;
+  color: #475569;
+  font-style: italic;
+  line-height: 1.4;
+}
+
+.text-indo-label {
+  color: #047857 !important;
+}
+
+.indo-translation-box {
+  background: #ecfdf5;
+  border: 1px solid #a7f3d0;
+  border-left: 4px solid #059669;
+  padding: 0.65rem 0.85rem;
+  border-radius: 0 6px 6px 0;
+  box-shadow: 0 2px 8px rgba(5, 150, 105, 0.08);
+}
+
+.indo-translation-text {
+  margin: 0;
+  font-size: 0.82rem;
+  font-weight: 600;
+  color: #065f46;
   line-height: 1.5;
-  color: #e2e8f0;
-  white-space: pre-wrap;
-  max-height: 220px;
-  overflow-y: auto;
+}
+
+.clinical-specs-row {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 0.75rem;
+}
+
+@media (max-width: 600px) {
+  .clinical-specs-row {
+    grid-template-columns: 1fr;
+  }
+}
+
+.spec-cell {
+  background: #ffffff;
+  padding: 0.6rem 0.75rem;
+  border-radius: 6px;
+  border: 1px solid #e2e8f0;
+  display: flex;
+  flex-direction: column;
+  gap: 0.3rem;
+}
+
+.spec-cell-label {
+  font-size: 0.68rem;
+  font-weight: 700;
+  color: #64748b;
+  text-transform: uppercase;
+}
+
+.spec-cell-badge {
+  font-size: 0.78rem;
+  font-weight: 700;
+  color: #0f172a;
+}
+
+.badge-pressure {
+  color: #0284c7;
+}
+
+.badge-oil {
+  color: #047857;
+}
+
+.badge-etiquette {
+  color: #6366f1;
+}
+
+.focus-pill-container {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.3rem;
+}
+
+.focus-area-tag {
+  font-size: 0.72rem;
+  font-weight: 700;
+  padding: 0.2rem 0.5rem;
+  background: #eff6ff;
+  color: #1d4ed8;
+  border: 1px solid #bfdbfe;
+  border-radius: 4px;
+}
+
+.clinical-danger-row {
+  background: #fff1f2;
+  border: 1px solid #fecdd3;
+  border-left: 4px solid #e11d48;
+  border-radius: 4px;
+  padding: 0.65rem 0.85rem;
+  display: flex;
+  flex-direction: column;
+  gap: 0.35rem;
+}
+
+.danger-title {
+  font-size: 0.72rem;
+  font-weight: 800;
+  color: #be123c;
+}
+
+.danger-alerts-list {
+  display: flex;
+  flex-direction: column;
+  gap: 0.25rem;
+}
+
+.danger-item {
+  font-size: 0.75rem;
+  font-weight: 700;
+  color: #9f1239;
+  line-height: 1.35;
 }
 
 .output-actions {

@@ -79,7 +79,7 @@
       </button>
     </nav>
 
-    <!-- Quick Switcher Box -->
+    <!-- Quick Switcher Box & Logout -->
     <div class="sidebar-footer">
       <span class="hint-label">Quick Portal Access:</span>
       <div class="hint-btns">
@@ -90,6 +90,10 @@
           Tourist
         </button>
       </div>
+
+      <button class="btn-merchant-logout" @click="logout">
+        <span>🚪 Sign Out (Keluar)</span>
+      </button>
     </div>
   </aside>
 </template>
@@ -109,7 +113,7 @@ defineProps({
 defineEmits(['update:modelValue']);
 
 const { merchantSalon, merchantBookings } = useZenturaStore();
-const { quickLogin } = useAuth();
+const { quickLogin, logout } = useAuth();
 
 const pendingCount = computed(() => {
   return (merchantBookings.value || []).filter(b => b.status === 'pending').length;
@@ -275,6 +279,29 @@ const pendingCount = computed(() => {
   background: #eff6ff;
   border-color: #bfdbfe;
   color: #1e3a8a;
+}
+
+.btn-merchant-logout {
+  width: 100%;
+  margin-top: 0.75rem;
+  padding: 0.55rem;
+  background: #fef2f2;
+  border: 1px solid #fecaca;
+  color: #dc2626;
+  font-size: 0.78rem;
+  font-weight: 700;
+  border-radius: var(--radius-xs);
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.4rem;
+  transition: all 0.15s ease;
+}
+
+.btn-merchant-logout:hover {
+  background: #fee2e2;
+  border-color: #f87171;
 }
 
 @media (max-width: 900px) {

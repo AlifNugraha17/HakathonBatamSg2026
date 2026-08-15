@@ -19,6 +19,8 @@
 </template>
 
 <script setup>
+import { onMounted, watch } from 'vue';
+import { useRoute, useRouter } from 'vue-router';
 import { useAdminStore } from '../../composables/useAdminStore';
 import AdminSidebar from './components/AdminSidebar.vue';
 import AdminHeader from './components/AdminHeader.vue';
@@ -29,7 +31,27 @@ import AiMonitoring from './views/AiMonitoring.vue';
 import FinanceRevenue from './views/FinanceRevenue.vue';
 import SystemSettings from './views/SystemSettings.vue';
 
+const route = useRoute();
+const router = useRouter();
 const { activeAdminTab } = useAdminStore();
+
+onMounted(() => {
+  if (route.query.tab && ['overview', 'merchants', 'users', 'ai', 'finance', 'settings'].includes(route.query.tab)) {
+    activeAdminTab.value = route.query.tab;
+  }
+});
+
+watch(() => route.query.tab, (newTab) => {
+  if (newTab && ['overview', 'merchants', 'users', 'ai', 'finance', 'settings'].includes(newTab)) {
+    activeAdminTab.value = newTab;
+  }
+});
+
+watch(activeAdminTab, (newTab) => {
+  if (route.query.tab !== newTab) {
+    router.replace({ query: { ...route.query, tab: newTab } });
+  }
+});
 </script>
 
 <style scoped>
