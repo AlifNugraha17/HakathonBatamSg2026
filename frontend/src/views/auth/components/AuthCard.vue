@@ -315,7 +315,6 @@ const authMode = ref('login'); // 'login' | 'register' | 'verify'
 const loginEmail = ref('admin@zentura.com');
 const loginPassword = ref('password123');
 const showPassword = ref(false);
-const rememberMe = ref(true);
 const isLoading = ref(false);
 const successBanner = ref(null);
 
