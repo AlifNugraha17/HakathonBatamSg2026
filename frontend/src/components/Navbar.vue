@@ -1,7 +1,7 @@
 <template>
   <header class="sticky top-0 z-50 bg-white/95 backdrop-blur-md border-b-2 border-slate-200 shadow-sm">
     <!-- Top Micro Live Status Bar (Single Line) -->
-    <div class="bg-gradient-to-r from-sky-800 via-teal-800 to-emerald-800 text-white py-1 px-3 sm:px-6 text-xs font-medium">
+    <div class="bg-gradient-to-r from-sky-800 via-teal-800 to-emerald-800 text-white py-1 px-4 sm:px-6 text-xs font-medium">
       <div class="max-w-7xl mx-auto flex items-center justify-between gap-4 text-[11px] whitespace-nowrap">
         <div class="flex items-center gap-3 overflow-x-auto no-scrollbar">
           <span class="inline-flex items-center gap-1.5 bg-emerald-400/20 px-2 py-0.5 rounded-full text-emerald-100 border border-emerald-400/30 font-mono">
@@ -32,14 +32,14 @@
       </div>
     </div>
 
-    <!-- Main Navigation Bar (Full Left-Aligned Flow) -->
-    <div class="max-w-7xl mx-auto px-3 sm:px-4 lg:px-6">
+    <!-- Main Navigation Bar (Clean, Left-Aligned, Perfectly Padded) -->
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
       <div class="flex items-center justify-between h-16 sm:h-18">
         
-        <!-- Left Group: Logo Far Left + Nav Links -->
-        <div class="flex items-center gap-5 sm:gap-6 lg:gap-8">
+        <!-- Left Group: Brand Logo & Nav Links with Ample Spacing -->
+        <div class="flex items-center gap-4 sm:gap-6 lg:gap-8">
           
-          <!-- Brand Logo (Pushed to the Left, Crisp) -->
+          <!-- Brand Logo (Single Line, Crisp) -->
           <div 
             class="flex items-center space-x-2.5 cursor-pointer select-none shrink-0 group" 
             @click="$emit('nav', 'home')"
@@ -57,7 +57,7 @@
             </div>
           </div>
 
-          <!-- Navigation Links (Left-Aligned next to Logo) -->
+          <!-- Navigation Links (Left-Aligned next to Logo, Single Icon) -->
           <nav class="hidden lg:flex items-center space-x-1 sm:space-x-1.5 whitespace-nowrap">
             
             <!-- Medis & Spa -->
@@ -96,7 +96,7 @@
                 : 'text-slate-800 hover:text-slate-950 hover:bg-slate-100 font-bold border-2 border-transparent'"
             >
               <span>💰</span>
-              <span>Price Check & OCR</span>
+              <span>{{ t?.nav_pricecheck || 'Price Check & OCR' }}</span>
             </a>
 
             <!-- Jadwal Feri -->
@@ -122,23 +122,23 @@
                 : 'text-slate-800 hover:text-purple-950 hover:bg-purple-50 font-bold border-2 border-transparent'"
             >
               <span>✨</span>
-              <span>AI Itinerary</span>
+              <span>{{ t?.nav_ai || 'AI Itinerary' }}</span>
             </a>
 
           </nav>
         </div>
 
-        <!-- Right Side: Language Switcher & CTA Button -->
-        <div class="flex items-center space-x-2 sm:space-x-3 shrink-0 whitespace-nowrap pl-3">
+        <!-- Right Side: Language Switcher & Compact CTA Button -->
+        <div class="flex items-center space-x-2.5 shrink-0 whitespace-nowrap">
           
           <!-- Language Toggle Pill (ID / EN) -->
-          <div class="flex items-center bg-slate-100 p-1 rounded-xl border-2 border-slate-200 shadow-xs">
+          <div class="flex items-center bg-slate-100 p-0.5 rounded-xl border-2 border-slate-200 shadow-xs">
             <button 
               @click="$emit('set-lang', 'id')"
               :class="lang === 'id' 
                 ? 'bg-sky-100 text-sky-950 font-black border-2 border-sky-400 shadow-xs' 
                 : 'text-slate-700 hover:text-slate-950 font-bold border-2 border-transparent'"
-              class="px-2.5 py-1 rounded-lg text-xs transition-all flex items-center gap-1 cursor-pointer"
+              class="px-2 py-1 rounded-lg text-xs transition-all flex items-center gap-1 cursor-pointer"
               title="Bahasa Indonesia"
             >
               <span>🇮🇩</span>
@@ -149,7 +149,7 @@
               :class="lang === 'en' 
                 ? 'bg-sky-100 text-sky-950 font-black border-2 border-sky-400 shadow-xs' 
                 : 'text-slate-700 hover:text-slate-950 font-bold border-2 border-transparent'"
-              class="px-2.5 py-1 rounded-lg text-xs transition-all flex items-center gap-1 cursor-pointer"
+              class="px-2 py-1 rounded-lg text-xs transition-all flex items-center gap-1 cursor-pointer"
               title="English"
             >
               <span>🇬🇧</span>
@@ -157,7 +157,7 @@
             </button>
           </div>
 
-          <!-- Main CTA Button -->
+          <!-- Main CTA Button (Compact, No Overflow) -->
           <button 
             @click="$emit('open-booking')"
             class="inline-flex items-center justify-center gap-1.5 px-3.5 sm:px-4 py-2 rounded-xl text-xs sm:text-sm font-black text-white bg-gradient-to-r from-teal-700 via-emerald-700 to-teal-800 hover:from-teal-800 hover:to-emerald-800 transition-all shadow-md active:scale-95 border-2 border-emerald-500 cursor-pointer shrink-0"
