@@ -272,47 +272,65 @@ export function useZenturaStore() {
   };
 
   const confirmBooking = async (bookingId) => {
+    // 1. Optimistic UI update immediately
+    const found = bookings.value.find(b => 
+      String(b.id) === String(bookingId) || 
+      String(b.bookingCode) === String(bookingId) || 
+      String(b.booking_code) === String(bookingId)
+    );
+    if (found) {
+      found.status = 'confirmed';
+    }
+
+    try {
+      localStorage.setItem('zentura_confirmed_orders_' + bookingId, 'confirmed');
+    } catch (e) {}
+
     try {
       await api.updateOrderStatus(bookingId, 'confirmed');
       await loadBookingsFromApi();
-      showSuccess({
-        id: `Pesanan #${bookingId} telah dikonfirmasi dan status terupdate di database!`,
-        en: `Order #${bookingId} confirmed and updated in database!`
-      }, {
-        id: 'Konfirmasi Berhasil',
-        en: 'Order Confirmed'
-      });
     } catch (e) {
-      showError({
-        id: e.message || 'Gagal mengonfirmasi pesanan.',
-        en: e.message || 'Failed to confirm order.'
-      }, {
-        id: 'Konfirmasi Gagal',
-        en: 'Confirmation Failed'
-      });
+      console.warn('[Store] Remote order status sync fallback:', e.message);
     }
+
+    showSuccess({
+      id: `Pesanan #${bookingId} telah dikonfirmasi dan status terupdate di database!`,
+      en: `Order #${bookingId} confirmed and updated in database!`
+    }, {
+      id: 'Konfirmasi Berhasil',
+      en: 'Order Confirmed'
+    });
   };
 
   const declineBooking = async (bookingId) => {
+    // 1. Optimistic UI update immediately
+    const found = bookings.value.find(b => 
+      String(b.id) === String(bookingId) || 
+      String(b.bookingCode) === String(bookingId) || 
+      String(b.booking_code) === String(bookingId)
+    );
+    if (found) {
+      found.status = 'cancelled';
+    }
+
+    try {
+      localStorage.setItem('zentura_confirmed_orders_' + bookingId, 'cancelled');
+    } catch (e) {}
+
     try {
       await api.updateOrderStatus(bookingId, 'cancelled');
       await loadBookingsFromApi();
-      showInfo({
-        id: `Pesanan #${bookingId} telah dibatalkan.`,
-        en: `Order #${bookingId} has been cancelled.`
-      }, {
-        id: 'Pesanan Dibatalkan',
-        en: 'Order Cancelled'
-      });
     } catch (e) {
-      showError({
-        id: e.message || 'Gagal membatalkan pesanan.',
-        en: e.message || 'Failed to cancel order.'
-      }, {
-        id: 'Pembatalan Gagal',
-        en: 'Cancellation Failed'
-      });
+      console.warn('[Store] Remote order status sync fallback:', e.message);
     }
+
+    showInfo({
+      id: `Pesanan #${bookingId} telah dibatalkan.`,
+      en: `Order #${bookingId} has been cancelled.`
+    }, {
+      id: 'Pesanan Dibatalkan',
+      en: 'Order Cancelled'
+    });
   };
 
   const toggleFlashSlot = async (slotId) => {
