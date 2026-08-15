@@ -63,10 +63,13 @@ return new class extends Migration
         // Add Spatial Location Column in PostgreSQL PostGIS if available
         if ($hasPostgis) {
             try {
-                DB::statement("SELECT AddGeometryColumn('places', 'location', 4326, 'POINT', 2);");
-                DB::statement("CREATE INDEX places_location_spatial_idx ON places USING GIST (location);");
+                $extActive = DB::select("SELECT 1 FROM pg_extension WHERE extname = 'postgis'");
+                if (!empty($extActive)) {
+                    DB::statement("SELECT AddGeometryColumn('places', 'location', 4326, 'POINT', 2);");
+                    DB::statement("CREATE INDEX places_location_spatial_idx ON places USING GIST (location);");
+                }
             } catch (\Throwable $e) {
-                // PostGIS functions not available
+                // PostGIS not active; continue with latitude/longitude
             }
         }
 

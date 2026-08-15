@@ -5,6 +5,7 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Schema;
 
 class Place extends Model
 {
@@ -34,6 +35,11 @@ class Place extends Model
         return $this->belongsTo(FerryTerminal::class);
     }
 
+    public function reviews()
+    {
+        return $this->hasMany(Review::class);
+    }
+
     /**
      * Scope query to find places near a given latitude/longitude using PostgreSQL PostGIS (with standard SQL Haversine fallback)
      */
@@ -42,7 +48,7 @@ class Place extends Model
         $hasPostgisLocation = false;
         if (DB::getDriverName() === 'pgsql') {
             try {
-                $hasPostgisLocation = \Illuminate\Support\Facades\Schema::hasColumn('places', 'location');
+                $hasPostgisLocation = Schema::hasColumn('places', 'location');
             } catch (\Throwable $e) {
                 $hasPostgisLocation = false;
             }

@@ -149,7 +149,9 @@
 defineProps({
   currency: { type: String, default: 'SGD' },
   exchangeRate: { type: Number, default: 11850 },
-  activeNav: { type: String, default: 'home' }
+  activeNav: { type: String, default: 'home' },
+  lang: { type: String, default: 'id' },
+  t: { type: Object, default: () => ({}) }
 })
 
 defineEmits(['nav', 'toggle-currency', 'open-ferry', 'open-ai', 'open-booking', 'open-price-check'])

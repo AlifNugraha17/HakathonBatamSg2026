@@ -4,6 +4,7 @@ namespace Database\Seeders;
 
 use Illuminate\Database\Seeder;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Schema;
 use App\Models\Category;
 use App\Models\FerryTerminal;
 use App\Models\Place;
@@ -105,7 +106,7 @@ class TourismSeeder extends Seeder
             // Insert Spatial Geometry Point for PostGIS if available
             if (DB::getDriverName() === 'pgsql') {
                 try {
-                    if (\Illuminate\Support\Facades\Schema::hasColumn('places', 'location')) {
+                    if (Schema::hasColumn('places', 'location')) {
                         DB::statement("UPDATE places SET location = ST_SetSRID(ST_MakePoint(?, ?), 4326) WHERE id = ?", [
                             $data['longitude'],
                             $data['latitude'],
