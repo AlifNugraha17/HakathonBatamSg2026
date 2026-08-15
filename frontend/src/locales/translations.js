@@ -1,0 +1,157 @@
+export const translations = {
+  id: {
+    // Navbar
+    nav_subtitle: 'Portal Wisata Medis & Travel Lintas Batas',
+    nav_medical: '🏥 Rumah Sakit & Medis',
+    nav_tourism: '🏖️ Wisata & Kafe',
+    nav_resorts: '⛳ Resort & Golf',
+    nav_ferry: '🚢 Jadwal Feri',
+    nav_cta: 'Buat Janji',
+    rate_label: 'Kurs Live:',
+
+    // Hero Section
+    hero_badge: '🚢 49 Destinasi Terpadu: 🇮🇩 Batam (29 Tempat) ⇄ 🇸🇬 Singapura (20 Tempat)',
+    hero_title_1: 'Portal Wisata Medis, Kafe & Resort',
+    hero_title_2: 'Lengkap di Batam & Singapura',
+    hero_desc: 'Jelajahi seluruh rumah sakit rujukan utama, klinik spesialis, pantai, kafe viral, hingga resort golf di kedua negara dengan transparansi biaya SGD/IDR.',
+    country_all: '🌐 2 Negara (49)',
+    country_batam: '🇮🇩 Batam (29)',
+    country_sg: '🇸🇬 Singapura (20)',
+    cat_all: '🌟 Semua (49)',
+    cat_medical: '🏥 Rumah Sakit & Medis (23)',
+    cat_tourism: '🏖️ Wisata & Kafe (21)',
+    cat_dental: '🦷 Gigi (3)',
+    cat_spa: '💆 Spa (2)',
+    cat_golf: '⛳ Golf (3)',
+    label_select_cat: 'Pilih Kategori',
+    label_select_port: 'Lokasi Pelabuhan Feri',
+    btn_search: 'Tampilkan Destinasi',
+    all_ports: 'Semua Pelabuhan (SG ⇄ Batam)',
+    metric_batam: '🇮🇩 Wilayah Batam',
+    metric_sg: '🇸🇬 Wilayah Singapura',
+    metric_ferry: 'Kapal Feri Cepat',
+    metric_dest: '29 Destinasi',
+    metric_dest_sg: '20 Destinasi',
+    metric_time: '45 Menit',
+    metric_complete: '100% Lengkap',
+    metric_complete_sub: 'RS, Pantai, Kafe & Resort',
+
+    // Listings Section
+    list_tag: 'Katalog Destinasi 2 Negara (SG ⇄ Batam)',
+    list_title: 'Daftar Rumah Sakit, Wisata, Kafe & Resort',
+    list_subtitle: 'Menampilkan {count} lokasi terverifikasi',
+    currency_label: 'Mata Uang:',
+    savings_badge: '🇮🇩 Batam • Hemat ~{percent}%',
+    benchmark_badge: '🇸🇬 Singapore Rujukan Utama',
+    price_batam: 'Biaya di Batam',
+    price_sg_est: 'Estimasi SG',
+    price_sg_bench: 'Benchmark SG',
+    price_treatment: 'Biaya Perawatan',
+    btn_map: 'Peta',
+    btn_wa: 'WhatsApp',
+
+    // Map Section
+    map_tag: 'Peta Spasial PostGIS Interaktif',
+    map_title: 'Eksplorasi Destinasi SG ⇄ Batam Cross-Border',
+    map_desc: 'Klik marker untuk melihat detail rute, estimasi harga, dan jarak dari pelabuhan feri',
+    map_terminal: 'Terminal Feri',
+    map_hospital: 'Rumah Sakit',
+    map_tourism: 'Wisata & Kafe',
+    map_resort: 'Golf & Spa',
+    map_reset: '🔄 Reset Zoom',
+    map_loading: 'Memuat Peta Spasial Batam & Singapura...',
+
+    // Features
+    feat_tag: 'Pengalaman Lintas Batas',
+    feat_title: 'Mengapa Wisatawan Singapura Memilih Batam?',
+    feat_desc: 'Kombinasi efisiensi biaya perawatan medis, kemudahan kapal feri 45 menit, dan ragam kuliner & rekreasi pantai.',
+    feat_1_title: 'Fasilitas RS Berstandar Internasional',
+    feat_1_desc: 'Rumah sakit ternama di Batam didukung dokter spesialis berpengalaman dan peralatan diagnostik mutakhir.',
+    feat_2_title: 'Transparansi Biaya SGD / IDR',
+    feat_2_desc: 'Dapatkan perbandingan harga langsung dengan estimasi biaya di Singapura tanpa biaya tersembunyi.',
+    feat_3_title: 'Penjemputan VIP di Pelabuhan',
+    feat_3_desc: 'Layanan antar-jemput privat dari pelabuhan feri langsung ke lokasi klinik atau resort.',
+
+    // Footer
+    footer_desc: '© 2026 — Platform SG ⇄ Batam Cross-Border Tourism Hub',
+    footer_ports: 'HarbourFront • Tanah Merah • Harbour Bay • Batam Centre • Sekupang • Nongsa'
+  },
+
+  en: {
+    // Navbar
+    nav_subtitle: 'Cross-Border Medical & Travel Hub',
+    nav_medical: '🏥 Hospitals & Medical',
+    nav_tourism: '🏖️ Tourism & Cafes',
+    nav_resorts: '⛳ Resorts & Golf',
+    nav_ferry: '🚢 Ferry Schedules',
+    nav_cta: 'Book Appointment',
+    rate_label: 'Live Exchange:',
+
+    // Hero Section
+    hero_badge: '🚢 49 Integrated Destinations: 🇮🇩 Batam (29 Spots) ⇄ 🇸🇬 Singapore (20 Spots)',
+    hero_title_1: 'Cross-Border Medical, Cafe & Resort',
+    hero_title_2: 'Travel Guide for Batam & Singapore',
+    hero_desc: 'Compare premier hospitals, specialist clinics, beaches, viral cafes, and championship golf courses in both countries with clear SGD/IDR rates.',
+    country_all: '🌐 Both Countries (49)',
+    country_batam: '🇮🇩 Batam (29)',
+    country_sg: '🇸🇬 Singapore (20)',
+    cat_all: '🌟 All (49)',
+    cat_medical: '🏥 Hospitals & Medical (23)',
+    cat_tourism: '🏖️ Tourism & Cafes (21)',
+    cat_dental: '🦷 Dental (3)',
+    cat_spa: '💆 Wellness Spa (2)',
+    cat_golf: '⛳ Golf (3)',
+    label_select_cat: 'Select Category',
+    label_select_port: 'Ferry Terminal Gateway',
+    btn_search: 'Explore Destinations',
+    all_ports: 'All Ferry Terminals (SG ⇄ Batam)',
+    metric_batam: '🇮🇩 Batam Region',
+    metric_sg: '🇸🇬 Singapore Region',
+    metric_ferry: 'High-Speed Ferry',
+    metric_dest: '29 Spots',
+    metric_dest_sg: '20 Spots',
+    metric_time: '45 Mins',
+    metric_complete: '100% Verified',
+    metric_complete_sub: 'Hospitals, Beaches, Cafes & Resorts',
+
+    // Listings Section
+    list_tag: 'Dual-Country Gateway (SG ⇄ Batam)',
+    list_title: 'Hospitals, Attractions, Cafes & Resorts Directory',
+    list_subtitle: 'Showing {count} verified destinations',
+    currency_label: 'Currency:',
+    savings_badge: '🇮🇩 Batam • Save ~{percent}%',
+    benchmark_badge: '🇸🇬 Singapore Main Referral',
+    price_batam: 'Batam Price',
+    price_sg_est: 'Est. SG Cost',
+    price_sg_bench: 'SG Benchmark',
+    price_treatment: 'Care Cost',
+    btn_map: 'Map',
+    btn_wa: 'WhatsApp',
+
+    // Map Section
+    map_tag: 'Interactive Spatial PostGIS Map',
+    map_title: 'SG ⇄ Batam Cross-Border Destination Explorer',
+    map_desc: 'Click on markers to see route details, price estimates, and ferry terminal distance',
+    map_terminal: 'Ferry Terminals',
+    map_hospital: 'Hospitals',
+    map_tourism: 'Tourism & Cafes',
+    map_resort: 'Golf & Spa',
+    map_reset: '🔄 Reset Zoom',
+    map_loading: 'Loading Spatial Map of Batam & Singapore...',
+
+    // Features
+    feat_tag: 'Cross-Border Advantage',
+    feat_title: 'Why Do Singapore Travelers Choose Batam?',
+    feat_desc: 'A seamless blend of healthcare cost savings, 45-minute ferry proximity, and rich coastal culinary leisure.',
+    feat_1_title: 'International Standard Hospital Facilities',
+    feat_1_desc: 'Leading Batam hospitals are supported by overseas-trained specialists and cutting-edge diagnostic equipment.',
+    feat_2_title: 'Transparent SGD / IDR Pricing',
+    feat_2_desc: 'Direct price comparisons against estimated Singapore hospital costs with no hidden fees.',
+    feat_3_title: 'VIP Ferry Terminal Transfer',
+    feat_3_desc: 'Private door-to-door transfer service from ferry terminals straight to your clinic or resort.',
+
+    // Footer
+    footer_desc: '© 2026 — Platform SG ⇄ Batam Cross-Border Tourism Hub',
+    footer_ports: 'HarbourFront • Tanah Merah • Harbour Bay • Batam Centre • Sekupang • Nongsa'
+  }
+}
