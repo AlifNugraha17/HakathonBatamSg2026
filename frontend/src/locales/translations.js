@@ -3,7 +3,7 @@ export const translations = {
     // Navbar
     nav_subtitle: 'Portal Wisata Medis & Travel Lintas Batas',
     nav_medical: 'Medis',
-    nav_tourism: 'Wisata',
+    nav_tourism: 'Kafe & Wisata',
     nav_resorts: 'Resort',
     nav_pricecheck: 'Price Check',
     nav_ferry: 'Jadwal Feri',
@@ -127,7 +127,7 @@ export const translations = {
     // Navbar
     nav_subtitle: 'Cross-Border Medical & Travel Hub',
     nav_medical: 'Medical',
-    nav_tourism: 'Tourism',
+    nav_tourism: 'Cafes & Tours',
     nav_resorts: 'Resorts',
     nav_pricecheck: 'Price Check',
     nav_ferry: 'Ferries',

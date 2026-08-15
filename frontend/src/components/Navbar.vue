@@ -33,15 +33,15 @@
     </div>
 
     <!-- Main Navigation Bar (Clean, Left-Aligned, Perfectly Padded) -->
-    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+    <div class="max-w-7xl mx-auto px-3 sm:px-4 lg:px-6">
       <div class="flex items-center justify-between h-16 sm:h-18">
         
         <!-- Left Group: Brand Logo & Nav Links with Ample Spacing -->
-        <div class="flex items-center gap-4 sm:gap-6 lg:gap-7">
+        <div class="flex items-center gap-3 sm:gap-4 lg:gap-6">
           
           <!-- Brand Logo (Single Line, Crisp) -->
           <div 
-            class="flex items-center space-x-2.5 cursor-pointer select-none shrink-0 group" 
+            class="flex items-center space-x-2 cursor-pointer select-none shrink-0 group" 
             @click="$emit('nav', 'home')"
           >
             <div class="w-9 h-9 sm:w-10 sm:h-10 rounded-xl bg-gradient-to-tr from-sky-600 via-teal-600 to-emerald-600 flex items-center justify-center shadow-md text-white font-black text-lg tracking-tighter group-hover:scale-105 transition-transform">
@@ -71,6 +71,19 @@
             >
               <span>🩺</span>
               <span>{{ t?.nav_medical || 'Medis' }}</span>
+            </a>
+
+            <!-- Kafe & Wisata -->
+            <a 
+              @click.prevent="$emit('nav', 'tourism')" 
+              href="#" 
+              class="px-2.5 sm:px-3 py-1.5 rounded-xl text-xs transition-all flex items-center gap-1.5 cursor-pointer"
+              :class="activeNav === 'tourism' 
+                ? 'bg-amber-100 text-amber-950 font-black shadow-sm border-2 border-amber-400' 
+                : 'text-slate-800 hover:text-slate-950 hover:bg-slate-100 font-bold border-2 border-transparent'"
+            >
+              <span>☕</span>
+              <span>{{ t?.nav_tourism || 'Kafe & Wisata' }}</span>
             </a>
 
             <!-- Resort -->
@@ -129,7 +142,7 @@
         </div>
 
         <!-- Right Side: Language Switcher & Compact CTA Button -->
-        <div class="flex items-center space-x-2 sm:space-x-3 shrink-0 whitespace-nowrap">
+        <div class="flex items-center space-x-2 shrink-0 whitespace-nowrap">
           
           <!-- Language Toggle Pill (ID / EN) -->
           <div class="flex items-center bg-slate-100 p-0.5 rounded-xl border-2 border-slate-200 shadow-xs">
