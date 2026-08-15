@@ -78,12 +78,6 @@
           </div>
         </div>
 
-        <div class="form-options">
-          <label class="remember-checkbox">
-            <input type="checkbox" v-model="rememberMe" />
-            <span>{{ t('auth_remember') }}</span>
-          </label>
-        </div>
 
         <button 
           type="submit" 

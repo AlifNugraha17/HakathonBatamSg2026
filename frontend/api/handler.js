@@ -268,10 +268,66 @@ export default async function handler(req, res) {
 
   if (cleanPath === '/merchant/therapists') {
     return send(200, [
-      { id: 'th-1', name: 'Ibu Ratna', experience: '12 yrs exp', specialty: 'Balinese Pressure', rating: 4.9, bnspCertified: true, status: 'available' },
-      { id: 'th-2', name: 'Mas Budi', experience: '8 yrs exp', specialty: 'Reflexology & Sciatica', rating: 4.8, bnspCertified: true, status: 'available' },
-      { id: 'th-3', name: 'Mbak Dewi', experience: '6 yrs exp', specialty: 'Aroma Therapy & Head Spa', rating: 4.9, bnspCertified: true, status: 'busy' }
+      { id: 'th-1', name: 'Dewi Anggraini', title: 'Senior Balinese Master Therapist', experienceYears: 7, specialty: 'Balinese Pressure', rating: 4.9, bnspCertified: true, status: 'ready' },
+      { id: 'th-2', name: 'Siti Rahma', title: 'Herbal Specialist', experienceYears: 10, specialty: 'Reflexology & Sciatica', rating: 4.8, bnspCertified: true, status: 'busy' },
+      { id: 'th-3', name: 'Bayu Pratama', title: 'Sports Bodywork', experienceYears: 5, specialty: 'Aroma Therapy & Head Spa', rating: 4.9, bnspCertified: true, status: 'ready' }
     ]);
+  }
+
+  // Therapist Status Toggle Route
+  const therapistStatusMatch = cleanPath.match(/^\/merchant\/therapists\/(.+)\/status$/);
+  if (therapistStatusMatch && req.method === 'POST') {
+    const thId = therapistStatusMatch[1];
+    const newStatus = req.body?.status || 'ready';
+    return send(200, { id: thId, status: newStatus, success: true }, `Therapist #${thId} status updated to ${newStatus}`);
+  }
+
+  // Slot Toggle Route
+  const slotToggleMatch = cleanPath.match(/^\/slots\/(.+)\/toggle$/);
+  if (slotToggleMatch && req.method === 'POST') {
+    const slotId = slotToggleMatch[1];
+    return send(200, { id: slotId, toggled: true, success: true }, `Slot #${slotId} toggled successfully`);
+  }
+
+  // Slot Broadcast Route
+  if (cleanPath === '/slots' && req.method === 'POST') {
+    const b = req.body || {};
+    const newSlot = {
+      id: `slot-${Date.now()}`,
+      therapist_name: b.therapist_name || 'Ibu Ratna',
+      service_name: b.service_name || 'Flash Massage',
+      chair: b.chair || 'Chair 1',
+      price_idr: Number(b.price_idr || 150000),
+      original_price_idr: Number(b.original_price_idr || 200000),
+      discount_percent: Number(b.discount_percent || 20),
+      duration_minutes: Number(b.duration_minutes || 45),
+      time_window: b.time_window || '15:00 - 15:45',
+      is_flash_active: true
+    };
+    return send(201, newSlot, 'Flash slot broadcast successfully');
+  }
+
+  // Admin Approve Merchant Route
+  const adminApproveMatch = cleanPath.match(/^\/admin\/merchants\/(.+)\/approve$/);
+  if (adminApproveMatch && req.method === 'POST') {
+    const mId = adminApproveMatch[1];
+    const target = SPAS.find(s => String(s.id) === String(mId) || `merch-${s.id}` === String(mId));
+    if (target) {
+      target.status = 'active';
+      target.kyc_verified = true;
+    }
+    return send(200, { id: mId, status: 'active', kyc_verified: true, success: true }, 'Merchant KYC approved');
+  }
+
+  // Admin Suspend Merchant Route
+  const adminSuspendMatch = cleanPath.match(/^\/admin\/merchants\/(.+)\/suspend$/);
+  if (adminSuspendMatch && req.method === 'POST') {
+    const mId = adminSuspendMatch[1];
+    const target = SPAS.find(s => String(s.id) === String(mId) || `merch-${s.id}` === String(mId));
+    if (target) {
+      target.status = 'suspended';
+    }
+    return send(200, { id: mId, status: 'suspended', success: true }, 'Merchant suspended');
   }
 
   // 5. SPAS & CATALOG

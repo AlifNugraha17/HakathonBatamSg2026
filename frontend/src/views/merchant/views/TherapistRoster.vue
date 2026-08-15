@@ -102,11 +102,27 @@ const columns = [
   { key: 'status', label: 'Status', sortable: true, align: 'center' },
 ];
 
-const therapists = ref([
+const defaultTherapists = [
   { id: 'th-1', name: 'Dewi Anggraini', title: 'Senior Balinese Master Therapist', experienceYears: 7, specialties: ['Balinese Deep Tissue', 'Aromatherapy', 'Foot Reflexology'], shift: '10:00 - 19:00 WIB', status: 'ready' },
   { id: 'th-2', name: 'Siti Rahma', title: 'Herbal & Body Scrub Specialist', experienceYears: 10, specialties: ['Javanese Lulur', 'Postnatal Massage', 'Hot Stone'], shift: '11:00 - 20:00 WIB', status: 'busy' },
   { id: 'th-3', name: 'Bayu Pratama', title: 'Sports & Acupressure Specialist', experienceYears: 5, specialties: ['Upper Back Relief', 'Foot Pressure Points', 'Dry Shiatsu'], shift: '12:00 - 21:00 WIB', status: 'ready' },
-]);
+];
+
+const loadSavedTherapists = () => {
+  try {
+    const raw = localStorage.getItem('zentura_merchant_therapists');
+    if (raw) return JSON.parse(raw);
+  } catch (e) {}
+  return defaultTherapists;
+};
+
+const therapists = ref(loadSavedTherapists());
+
+const saveTherapistsToStorage = () => {
+  try {
+    localStorage.setItem('zentura_merchant_therapists', JSON.stringify(therapists.value));
+  } catch (e) {}
+};
 
 const newTherapist = ref({ name: '', years: 4, shift: '10:00 - 18:00 WIB', specialtiesText: 'Balinese, Head Spa, Reflexology' });
 
@@ -114,7 +130,8 @@ const toggleTherapistStatus = (id) => {
   const t = therapists.value.find(item => item.id === id);
   if (t) {
     t.status = t.status === 'ready' ? 'busy' : 'ready';
-    showToast(`${t.name} status: ${t.status === 'ready' ? 'STANDBY' : 'IN TREATMENT'}`, 'info');
+    saveTherapistsToStorage();
+    showToast(`${t.name} status: ${t.status === 'ready' ? 'STANDBY (Siap Layani Tamu)' : 'IN TREATMENT (Sedang Melayani)'}`, 'info');
   }
 };
 
@@ -126,6 +143,7 @@ const handleCreateTherapist = () => {
     specialties: newTherapist.value.specialtiesText.split(',').map(s => s.trim()),
     shift: newTherapist.value.shift, status: 'ready',
   });
+  saveTherapistsToStorage();
   showToast(`Therapist "${newTherapist.value.name}" registered!`, 'success');
   showAddModal.value = false;
   newTherapist.value = { name: '', years: 4, shift: '10:00 - 18:00 WIB', specialtiesText: '' };
