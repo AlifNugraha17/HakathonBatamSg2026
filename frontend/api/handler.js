@@ -1,5 +1,26 @@
 // Vercel Serverless Backend Handler for Zentura (Singapore - Batam Maritime Gateway)
+const SUPABASE_URL = process.env.VITE_SUPABASE_URL || 'https://rcbxfhyodnudmeishbdj.supabase.co';
+const SUPABASE_KEY = process.env.VITE_SUPABASE_ANON_KEY || 'sb_publishable_vvgnnzxPfov0YR0pqLhO4g_e9Rpda-s';
 
+async function supabaseFetch(endpoint, options = {}) {
+  try {
+    const res = await fetch(`${SUPABASE_URL}/rest/v1/${endpoint}`, {
+      headers: {
+        'apikey': SUPABASE_KEY,
+        'Authorization': `Bearer ${SUPABASE_KEY}`,
+        'Content-Type': 'application/json',
+        'Prefer': options.prefer || 'return=representation'
+      },
+      ...options
+    });
+    if (res.ok) {
+      return await res.json();
+    }
+  } catch (e) {
+    console.warn('[Supabase REST] Connection check:', e.message);
+  }
+  return null;
+}
 const SPAS = [
   {
     id: 'salon-1',
@@ -249,11 +270,19 @@ export default async function handler(req, res) {
 
   // 2. SPAS & CATALOG
   if (cleanPath === '/spas') {
+    const fromDb = await supabaseFetch('spas?select=*');
+    if (fromDb && Array.isArray(fromDb) && fromDb.length > 0) {
+      return send(200, fromDb);
+    }
     return send(200, SPAS);
   }
 
   if (cleanPath.startsWith('/spas/')) {
     const id = cleanPath.split('/')[2];
+    const fromDb = await supabaseFetch(`spas?id=eq.${id}&select=*`);
+    if (fromDb && Array.isArray(fromDb) && fromDb.length > 0) {
+      return send(200, fromDb[0]);
+    }
     const spa = SPAS.find(s => s.id === id) || SPAS[0];
     return send(200, spa);
   }
@@ -287,7 +316,6 @@ export default async function handler(req, res) {
     if (req.method === 'POST') {
       const b = req.body || {};
       const newB = {
-        id: `ZEN-${Math.floor(1000 + Math.random() * 9000)}`,
         booking_code: `ZEN-${Math.floor(1000 + Math.random() * 9000)}`,
         spa_id: b.spa_id || 'salon-1',
         salonId: b.spa_id || 'salon-1',
@@ -302,8 +330,20 @@ export default async function handler(req, res) {
         price_idr: b.price_idr || 280000,
         status: 'confirmed'
       };
-      liveBookings.unshift(newB);
-      return send(201, newB, 'Booking created successfully');
+
+      const saved = await supabaseFetch('bookings', {
+        method: 'POST',
+        body: JSON.stringify(newB)
+      });
+
+      const responseItem = (saved && saved[0]) ? { ...newB, ...saved[0], id: saved[0].id } : { ...newB, id: newB.booking_code };
+      liveBookings.unshift(responseItem);
+      return send(201, responseItem, 'Booking created successfully');
+    }
+
+    const fromDb = await supabaseFetch('bookings?select=*&order=created_at.desc');
+    if (fromDb && Array.isArray(fromDb) && fromDb.length > 0) {
+      return send(200, fromDb);
     }
     return send(200, liveBookings);
   }
