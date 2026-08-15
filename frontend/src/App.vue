@@ -53,6 +53,13 @@
         />
       </div>
 
+      <!-- Verified Cross-Border Testimonials & Rating System (Singapore Visitors) -->
+      <TestimonialsSection 
+        :currency="currency"
+        :exchange-rate="exchangeRate"
+        :places="places"
+      />
+
       <!-- Features & Why Batam Section -->
       <section class="py-16 bg-slate-950 relative overflow-hidden">
         <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
@@ -137,6 +144,7 @@ import MedicalListings from './components/MedicalListings.vue'
 import MapView from './components/MapView.vue'
 import FerryGuideModal from './components/FerryGuideModal.vue'
 import BookingModal from './components/BookingModal.vue'
+import TestimonialsSection from './components/TestimonialsSection.vue'
 
 // Language State
 const lang = ref(localStorage.getItem('bp_lang') || 'id')
@@ -928,6 +936,9 @@ const handleNav = (target) => {
   } else if (target === 'resorts') {
     selectedCategory.value = 'golf'
     scrollToMedical()
+  } else if (target === 'reviews') {
+    const el = document.getElementById('testimonials-section')
+    if (el) el.scrollIntoView({ behavior: 'smooth' })
   } else {
     selectedCategory.value = 'all'
     window.scrollTo({ top: 0, behavior: 'smooth' })
@@ -981,7 +992,40 @@ const fetchLiveExchangeRate = async () => {
   }
 }
 
+const fetchPlacesFromBackend = async () => {
+  try {
+    const res = await fetch('/api/places')
+    if (res.ok) {
+      const result = await res.json()
+      if (result && result.data && result.data.length > 0) {
+        const apiPlaces = result.data.map(item => ({
+          id: item.id,
+          name: item.name,
+          category: item.category?.slug || 'medical',
+          categoryLabel: item.category ? `🏥 ${item.category.name}` : '🩺 Medical & Tourism',
+          nearestTerminal: item.ferry_terminal ? `${item.ferry_terminal.name}` : 'Batam Ferry Terminal',
+          terminalKey: item.ferry_terminal?.slug || 'batam-centre',
+          priceSgd: item.price_sgd || 100,
+          savingsPercent: item.savings_percent || 50,
+          rating: item.rating || 4.8,
+          lat: item.latitude,
+          lng: item.longitude,
+          description: item.description,
+          image: item.image_url || 'https://images.unsplash.com/photo-1586773860418-d37222d8fce3?auto=format&fit=crop&w=600&q=80'
+        }))
+
+        const existingIds = new Set(apiPlaces.map(p => p.id))
+        const remainingFallback = places.value.filter(p => !existingIds.has(p.id))
+        places.value = [...apiPlaces, ...remainingFallback]
+      }
+    }
+  } catch (err) {
+    console.warn('Backend places fetch note:', err)
+  }
+}
+
 onMounted(() => {
+  fetchPlacesFromBackend()
   fetchLiveExchangeRate()
   // Refresh exchange rate automatically every 60 seconds
   rateInterval = setInterval(fetchLiveExchangeRate, 60000)
