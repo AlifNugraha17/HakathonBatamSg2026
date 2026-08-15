@@ -121,7 +121,7 @@
     <footer class="bg-white border-t border-slate-200 py-10">
       <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 flex flex-col sm:flex-row items-center justify-between text-xs text-slate-500 gap-4">
         <div class="flex items-center space-x-2">
-          <span class="font-extrabold text-teal-ink text-sm">BatamPulse</span>
+          <span class="font-extrabold text-teal-ink text-sm">LokaBatam</span>
           <span>© 2026 — Platform Lomba Turis Development (SG ⇄ Batam)</span>
         </div>
         <div class="flex items-center space-x-4">

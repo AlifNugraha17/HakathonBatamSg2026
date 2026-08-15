@@ -34,7 +34,8 @@ echo "🐘 Connecting to PostgreSQL ($dbHost:$dbPort/$dbName) as '$dbUser'...\n"
 echo "========================================================\n";
 
 try {
-    $dsn = "pgsql:host=$dbHost;port=$dbPort;dbname=$dbName";
+    $ssl = (strpos($dbHost, 'supabase.co') !== false || strpos($dbHost, 'supabase.com') !== false) ? ';sslmode=require' : '';
+    $dsn = "pgsql:host=$dbHost;port=$dbPort;dbname=$dbName$ssl";
     $pdo = new PDO($dsn, $dbUser, $dbPass, [
         PDO::ATTR_ERRMODE => PDO::ERRMODE_EXCEPTION,
         PDO::ATTR_DEFAULT_FETCH_MODE => PDO::FETCH_ASSOC
@@ -141,10 +142,10 @@ CREATE TABLE bookings (
     patient_email VARCHAR(255) NOT NULL,
     patient_phone VARCHAR(50) NOT NULL,
     origin_country VARCHAR(50) DEFAULT 'Singapore',
-    service_type VARCHAR(100),
-    booking_date DATE NOT NULL,
-    booking_time VARCHAR(20),
-    ferry_terminal VARCHAR(100),
+    service_type VARCHAR(255),
+    booking_date VARCHAR(50) NOT NULL,
+    booking_time VARCHAR(255),
+    ferry_terminal VARCHAR(255),
     needs_pickup BOOLEAN DEFAULT TRUE,
     notes TEXT,
     status VARCHAR(50) DEFAULT 'CONFIRMED',

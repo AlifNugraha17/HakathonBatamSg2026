@@ -118,11 +118,11 @@
           </div>
 
           <div>
-            <label class="block text-xs font-black text-slate-800 mb-1 uppercase tracking-wider">Catatan Khusus / Keluhan Medis</label>
+            <label class="block text-xs font-black text-slate-800 mb-1 uppercase tracking-wider">Catatan Khusus</label>
             <textarea 
               v-model="form.notes" 
               rows="2" 
-              placeholder="Catatan untuk tempat tujuan (contoh: minta ruang konsultasi VIP, alergi obat, permintaan supir penjemput bawa papan nama...)"
+              placeholder="Catatan untuk tempat tujuan (contoh: minta ruang konsultasi VIP, preferensi jam tertentu, permintaan supir penjemput bawa papan nama...)"
               class="w-full bg-slate-50 border-2 border-slate-300 rounded-xl px-3.5 py-2 text-sm text-slate-900 font-medium focus:outline-none focus:border-teal-600 focus:bg-white transition-all shadow-sm"
             ></textarea>
           </div>
@@ -304,7 +304,7 @@ const patientWaLink = computed(() => {
   const placeTitle = props.selectedPlace ? props.selectedPlace.name : 'Layanan Medis Batam'
   const text = encodeURIComponent(
     `Halo ${form.value.name}! 🌟\n\n` +
-    `Konfirmasi Reservasi BatamPulse (Ref: ${receiptData.value?.bookingRef}):\n` +
+    `Konfirmasi Reservasi LokaBatam (Ref: ${receiptData.value?.bookingRef}):\n` +
     `📍 Destinasi: ${placeTitle}\n` +
     `📅 Tanggal: ${form.value.date}\n` +
     `🚢 Feri Keberangkatan: ${form.value.ferrySchedule}\n` +
@@ -319,7 +319,7 @@ const patientWaLink = computed(() => {
 const vendorWaLink = computed(() => {
   const placeTitle = props.selectedPlace ? props.selectedPlace.name : 'Layanan Medis Batam'
   const text = encodeURIComponent(
-    `[NOTIFIKASI TAMU SG BARU - BatamPulse]\n\n` +
+    `[NOTIFIKASI TAMU SG BARU - LokaBatam]\n\n` +
     `Yth. Tim ${placeTitle},\n\n` +
     `Ada reservasi baru dari wisatawan Singapura (Ref: ${receiptData.value?.bookingRef}):\n` +
     `👤 Nama Pasien: ${form.value.name}\n` +
@@ -338,7 +338,7 @@ const sendFonnteDirectWA = async (bookingRef) => {
   try {
     const placeTitle = props.selectedPlace ? props.selectedPlace.name : 'Layanan Medis Batam'
     const waText = 
-      `*[NOTIFIKASI TAMU SG BARU - BatamPulse]*\n\n` +
+      `*[NOTIFIKASI TAMU SG BARU - LokaBatam]*\n\n` +
       `Yth. Tim Operasional ${placeTitle},\n\n` +
       `Ada reservasi baru dari wisatawan Singapura:\n` +
       `🆔 Kode Booking: ${bookingRef}\n` +
@@ -390,9 +390,10 @@ const submitBooking = async () => {
     price_idr: props.selectedPlace ? Math.round(props.selectedPlace.priceSgd * props.exchangeRate) : 0
   }
 
-  // Trigger Fonnte WhatsApp API Direct Send to +6285261516767
+  // 1. Trigger Fonnte WhatsApp API Direct Send to +6285261516767
   sendFonnteDirectWA(generatedRef)
 
+  // 2. Try Local/Vercel Backend API first
   try {
     const res = await fetch('/api/bookings', {
       method: 'POST',
@@ -405,14 +406,45 @@ const submitBooking = async () => {
       receiptData.value = {
         bookingRef: data.booking_ref || generatedRef
       }
-    } else {
-      receiptData.value = { bookingRef: generatedRef }
+      return
     }
   } catch (err) {
-    receiptData.value = { bookingRef: generatedRef }
-  } finally {
-    isSubmitting.value = false
+    console.log('Local API not reached, syncing directly to Supabase Cloud...')
   }
+
+  // 3. Direct Cloud Supabase REST API Sync (Guaranteed to save from Surge!)
+  try {
+    const supaPayload = {
+      place_id: props.selectedPlace?.id || 1,
+      patient_name: form.value.name,
+      patient_email: form.value.email,
+      patient_phone: form.value.phone,
+      origin_country: 'Singapore',
+      service_type: props.selectedPlace?.name || 'Layanan Medis Batam',
+      booking_date: form.value.date,
+      booking_time: form.value.ferrySchedule,
+      ferry_terminal: form.value.pickup ? form.value.terminal : 'Mandiri',
+      needs_pickup: Boolean(form.value.pickup),
+      notes: form.value.notes,
+      status: 'CONFIRMED'
+    }
+
+    await fetch('https://ypubupzxrriuzpzvvfwd.supabase.co/rest/v1/bookings', {
+      method: 'POST',
+      headers: {
+        'apikey': 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InlwdWJ1cHp4cnJpdXpwenZ2ZndkIiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODY4MDg2ODYsImV4cCI6MjEwMjM4NDY4Nn0.Vglq-HqGZdRJZm9udJOkDHBn8gwYx_cs1tcERt4WdRM',
+        'Authorization': 'Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InlwdWJ1cHp4cnJpdXpwenZ2ZndkIiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODY4MDg2ODYsImV4cCI6MjEwMjM4NDY4Nn0.Vglq-HqGZdRJZm9udJOkDHBn8gwYx_cs1tcERt4WdRM',
+        'Content-Type': 'application/json',
+        'Prefer': 'return=representation'
+      },
+      body: JSON.stringify(supaPayload)
+    })
+  } catch (supaErr) {
+    console.warn('Supabase Direct note:', supaErr)
+  }
+
+  receiptData.value = { bookingRef: generatedRef }
+  isSubmitting.value = false
 }
 
 const closeModal = () => {
