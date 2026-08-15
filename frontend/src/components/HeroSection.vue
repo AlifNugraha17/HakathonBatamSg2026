@@ -38,19 +38,19 @@
           
           <div class="absolute bottom-4 left-4 sm:bottom-6 sm:left-6 right-4 sm:right-auto max-w-xl bg-slate-950/85 backdrop-blur-md p-4 sm:p-5 rounded-2xl border border-white/20 shadow-2xl">
             <span class="inline-block px-3 py-1 rounded-md bg-teal-500 text-slate-950 text-xs font-black uppercase tracking-wider mb-1.5 shadow-sm">
-              🚢 Akses Cepat Singapura ⇄ Batam
+              {{ t?.hero_banner_tag || '🚢 Akses Cepat Singapura ⇄ Batam' }}
             </span>
             <h3 class="text-lg sm:text-2xl font-black text-white leading-snug drop-shadow-md">
-              Perjalanan Nyaman dari HarbourFront & Tanah Merah SG
+              {{ t?.hero_banner_title || 'Perjalanan Nyaman dari HarbourFront & Tanah Merah SG' }}
             </h3>
             <p class="text-xs sm:text-sm text-slate-200 mt-1 font-medium drop-shadow">
-              Terminal Harbour Bay, Batam Centre, Nongsa Pura, dan Sekupang siap menyambut Anda.
+              {{ t?.hero_banner_desc || 'Terminal Harbour Bay, Batam Centre, Nongsa Pura, dan Sekupang siap menyambut Anda.' }}
             </p>
           </div>
 
           <div class="absolute top-4 right-4 hidden sm:flex items-center gap-2">
             <span class="px-3.5 py-1.5 rounded-xl bg-slate-950/85 text-emerald-400 text-xs font-black shadow-xl border border-white/20 backdrop-blur-md">
-              ✨ 60+ Trip Feri Harian
+              ✨ {{ t?.hero_daily_trips || '60+ Trip Feri Harian' }}
             </span>
           </div>
         </div>
@@ -75,7 +75,7 @@
               <option value="dental">🦷 {{ t?.cat_dental || 'Perawatan Gigi (Dental)' }}</option>
               <option value="spa">💆‍♀️ {{ t?.cat_spa || 'Wellness & Spa' }}</option>
               <option value="golf">⛳ {{ t?.cat_golf || 'Resort & Golf Course' }}</option>
-              <option value="culinary">🦀 Seafood & Culinary</option>
+              <option value="culinary">🦀 {{ t?.cat_culinary || 'Seafood & Kuliner' }}</option>
             </select>
           </div>
 
