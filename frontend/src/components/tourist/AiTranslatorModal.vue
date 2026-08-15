@@ -139,6 +139,20 @@
               </div>
             </div>
 
+            <!-- AI Voice Synthesizer Player for Indonesian Therapist -->
+            <div class="tts-voice-mini-box" :class="{ 'is-speaking': isSpeaking }">
+              <div class="tts-mini-left">
+                <span class="tts-mini-icon">{{ isSpeaking ? '🔊' : '🎙️' }}</span>
+                <div class="tts-mini-meta">
+                  <strong class="tts-mini-title">AI Voice (Bahasa Indonesia)</strong>
+                  <span class="tts-mini-sub">{{ isSpeaking ? 'Membacakan instruksi terapis...' : 'Putar suara instruksi untuk terapis' }}</span>
+                </div>
+              </div>
+              <button type="button" class="btn-tts-mini" :class="{ active: isSpeaking }" @click="toggleSpeech">
+                <span>{{ isSpeaking ? '⏹️ Hentikan' : '▶️ Putar Suara AI' }}</span>
+              </button>
+            </div>
+
             <!-- Formatted Therapist Summary -->
             <div class="raw-notes-box">
               <span class="spec-label">Pratinjau Teks Lengkap Terapis:</span>
@@ -240,11 +254,61 @@ const runTranslation = async () => {
   }
 };
 
+const isSpeaking = ref(false);
+
+const toggleSpeech = () => {
+  if (typeof window === 'undefined' || !('speechSynthesis' in window)) {
+    return;
+  }
+
+  if (isSpeaking.value) {
+    window.speechSynthesis.cancel();
+    isSpeaking.value = false;
+    return;
+  }
+
+  let text = 'Halo terapis. Berikut instruksi khusus untuk tamu ini. ';
+  if (aiResult.value.allergyAlerts && aiResult.value.allergyAlerts.length > 0) {
+    text += 'Peringatan penting: ' + aiResult.value.allergyAlerts.join('. ') + '. ';
+  }
+  text += 'Tekanan yang diminta: ' + (aiResult.value.pressure || 'sedang') + '. ';
+  if (aiResult.value.focusAreas && aiResult.value.focusAreas.length > 0) {
+    text += 'Area fokus: ' + aiResult.value.focusAreas.join(', ') + '. ';
+  }
+  if (aiResult.value.etiquette && aiResult.value.etiquette.length > 0) {
+    text += 'Catatan suasana: ' + aiResult.value.etiquette.join('. ') + '. ';
+  }
+  text += 'Terima kasih dan selamat melayani.';
+
+  const utterance = new SpeechSynthesisUtterance(text);
+  utterance.lang = 'id-ID';
+  utterance.rate = 1.0;
+
+  const voices = window.speechSynthesis.getVoices();
+  const idVoice = voices.find(v => v.lang === 'id-ID' || v.lang.startsWith('id'));
+  if (idVoice) utterance.voice = idVoice;
+
+  utterance.onstart = () => { isSpeaking.value = true; };
+  utterance.onend = () => { isSpeaking.value = false; };
+  utterance.onerror = () => { isSpeaking.value = false; };
+
+  window.speechSynthesis.cancel();
+  window.speechSynthesis.speak(utterance);
+};
+
 const closeModal = () => {
+  if (isSpeaking.value && typeof window !== 'undefined' && 'speechSynthesis' in window) {
+    window.speechSynthesis.cancel();
+    isSpeaking.value = false;
+  }
   isAiTranslatorOpen.value = false;
 };
 
 const proceedToWhatsApp = () => {
+  if (isSpeaking.value && typeof window !== 'undefined' && 'speechSynthesis' in window) {
+    window.speechSynthesis.cancel();
+    isSpeaking.value = false;
+  }
   isAiTranslatorOpen.value = false;
   isWhatsAppModalOpen.value = true;
 };
@@ -585,6 +649,75 @@ const proceedToWhatsApp = () => {
 
 .btn-proceed:hover {
   background: #0f172a;
+}
+
+/* =========================================
+   MINI TTS VOICE BOX STYLES
+   ========================================= */
+.tts-voice-mini-box {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 0.75rem;
+  padding: 0.65rem 0.85rem;
+  background: #f0f9ff;
+  border: 1px solid #bae6fd;
+  border-radius: var(--radius-xs);
+  margin-top: 0.5rem;
+  transition: all 0.2s ease;
+}
+
+.tts-voice-mini-box.is-speaking {
+  background: #e0f2fe;
+  border-color: #0284c7;
+  box-shadow: 0 0 12px rgba(2, 132, 199, 0.2);
+}
+
+.tts-mini-left {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+.tts-mini-icon {
+  font-size: 1.15rem;
+}
+
+.tts-mini-meta {
+  display: flex;
+  flex-direction: column;
+}
+
+.tts-mini-title {
+  font-size: 0.75rem;
+  font-weight: 700;
+  color: #0369a1;
+}
+
+.tts-mini-sub {
+  font-size: 0.65rem;
+  color: #64748b;
+}
+
+.btn-tts-mini {
+  background: #0284c7;
+  color: #ffffff;
+  border: none;
+  font-size: 0.72rem;
+  font-weight: 700;
+  padding: 0.35rem 0.65rem;
+  border-radius: 4px;
+  cursor: pointer;
+  white-space: nowrap;
+  transition: all 0.15s ease;
+}
+
+.btn-tts-mini:hover {
+  background: #0369a1;
+}
+
+.btn-tts-mini.active {
+  background: #dc2626;
 }
 
 @media (max-width: 768px) {

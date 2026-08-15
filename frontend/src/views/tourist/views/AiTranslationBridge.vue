@@ -120,6 +120,40 @@
             </div>
           </div>
 
+          <!-- AI Text-to-Speech Voice Player for Indonesian Therapist -->
+          <div class="tts-voice-box" :class="{ 'is-speaking': isSpeaking }">
+            <div class="tts-left">
+              <div class="tts-avatar-circle" :class="{ pulse: isSpeaking }">
+                <span class="tts-icon">{{ isSpeaking ? '🔊' : '🎙️' }}</span>
+              </div>
+              <div class="tts-meta">
+                <div class="tts-title-row">
+                  <h4 class="tts-title">AI Voice Synthesizer (Bahasa Indonesia)</h4>
+                  <span class="badge-tts-lang">id-ID Natural Audio</span>
+                </div>
+                <p class="tts-desc">
+                  {{ isSpeaking ? 'Sedang membacakan instruksi medis & preferensi terapis...' : 'Putar audio instruksi medis agar didengarkan langsung oleh terapis di ruang spa' }}
+                </p>
+              </div>
+            </div>
+
+            <div class="tts-controls">
+              <!-- Visual Equalizer -->
+              <div v-if="isSpeaking" class="audio-equalizer">
+                <span class="bar bar-1"></span>
+                <span class="bar bar-2"></span>
+                <span class="bar bar-3"></span>
+                <span class="bar bar-4"></span>
+                <span class="bar bar-5"></span>
+              </div>
+
+              <button class="btn-tts-action" :class="{ active: isSpeaking }" @click="toggleSpeech">
+                <span class="btn-tts-icon">{{ isSpeaking ? '⏹️' : '▶️' }}</span>
+                <span>{{ isSpeaking ? 'Hentikan Suara' : 'Dengarkan Instruksi Suara' }}</span>
+              </button>
+            </div>
+          </div>
+
           <!-- Raw Therapist Notes Formatted Box -->
           <div class="therapist-brief-box">
             <div class="brief-header">
@@ -232,6 +266,70 @@ const copyBrief = () => {
     showToast('Therapist instruction card copied to clipboard!', 'success');
     setTimeout(() => { copied.value = false; }, 2500);
   }
+};
+
+const isSpeaking = ref(false);
+const speechRate = ref(1.0);
+
+const toggleSpeech = () => {
+  if (typeof window === 'undefined' || !('speechSynthesis' in window)) {
+    showToast('Browser Anda tidak mendukung Web Speech Synthesis API.', 'warning');
+    return;
+  }
+
+  if (isSpeaking.value) {
+    window.speechSynthesis.cancel();
+    isSpeaking.value = false;
+    showToast('Audio dihentikan.', 'info');
+    return;
+  }
+
+  // Format natural, polite spoken brief in Indonesian
+  let text = 'Halo terapis. Berikut adalah instruksi perawatan khusus untuk tamu ini. ';
+  
+  if (aiResult.value.allergyAlerts && aiResult.value.allergyAlerts.length > 0) {
+    text += 'Peringatan medis dan alergi sangat penting! ' + aiResult.value.allergyAlerts.join('. ') + '. ';
+  }
+  
+  text += 'Tingkat tekanan yang diinginkan adalah ' + (aiResult.value.pressure || 'sedang') + '. ';
+  
+  if (aiResult.value.focusAreas && aiResult.value.focusAreas.length > 0) {
+    text += 'Fokuskan pijatan pada area ' + aiResult.value.focusAreas.join(', ') + '. ';
+  }
+  
+  if (aiResult.value.etiquette && aiResult.value.etiquette.length > 0) {
+    text += 'Catatan suasana: ' + aiResult.value.etiquette.join('. ') + '. ';
+  }
+  
+  text += 'Terima kasih dan selamat melayani tamu dengan baik.';
+
+  const utterance = new SpeechSynthesisUtterance(text);
+  utterance.lang = 'id-ID';
+  utterance.rate = speechRate.value;
+  utterance.pitch = 1.0;
+
+  const voices = window.speechSynthesis.getVoices();
+  const idVoice = voices.find(v => v.lang === 'id-ID' || v.lang.startsWith('id') || v.name.toLowerCase().includes('indonesia'));
+  if (idVoice) {
+    utterance.voice = idVoice;
+  }
+
+  utterance.onstart = () => {
+    isSpeaking.value = true;
+    showToast('Memutar suara instruksi terapis (Bahasa Indonesia)...', 'success');
+  };
+
+  utterance.onend = () => {
+    isSpeaking.value = false;
+  };
+
+  utterance.onerror = (e) => {
+    console.warn('[TTS] Speech error:', e);
+    isSpeaking.value = false;
+  };
+
+  window.speechSynthesis.cancel();
+  window.speechSynthesis.speak(utterance);
 };
 
 const bookWithThisCard = () => {
@@ -698,6 +796,158 @@ onMounted(() => {
 
 @keyframes spin {
   to { transform: rotate(360deg); }
+}
+
+/* =========================================
+   TEXT-TO-SPEECH VOICE SYNTHESIZER STYLES
+   ========================================= */
+.tts-voice-box {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 1rem;
+  padding: 0.85rem 1rem;
+  background: linear-gradient(135deg, rgba(14, 165, 233, 0.08) 0%, rgba(59, 130, 246, 0.12) 100%);
+  border: 1px solid rgba(56, 189, 248, 0.35);
+  border-radius: var(--radius-sm);
+  transition: all 0.25s ease;
+}
+
+.tts-voice-box.is-speaking {
+  background: linear-gradient(135deg, rgba(14, 165, 233, 0.18) 0%, rgba(16, 185, 129, 0.15) 100%);
+  border-color: rgba(56, 189, 248, 0.7);
+  box-shadow: 0 0 20px rgba(14, 165, 233, 0.25);
+}
+
+.tts-left {
+  display: flex;
+  align-items: center;
+  gap: 0.85rem;
+  flex: 1;
+}
+
+.tts-avatar-circle {
+  width: 42px;
+  height: 42px;
+  border-radius: 50%;
+  background: rgba(14, 165, 233, 0.15);
+  border: 1.5px solid rgba(56, 189, 248, 0.5);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 1.25rem;
+  flex-shrink: 0;
+  transition: all 0.2s ease;
+}
+
+.tts-avatar-circle.pulse {
+  animation: pulse-ring 1.4s infinite ease-in-out;
+  background: rgba(14, 165, 233, 0.3);
+  border-color: #38bdf8;
+}
+
+@keyframes pulse-ring {
+  0% { box-shadow: 0 0 0 0 rgba(56, 189, 248, 0.6); }
+  70% { box-shadow: 0 0 0 10px rgba(56, 189, 248, 0); }
+  100% { box-shadow: 0 0 0 0 rgba(56, 189, 248, 0); }
+}
+
+.tts-meta {
+  display: flex;
+  flex-direction: column;
+  gap: 0.2rem;
+}
+
+.tts-title-row {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+.tts-title {
+  margin: 0;
+  font-size: 0.86rem;
+  font-weight: 800;
+  color: #f0fdf4;
+}
+
+.badge-tts-lang {
+  font-size: 0.65rem;
+  font-weight: 700;
+  padding: 0.15rem 0.45rem;
+  background: rgba(56, 189, 248, 0.2);
+  color: #38bdf8;
+  border-radius: 9999px;
+  border: 1px solid rgba(56, 189, 248, 0.3);
+}
+
+.tts-desc {
+  margin: 0;
+  font-size: 0.72rem;
+  color: #94a3b8;
+  line-height: 1.35;
+}
+
+.tts-controls {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  flex-shrink: 0;
+}
+
+/* Equalizer Bars */
+.audio-equalizer {
+  display: flex;
+  align-items: center;
+  gap: 3px;
+  height: 20px;
+  padding: 0 0.25rem;
+}
+
+.audio-equalizer .bar {
+  width: 3px;
+  background: #38bdf8;
+  border-radius: 2px;
+  animation: equalize 1s infinite ease-in-out;
+}
+
+.audio-equalizer .bar-1 { height: 16px; animation-delay: 0.1s; }
+.audio-equalizer .bar-2 { height: 10px; animation-delay: 0.3s; }
+.audio-equalizer .bar-3 { height: 22px; animation-delay: 0.15s; }
+.audio-equalizer .bar-4 { height: 14px; animation-delay: 0.4s; }
+.audio-equalizer .bar-5 { height: 8px; animation-delay: 0.2s; }
+
+@keyframes equalize {
+  0%, 100% { transform: scaleY(0.3); }
+  50% { transform: scaleY(1.2); }
+}
+
+.btn-tts-action {
+  display: flex;
+  align-items: center;
+  gap: 0.45rem;
+  padding: 0.55rem 0.95rem;
+  background: linear-gradient(135deg, #0284c7 0%, #0369a1 100%);
+  color: #ffffff;
+  font-size: 0.78rem;
+  font-weight: 700;
+  border-radius: var(--radius-xs);
+  border: 1px solid rgba(56, 189, 248, 0.4);
+  cursor: pointer;
+  box-shadow: 0 2px 8px rgba(2, 132, 199, 0.3);
+  transition: all 0.2s ease;
+  white-space: nowrap;
+}
+
+.btn-tts-action:hover {
+  background: linear-gradient(135deg, #0369a1 0%, #075985 100%);
+  transform: translateY(-1px);
+}
+
+.btn-tts-action.active {
+  background: linear-gradient(135deg, #dc2626 0%, #b91c1c 100%);
+  border-color: rgba(248, 113, 113, 0.5);
+  box-shadow: 0 2px 8px rgba(220, 38, 38, 0.35);
 }
 
 @media (max-width: 900px) {
