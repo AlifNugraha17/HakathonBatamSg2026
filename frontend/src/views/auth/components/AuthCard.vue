@@ -79,6 +79,13 @@
         </div>
 
 
+        <div class="form-options">
+          <label class="remember-checkbox">
+            <input type="checkbox" v-model="rememberMe" />
+            <span>{{ currentLang === 'id' ? 'Ingat saya di perangkat ini' : 'Remember me on this device' }}</span>
+          </label>
+        </div>
+
         <button 
           type="submit" 
           class="btn-submit" 
@@ -315,6 +322,7 @@ const authMode = ref('login'); // 'login' | 'register' | 'verify'
 const loginEmail = ref('admin@zentura.com');
 const loginPassword = ref('password123');
 const showPassword = ref(false);
+const rememberMe = ref(false);
 const isLoading = ref(false);
 const successBanner = ref(null);
 
